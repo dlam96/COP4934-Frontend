@@ -2,7 +2,12 @@
   width: 50px;
   height: 50px;
 }
-
+.navbarTheme {
+  background-color: #00308f;
+}
+.navlinkTheme {
+  color: white !important;
+}
 .wrapper {
   width: 100vw;
   height: 100vh;

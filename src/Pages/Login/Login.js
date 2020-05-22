@@ -1,14 +1,6 @@
 import React, { useState } from "react";
 import "./Login.css";
-import {
-  Container,
-  Row,
-  Navbar,
-  Nav,
-  NavDropdown,
-  Form,
-  Button,
-} from "react-bootstrap";
+import { Container, Row, Navbar, Nav, Form, Button } from "react-bootstrap";
 
 export default function Login() {
   let [username, setUsername] = useState("");
@@ -19,24 +11,7 @@ export default function Login() {
   }
 
   return (
-    <div className="wrapper">
-      {/* // Navbar */}
-      <Navbar bg="light" expand="lg">
-        <Navbar.Brand href="#home">
-          <img src={require("./airforce-logo.jpg")} className="logo" />
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-          <Nav>
-            <Nav.Link href="#home" className="pr-5">
-              Login
-            </Nav.Link>
-            <Nav.Link href="#link" className="pr-5">
-              Signup
-            </Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+    <div>
       {/* Login Form */}
       <Container fluid>
         <Row className="headerWrapper">
