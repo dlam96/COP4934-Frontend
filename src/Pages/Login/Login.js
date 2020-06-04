@@ -1,13 +1,22 @@
 import React, { useState } from "react";
 import "./Login.css";
-import { Container, Row, Navbar, Nav, Form, Button } from "react-bootstrap";
+import { Alert, Container, Row, Form, Button } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 
 export default function Login() {
+  let history = useHistory();
+  let [authFail, setAuthFail] = useState(false);
   let [username, setUsername] = useState("");
   let [password, setPassword] = useState("");
 
-  function validateLogin(props) {
+  function validateLogin(e) {
+    e.preventDefault();
     console.log("Username ", username, " password ", password);
+    if (username === "admin@home.com" && password === "root") {
+      history.push("/Home");
+    } else {
+      setAuthFail(true);
+    }
   }
 
   return (
@@ -18,6 +27,14 @@ export default function Login() {
           <h1 className="headerText">LOG IN TO YOUR PROFILE</h1>
         </Row>
         <Form className="formWrapper" onSubmit={validateLogin}>
+          <Alert
+            show={authFail}
+            variant="danger"
+            dismissible="true"
+            onClose={() => setAuthFail(false)}
+          >
+            Incorrect Username or Password.
+          </Alert>
           <Form.Group>
             <Form.Label>Username</Form.Label>
             <Form.Control

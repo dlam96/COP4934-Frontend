@@ -9,7 +9,11 @@ function App() {
     <div>
       <Navbar expand="lg" className="navbarTheme">
         <Navbar.Brand href="/">
-          <img src={require("./airforce.png")} className="logo" />
+          <img
+            src={require("./airforce.png")}
+            className="logo"
+            alt="airforce"
+          />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
