@@ -8,6 +8,7 @@ import Home from "../Pages/Home/Home.js";
 export default function Routes() {
   return (
     <Switch>
+      {/* Navbar */}
       <Route exact path="/">
         <Login />
       </Route>

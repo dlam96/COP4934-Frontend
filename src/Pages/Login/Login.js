@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import "./Login.css";
 import { Alert, Container, Row, Form, Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+import { connect } from "react-redux";
+import { login } from "../../Redux/actions.js";
 
-export default function Login() {
+function Login(props) {
   let history = useHistory();
   let [authFail, setAuthFail] = useState(false);
   let [username, setUsername] = useState("");
@@ -12,7 +14,10 @@ export default function Login() {
   function validateLogin(e) {
     e.preventDefault();
     console.log("Username ", username, " password ", password);
+    // Valid Credentials
     if (username === "admin@home.com" && password === "root") {
+      // call the login action
+      props.loginAction("admin@home.com");
       history.push("/Home");
     } else {
       setAuthFail(true);
@@ -64,3 +69,10 @@ export default function Login() {
     </div>
   );
 }
+
+const mapDispatchToProps = { loginAction: login }
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Login)
