@@ -3,11 +3,24 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter as Router } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./Redux/store.js";
+import { saveState } from "./LocalCache/localStorage.js";
+
+
+store.subscribe(() => {
+  console.log("Saving the state to local storage");
+  console.log(store.getState());
+  saveState(store.getState());
+});
+
 
 ReactDOM.render(
   <Router>
     <React.StrictMode>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </React.StrictMode>
   </Router>,
   document.getElementById("root")
