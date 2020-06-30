@@ -1,26 +1,43 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import Login from "../Pages/Login/Login.js";
 import Signup from "../Pages/Signup/Signup.js";
 import NotFound from "../Pages/NotFound/NotFound.js";
 import Home from "../Pages/Home/Home.js";
+import { connect } from "react-redux";
 
-export default function Routes() {
+const PrivateRoute = ({ component: Component, auth }) => (
+  <Route
+    render={(props) =>
+      auth === true ? (
+        <Component auth={auth} {...props} />
+      ) : (
+        <Redirect to={{ pathname: "/" }} />
+      )
+    }
+  />
+);
+
+function Routes(props) {
   return (
     <Switch>
-      {/* Navbar */}
       <Route exact path="/">
         <Login />
       </Route>
       <Route exact path="/Signup">
         <Signup />
       </Route>
-      <Route exact path="/Home">
-        <Home />
-      </Route>
+      <PrivateRoute path="/Home" auth={props.logged} component={Home} />
       <Route>
         <NotFound />
       </Route>
     </Switch>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    logged: state.logged,
+  };
+};
+export default connect(mapStateToProps, null)(Routes);

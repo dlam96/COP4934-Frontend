@@ -1,30 +1,17 @@
-.logo {
-  width: 50px;
-  height: 50px;
-}
-.navbarTheme {
-  background-color: #00308f;
-}
-.navlinkTheme {
-  color: white !important;
-}
-.wrapper {
-  width: 100vw;
-  height: 100vh;
-}
-.headerWrapper {
+.paper {
+  margin-top: 15%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 10%;
-  /* background-color: #00308f; */
+  /* background-color: black; */
 }
-.headerText {
-  color: #00308f;
-  font-size: x-large;
-  font-weight: bolder;
-  letter-spacing: 1.5px;
+
+.form {
+  width: 100%;
+  /* marginTop: theme.spacing(1), */
 }
-.formWrapper {
-  margin: 0 20% 0 20%;
+.submit {
+  margin-top: 10%;
+  margin-bottom: 5%;
 }

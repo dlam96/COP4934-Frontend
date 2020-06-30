@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import "./Login.css";
-import { Alert, Container, Row, Form, Button } from "react-bootstrap";
+import {
+  Container,
+  CssBaseline,
+  Avatar,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  Link,
+} from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import { LockOutlined } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { login } from "../../Redux/actions.js";
@@ -25,54 +36,78 @@ function Login(props) {
   }
 
   return (
-    <div>
-      {/* Login Form */}
-      <Container fluid>
-        <Row className="headerWrapper">
-          <h1 className="headerText">LOG IN TO YOUR PROFILE</h1>
-        </Row>
-        <Form className="formWrapper" onSubmit={validateLogin}>
-          <Alert
-            show={authFail}
-            variant="danger"
-            dismissible="true"
-            onClose={() => setAuthFail(false)}
-          >
-            Incorrect Username or Password.
-          </Alert>
-          <Form.Group>
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Enter username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formGroupPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Login
-          </Button>
-          <div>
-            <small>FORGOT PASSWORD?</small>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className="paper">
+        <Avatar>
+          <LockOutlined />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Log in
+        </Typography>
+        <form className="form" onSubmit={validateLogin}>
+          {authFail ? (
+            <Alert
+              severity="error"
+              variant="filled"
+              onClose={() => setAuthFail(false)}
+            >
+              Incorrect Username or Password
+            </Alert>
+          ) : null}
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <div className="submit">
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              root="true"
+            >
+              Log In
+            </Button>
           </div>
-        </Form>
-      </Container>
-    </div>
+          <Grid container>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+                Forgot password?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link href="/Signup" variant="body2">
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+    </Container>
   );
 }
 
-const mapDispatchToProps = { loginAction: login }
+const mapDispatchToProps = { loginAction: login };
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(Login)
+export default connect(null, mapDispatchToProps)(Login);
