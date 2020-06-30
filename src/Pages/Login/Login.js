@@ -43,7 +43,7 @@ function Login(props) {
           <LockOutlined />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Log in
         </Typography>
         <form className="form" onSubmit={validateLogin}>
           {authFail ? (
@@ -87,7 +87,7 @@ function Login(props) {
               color="primary"
               root="true"
             >
-              Sign In
+              Log In
             </Button>
           </div>
           <Grid container>
