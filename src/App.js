@@ -1,13 +1,13 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.css";
-import { Nav, Navbar } from "react-bootstrap";
+// import { Nav, Navbar } from "react-bootstrap";
 import Routes from "./Routes/Routes.js";
 // import "./App.css";
 
 function App() {
   return (
     <div>
-      <Navbar expand="lg" className="navbarTheme">
+      {/* <Navbar expand="lg" className="navbarTheme">
         <Navbar.Brand href="/">
           <img
             src={require("./airforce.png")}
@@ -26,7 +26,7 @@ function App() {
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
-      </Navbar>
+      </Navbar> */}
       <Routes />
     </div>
   );
