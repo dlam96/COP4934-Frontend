@@ -2,7 +2,8 @@ import React from "react";
 import { AppBar, Toolbar, Button } from "@material-ui/core";
 import { connect } from "react-redux";
 import { logout } from "../../Redux/actions.js";
-import { Switch } from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
+import { Brightness4, Brightness7 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     color: "white",
+    "&:focus": {
+      outline: "none",
+    },
   },
 }));
 
@@ -37,10 +41,15 @@ function Navbar(props) {
             alt="airforce"
           />
           <div className={classes.grow} />
-
+          {/* theme and function to toggle passed from higher level App.js */}
+          <IconButton
+            onClick={props.action}
+            className={classes.button}
+            disableFocusRipple="true"
+          >
+            {props.theme ? <Brightness7 /> : <Brightness4 />}
+          </IconButton>
           <div className={classes.sectionDesktop}>
-            {/* theme and function to toggle passed from higher level App.js */}
-            <Switch checked={props.theme} onChange={props.action} />
             {/* Uses logged redux state to determine what to display */}
             {props.logged ? (
               <div>
