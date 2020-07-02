@@ -63,6 +63,7 @@ function Login(props) {
             id="email"
             label="Email Address"
             name="email"
+            type="email"
             autoComplete="email"
             autoFocus
             onChange={(e) => setUsername(e.target.value)}
