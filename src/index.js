@@ -7,21 +7,17 @@ import { Provider } from "react-redux";
 import store from "./Redux/store.js";
 import { saveState } from "./LocalCache/localStorage.js";
 
-
 store.subscribe(() => {
   console.log("Saving the state to local storage");
   console.log(store.getState());
   saveState(store.getState());
 });
 
-
 ReactDOM.render(
   <Router>
-    <React.StrictMode>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
   </Router>,
   document.getElementById("root")
 );
