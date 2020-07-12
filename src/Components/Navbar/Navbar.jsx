@@ -44,7 +44,7 @@ function Navbar(props) {
             alt="airforce"
           />
           <div className={classes.grow} />
-          {/* dark theme and function to toggle passed from higher level App.js */}
+          {/* dark theme and function to toggle passed from redux state */}
           <Tooltip title="Toggle dark/light theme">
             <IconButton
               onClick={!props.darkState ? props.onDMAction : props.offDMAction}
