@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.css";
+import React from "react";
+import { connect } from "react-redux";
 import Routes from "./Routes/Routes.js";
 import Navbar from "./Components/Navbar/Navbar.jsx";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 // import "./App.css";
 
-function App() {
-  const [darkState, setDarkState] = useState(false);
-  const palletType = darkState ? "dark" : "light";
+function App(props) {
+  const palletType = props.darkState ? "dark" : "light";
   const darkTheme = createMuiTheme({
     palette: {
       type: palletType,
@@ -19,18 +18,21 @@ function App() {
       // }
     },
   });
-  const handleThemeChange = () => {
-    setDarkState(!darkState);
-  };
 
   return (
     <ThemeProvider theme={darkTheme}>
       <div>
-        <Navbar theme={darkState} action={handleThemeChange} />
+        <Navbar />
         <Routes />
       </div>
     </ThemeProvider>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    darkState: state.darkModeReducer.darkmode,
+  };
+};
+
+export default connect(mapStateToProps, null)(App);

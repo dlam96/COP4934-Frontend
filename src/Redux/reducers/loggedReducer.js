@@ -1,7 +1,7 @@
 import { LOGIN, LOGOUT } from "../actionTypes.js";
 
 export default function loggedReducer(
-  state = { logged: false, username: "Kenny" },
+  state = { logged: false, username: null },
   action
 ) {
   switch (action.type) {

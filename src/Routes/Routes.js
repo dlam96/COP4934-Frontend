@@ -37,7 +37,7 @@ function Routes(props) {
 
 const mapStateToProps = (state) => {
   return {
-    logged: state.logged,
+    logged: state.loggedReducer.logged,
   };
 };
 export default connect(mapStateToProps, null)(Routes);

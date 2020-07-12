@@ -1,7 +1,7 @@
 import React from "react";
 import { AppBar, Toolbar, Button } from "@material-ui/core";
 import { connect } from "react-redux";
-import { logout } from "../../Redux/actions.js";
+import { logout, onDarkMode, offDarkMode } from "../../Redux/actions.js";
 import { IconButton, Tooltip } from "@material-ui/core";
 import { Brightness4, Brightness7 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
@@ -46,8 +46,11 @@ function Navbar(props) {
           <div className={classes.grow} />
           {/* dark theme and function to toggle passed from higher level App.js */}
           <Tooltip title="Toggle dark/light theme">
-            <IconButton onClick={props.action} className={classes.button}>
-              {props.theme ? <Brightness7 /> : <Brightness4 />}
+            <IconButton
+              onClick={!props.darkState ? props.onDMAction : props.offDMAction}
+              className={classes.button}
+            >
+              {props.darkState ? <Brightness7 /> : <Brightness4 />}
             </IconButton>
           </Tooltip>
           <div className={classes.sectionDesktop}>
@@ -79,10 +82,15 @@ function Navbar(props) {
   );
 }
 
-const mapDispatchToProps = { logoutAction: logout };
+const mapDispatchToProps = {
+  logoutAction: logout,
+  onDMAction: onDarkMode,
+  offDMAction: offDarkMode,
+};
 const mapStateToProps = (state) => {
   return {
-    logged: state.logged,
+    logged: state.loggedReducer.logged,
+    darkState: state.darkModeReducer.darkmode,
   };
 };
 

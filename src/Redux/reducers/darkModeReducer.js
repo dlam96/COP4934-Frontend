@@ -1,6 +1,6 @@
 import { ONDARKMODE, OFFDARKMODE } from "../actionTypes";
 
-export function darkModeReducer(state = { darkmode: false }, action) {
+export default function darkModeReducer(state = { darkmode: false }, action) {
   switch (action.type) {
     case ONDARKMODE: {
       return {
@@ -13,9 +13,7 @@ export function darkModeReducer(state = { darkmode: false }, action) {
       };
     }
     default: {
-      return {
-        darkmode: false,
-      };
+      return state;
     }
   }
 }
