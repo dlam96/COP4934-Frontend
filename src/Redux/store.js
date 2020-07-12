@@ -1,9 +1,14 @@
 import { createStore } from "redux";
-import loggedReducer from "./reducers/loggedReducer.js";
+// import loggedReducer from "./reducers/loggedReducer.js";
+import rootReducer from "./reducers/rootReducer";
 import { loadState } from "../LocalCache/localStorage.js";
 
 let localCache = loadState();
+let store = createStore(rootReducer);
+
 console.log("Loading Cache!");
 console.log(localCache);
-
-export default createStore(loggedReducer, localCache);
+if (localCache !== null) {
+  store = createStore(rootReducer, localCache);
+}
+export default store;

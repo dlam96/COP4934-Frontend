@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./Login.css";
 import {
   Container,
   CssBaseline,
@@ -9,6 +8,7 @@ import {
   Button,
   Grid,
   Link,
+  makeStyles,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { LockOutlined } from "@material-ui/icons";
@@ -16,12 +16,34 @@ import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { login } from "../../Redux/actions.js";
 
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(20),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
+
 function Login(props) {
+  const classes = useStyles();
   let history = useHistory();
   let [authFail, setAuthFail] = useState(false);
   let [username, setUsername] = useState("");
   let [password, setPassword] = useState("");
 
+  // TODO: axios
   function validateLogin(e) {
     e.preventDefault();
     console.log("Username ", username, " password ", password);
@@ -38,14 +60,14 @@ function Login(props) {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className="paper">
-        <Avatar>
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
           <LockOutlined />
         </Avatar>
         <Typography component="h1" variant="h5">
           Log in
         </Typography>
-        <form className="form" onSubmit={validateLogin}>
+        <form className={classes.form} onSubmit={validateLogin}>
           {authFail ? (
             <Alert
               severity="error"
@@ -87,6 +109,7 @@ function Login(props) {
               variant="contained"
               color="primary"
               root="true"
+              className={classes.submit}
             >
               Log In
             </Button>
