@@ -1,15 +1,11 @@
 import React from "react";
-// import Navbar from "../../Components/Navbar/Navbar.jsx";
+import { Route, Switch } from "react-router-dom";
+import CurrentSchedule from "../../Components/CurrentSchedule/CurrentSchedule.jsx";
+import CreateSchedule from "../../Components/CreateSchedule/CreateSchedule.jsx";
+import Pilots from "../../Components/Pilots/Pilots.jsx";
 import Sidebar from "../../Components/Sidebar/Sidebar.js";
 import { connect } from "react-redux";
-import clsx from "clsx";
-import {
-  CssBaseline,
-  Toolbar,
-  Container,
-  Grid,
-  Paper,
-} from "@material-ui/core";
+import { CssBaseline, Toolbar } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -43,8 +39,6 @@ const useStyles = makeStyles((theme) => ({
 
 function Home(props) {
   const classes = useStyles();
-  // force paper height to be fixed
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
     <div className={classes.root}>
@@ -55,7 +49,18 @@ function Home(props) {
         {/* <div className={classes.appBarSpacer} /> */}
         {/* Toolbar is just to pad */}
         <Toolbar />
-        <Container maxWidth="lg" className={classes.container}>
+        <Switch>
+          <Route exact path="/Home/CurrentSchedule">
+            <CurrentSchedule />
+          </Route>
+          <Route exact path="/Home/CreateSchedule">
+            <CreateSchedule />
+          </Route>
+          <Route exact path="/Home/Pilots">
+            <Pilots />
+          </Route>
+        </Switch>
+        {/* <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={8} lg={9}>
               <Paper className={fixedHeightPaper}>
@@ -63,7 +68,7 @@ function Home(props) {
               </Paper>
             </Grid>
           </Grid>
-        </Container>
+        </Container> */}
       </main>
     </div>
   );

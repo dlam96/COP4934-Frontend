@@ -64,7 +64,12 @@ export default function Sidebar() {
           {/* map json array to list */}
           {routes.map((key, index) => (
             <div key={key.route}>
-              <ListItem button onClick={() => handleClick(key.route)}>
+              <ListItem
+                button
+                component="a"
+                href={`/Home/${key.route.replace(/\s/g, "")}`}
+                onClick={() => handleClick(key.route)}
+              >
                 <ListItemIcon>{iconNames[key.icon]}</ListItemIcon>
                 <ListItemText primary={key.route} />
               </ListItem>
