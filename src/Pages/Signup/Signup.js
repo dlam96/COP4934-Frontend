@@ -185,13 +185,8 @@ function Signup() {
             className={classes.textField}
           />
           <TextField 
-            id="rank"
-            name="rank"
-            type="text"
-            margin="normal"
-            label="Rank"
-            fullWidth
-            required
+            id="rank" name="rank" type="text" margin="normal"
+            label="Rank" fullWidth required
             onChange={(e) => setRank(e.target.value)}
             className={classes.textField}
             // id="rank-select"
