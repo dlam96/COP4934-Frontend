@@ -1,5 +1,4 @@
 import { createStore } from "redux";
-// import loggedReducer from "./reducers/loggedReducer.js";
 import rootReducer from "./reducers/rootReducer";
 import { loadState } from "../LocalCache/localStorage.js";
 
