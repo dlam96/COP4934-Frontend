@@ -1,60 +1,11 @@
 import React, { useState } from "react";
+import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { makeStyles } from '@material-ui/core/styles';
 import { AssignmentIndRounded } from "@material-ui/icons";
-import {
-  Container,
-  CssBaseline,
-  Avatar,
-  Typography,
-  TextField,
-  Button,
-  Modal,
-} from "@material-ui/core";
-
-// const ranks = [
-//   {
-//     rank: 'O1',
-//     label: 'Second Lieutenant',
-//   },
-//   {
-//     rank: 'O2',
-//     label: 'First Lieutenant',
-//   },
-//   {
-//     rank: 'O3',
-//     label: 'Captain',
-//   },
-//   {
-//     rank: 'O4',
-//     label: 'Major',
-//   },
-//   {
-//     rank: 'O5',
-//     label: 'Lieutenant Colonel',
-//   },
-//   {
-//     rank: 'O6',
-//     label: 'Colonel',
-//   },
-//   {
-//     rank: 'O7',
-//     label: 'Brigadier General',
-//   },
-//   {
-//     rank: 'O8',
-//     label: 'Major General',
-//   },
-//   {
-//     rank: 'O9',
-//     label: 'Lieutenant General',
-//   },
-//   {
-//     rank: 'O10',
-//     label: 'Chief of Staff',
-//   },
-// ]
+import { Container, CssBaseline, Avatar, 
+         Typography, TextField, Button } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   textField: {
@@ -78,19 +29,17 @@ const useStyles = makeStyles((theme) => ({
   submitButton: {
     marginTop: theme.spacing(1),
   },
-  signupModal: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+  successful: {
+    color: 'green',
   },
+  fail: {
+    color: 'red',
+  }
 }));
 
-function Signup() {
+export default function Signup(props) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  let history = useHistory();
   let [firstName, setFirstname] = useState("");
   let [lastName, setLastname] = useState("");
   let [militaryId, setMilid] = useState("");
@@ -98,47 +47,50 @@ function Signup() {
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
   let [confirmPass, setConfirm] = useState("");
-  
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const body = (
-    <div className={classes.signupModal}>
-      <p id="simple-modal-description">
-        User created waiting for approval
-      </p>
-    </div>
-  );
+  let [successfulSignup, setSuccessfulSignup] = useState(false);
+  let [failSignup, setFailSignup] = useState(false);
 
   function validateSignup(e) {
+    // Prevent from reloading page
     e.preventDefault();
     console.log(
-      "First Name ", firstName,
-      "Last Name ", lastName,
-      "Military ID ", militaryId,
-      "Rank ", rank,
-      "E-mail ", email,
-      "Password ", password,
-      "Confirmation ", confirmPass,
+      "First Name:", firstName, " Last Name:", lastName, " Military ID:", militaryId, " Rank:", rank, 
+      " E-mail:", email, " Password:", password, " Confirmation:", confirmPass,
     )
-      
-    if (password !== confirmPass) {
-      // TextField error
-    } else {
-      console.log('User created waiting for approval')
-      // <Modal>
-      // </Modal>
+    //TODO check to make sure passwords match
+
+    if (successfulSignup) {
+      setSuccessfulSignup(false);
     }
+    if (failSignup) {
+      setFailSignup(false);
+    }
+    axios.post('/signup', 
+      { 
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        password: password,
+        military_id: militaryId,
+        rank_id: rank,
+      })
+      .then((response) => {
+        console.log("Response:", response);
+        console.log("Response data:", response.data);
+        setSuccessfulSignup(true);
+      })
+      .catch((error) => {
+        console.log("Signup Error:", error);
+        console.log(error.message);
+        //TODO: if the email is already taken then tell/show that to the user to change their email to something else
+        setFailSignup(true);
+      })
+
 
   }
 
   return (
-    <Container component="signupMain" maxWidth="xs">
+    <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.signupContent}>
 
@@ -152,78 +104,57 @@ function Signup() {
 
         <form className={classes.registration} onSubmit={validateSignup}>
           <TextField
-            id="firstName"
-            name="firstName"
-            type="text"
-            margin="normal"
-            label="First Name"
+            id="firstName" name="firstName" type="text"
+            margin="normal" label="First Name"
             fullWidth
             required
             onChange={(e) => setFirstname(e.target.value)}
             className={classes.textField} 
           />
           <TextField 
-            id="lastName"
-            name="lastName"
-            type="text"
-            margin="normal"
-            label="Last Name"
+            id="lastName" name="lastName" type="text"
+            margin="normal" label="Last Name"
             fullWidth
             required
             onChange={(e) => setLastname(e.target.value)}
             className={classes.textField}
           />
           <TextField
-            id="mil_id"
-            name="mil_id" 
-            type="text"
-            margin="normal"
-            label="Military ID"
+            id="mil_id" name="mil_id" type="text"
+            margin="normal" label="Military ID"
             fullWidth
             required
             onChange={(e) => setMilid(e.target.value)}
             className={classes.textField}
           />
           <TextField 
-            id="rank" name="rank" type="text" margin="normal"
-            label="Rank" fullWidth required
+            id="rank" name="rank" type="text"
+            margin="normal" label="Rank"
+            fullWidth 
+            required
             onChange={(e) => setRank(e.target.value)}
             className={classes.textField}
-            // id="rank-select"
-            // name="rank"
-            // label="Select"
-            // helperText="Rank"
-            // select
           />
           <TextField
-            id="email" 
-            name="email"
-            type="email"
-            margin="normal"
-            label="E-Mail"
+            id="email" name="email" type="email"
+            margin="normal" label="E-Mail"
             fullWidth
             required
             onChange={(e) => setEmail(e.target.value)}
             className={classes.textField}
           />
           <TextField
-            id="password" 
-            name="password"
-            type="password"
-            margin="normal"
-            label="Password"
+            id="password" name="password" type="password"
+            margin="normal" label="Password"
             fullWidth
             required
             onChange={(e) => setPassword(e.target.value)}
             className={classes.textField}
           />
           <TextField
-            id="confirm" 
-            name="confirm"
-            type="password"
-            margin="normal"
-            label="Confirm Password"
-            fullWidth
+            id="confirm" name="confirm" type="password"
+            margin="normal" label="Confirm Password"
+            fullWidth 
             required
             onChange={(e) => setConfirm(e.target.value)}
             className={classes.textField}
@@ -233,6 +164,10 @@ function Signup() {
             <Button type="submit" variant="contained">Sign Up</Button>
           </div>
 
+          {/* TODO: Convert these to alerts */}
+          {successfulSignup ? <p>Successfully Created a User Account!</p> : null}
+          {failSignup ? <p>Signup failed please panic!</p> : null}
+
         </form>
 
       </div>
@@ -240,4 +175,3 @@ function Signup() {
   );
 }
 
-export default Signup;

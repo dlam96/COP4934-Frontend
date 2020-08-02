@@ -7,9 +7,10 @@ export const login = (username) => ({
   },
 });
 
-export const logout = () => ({
+export const logout = () => ({  
   type: LOGOUT,
 });
+
 
 export const onDarkMode = () => ({
   type: ONDARKMODE,

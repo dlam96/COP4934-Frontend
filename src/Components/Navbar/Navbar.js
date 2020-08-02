@@ -5,6 +5,7 @@ import { logout, onDarkMode, offDarkMode } from "../../Redux/actions.js";
 import { IconButton, Tooltip } from "@material-ui/core";
 import { Brightness4, Brightness7 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -57,22 +58,27 @@ function Navbar(props) {
             {/* Uses logged redux state to determine what to display */}
             {props.logged ? (
               <div>
+                <Link to={'/'}>
                 <Button
-                  href="/"
                   onClick={props.logoutAction}
                   className={classes.button}
                 >
                   Log Out
                 </Button>
+                </Link>
               </div>
             ) : (
               <div>
-                <Button href="/" className={classes.button}>
-                  Login
-                </Button>
-                <Button href="/Signup" className={classes.button}>
-                  Signup
-                </Button>
+                <Link to={'/'}>
+                  <Button className={classes.button}>
+                    Login
+                  </Button>
+                </Link>
+                <Link to={'/signup'}>
+                  <Button className={classes.button}>
+                    Signup
+                  </Button>
+                </Link>
               </div>
             )}
           </div>

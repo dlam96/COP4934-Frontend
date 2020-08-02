@@ -1,20 +1,13 @@
 import React, { useState } from "react";
-import {
-  Container,
-  CssBaseline,
-  Avatar,
-  Typography,
-  TextField,
-  Button,
-  Grid,
-  Link,
-  makeStyles,
+import { Container, CssBaseline, Avatar, Typography,
+          TextField, Button, Grid, Link, makeStyles
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { LockOutlined } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { login } from "../../Redux/actions.js";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -46,15 +39,25 @@ function Login(props) {
   // TODO: axios
   function validateLogin(e) {
     e.preventDefault();
-    console.log("Username ", username, " password ", password);
+    if (authFail) setAuthFail(false);
+
+    console.log("Email", username, " Password", password);
     // Valid Credentials
-    if (username === "admin@home.com" && password === "root") {
-      // call the login action
-      props.loginAction("admin@home.com");
+    axios.post('/login', 
+      {
+        email: username,
+        password: password
+      }
+    )
+    .then((response) => {
+      console.log("Token", response.data.token);
+      props.loginAction(username);
       history.push("/Home");
-    } else {
+    })
+    .catch((error) => {
+      console.log("Login Error:", error);
       setAuthFail(true);
-    }
+    })
   }
 
   return (
