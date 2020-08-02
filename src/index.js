@@ -6,6 +6,9 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./Redux/store.js";
 import { saveState } from "./LocalCache/localStorage.js";
+import axios from "axios";
+
+axios.defaults.baseURL = "http://209.97.155.92:3000";
 
 store.subscribe(() => {
   console.log("Saving the state to local storage");

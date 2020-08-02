@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Routes from "./Routes/Routes.js";
-import Navbar from "./Components/Navbar/Navbar.jsx";
+import Navbar from "./Components/Navbar/Navbar.js";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 // import "./App.css";
 

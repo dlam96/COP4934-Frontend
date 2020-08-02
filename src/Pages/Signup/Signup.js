@@ -7,8 +7,6 @@ import { AssignmentIndRounded } from "@material-ui/icons";
 import { Container, CssBaseline, Avatar, 
          Typography, TextField, Button } from "@material-ui/core";
 
-import { signup } from '../../Redux/actions.js';
-
 const useStyles = makeStyles((theme) => ({
   textField: {
     marginTop: theme.spacing(2),
@@ -31,18 +29,26 @@ const useStyles = makeStyles((theme) => ({
   submitButton: {
     marginTop: theme.spacing(1),
   },
+  successful: {
+    color: 'green',
+  },
+  fail: {
+    color: 'red',
+  }
 }));
 
-function Signup(props) {
+export default function Signup(props) {
   const classes = useStyles();
   let history = useHistory();
-  let [firstName, setFirstname] = useState(" ");
-  let [lastName, setLastname] = useState(" ");
-  let [militaryId, setMilid] = useState(" ");
-  let [rank, setRank] = useState(" ");
-  let [email, setEmail] = useState(" ");
-  let [password, setPassword] = useState(" ");
-  let [confirmPass, setConfirm] = useState(" ");
+  let [firstName, setFirstname] = useState("");
+  let [lastName, setLastname] = useState("");
+  let [militaryId, setMilid] = useState("");
+  let [rank, setRank] = useState("");
+  let [email, setEmail] = useState("");
+  let [password, setPassword] = useState("");
+  let [confirmPass, setConfirm] = useState("");
+  let [successfulSignup, setSuccessfulSignup] = useState(false);
+  let [failSignup, setFailSignup] = useState(false);
 
   function validateSignup(e) {
     // Prevent from reloading page
@@ -51,33 +57,34 @@ function Signup(props) {
       "First Name:", firstName, " Last Name:", lastName, " Military ID:", militaryId, " Rank:", rank, 
       " E-mail:", email, " Password:", password, " Confirmation:", confirmPass,
     )
-    
-    if (password === confirmPass) {
-      // Axios
-      console.log("User created waiting for approval");
-      props.signupAction( { email, password } );
-      history.push("/");
-    } else {
-      console.log("Passwords do not match")
-    }
+    //TODO check to make sure passwords match
 
-    // // Axios testing here for api implementation
-    
-    // // Adding a new user 
-    // const newUser = {
-    //   firstName: props.firstName,
-    //   lastName: props.lastName,
-    //   militaryId: props.militaryId,
-    //   rank: props.rank,
-    //   email: props.email,
-    //   password: props.password,
-    // }
-    // axios
-    //   .post(``, { newUser })
-    //   .then( userInfo => {
-    //     console.log(userInfo);
-    //     console.log(userInfo.data);
-    //   })
+    if (successfulSignup) {
+      setSuccessfulSignup(false);
+    }
+    if (failSignup) {
+      setFailSignup(false);
+    }
+    axios.post('/signup', 
+      { 
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        password: password,
+        military_id: militaryId,
+        rank_id: rank,
+      })
+      .then((response) => {
+        console.log("Response:", response);
+        console.log("Response data:", response.data);
+        setSuccessfulSignup(true);
+      })
+      .catch((error) => {
+        console.log("Signup Error:", error);
+        console.log(error.message);
+        //TODO: if the email is already taken then tell/show that to the user to change their email to something else
+        setFailSignup(true);
+      })
 
 
   }
@@ -157,12 +164,13 @@ function Signup(props) {
             <Button type="submit" variant="contained">Sign Up</Button>
           </div>
 
+          {/* TODO: Convert these to alerts */}
+          {successfulSignup ? <p>Successfully Created a User Account!</p> : null}
+          {failSignup ? <p>Signup failed please panic!</p> : null}
+
         </form>
 
       </div>
     </Container>
   );
 }
-const mapDispatchToProps = { signupAction: signup };
-
-export default connect(null, mapDispatchToProps)(Signup);
