@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import CurrentSchedule from "../../Components/CurrentSchedule/CurrentSchedule.jsx";
-import CreateSchedule from "../../Components/CreateSchedule/CreateSchedule.jsx";
+import CurrentSchedule from "../../Components/CurrentSchedule/CurrentSchedule.js";
+import CreateSchedule from "../../Components/CreateSchedule/CreateSchedule.js";
 import Pilots from "../../Components/Pilots/Pilots.jsx";
 import Sidebar from "../../Components/Sidebar/Sidebar.js";
 import { connect } from "react-redux";
