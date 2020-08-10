@@ -1,6 +1,14 @@
 import React, { useState } from "react";
-import { Container, CssBaseline, Avatar, Typography,
-          TextField, Button, Grid, Link, makeStyles
+import {
+  Container,
+  CssBaseline,
+  Avatar,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  Link,
+  makeStyles,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { LockOutlined } from "@material-ui/icons";
@@ -43,21 +51,20 @@ function Login(props) {
 
     console.log("Email", username, " Password", password);
     // Valid Credentials
-    axios.post('/login', 
-      {
+    axios
+      .post("/login", {
         email: username,
-        password: password
-      }
-    )
-    .then((response) => {
-      console.log("Token", response.data.token);
-      props.loginAction(username);
-      history.push("/Home");
-    })
-    .catch((error) => {
-      console.log("Login Error:", error);
-      setAuthFail(true);
-    })
+        password: password,
+      })
+      .then((response) => {
+        console.log("Token", response.data.token);
+        props.loginAction(username);
+        history.push("/Home/CurrentSchedule");
+      })
+      .catch((error) => {
+        console.log("Login Error:", error);
+        setAuthFail(true);
+      });
   }
 
   return (
