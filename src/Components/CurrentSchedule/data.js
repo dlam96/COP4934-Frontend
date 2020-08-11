@@ -96,8 +96,8 @@ export default [
   {
     id: 13,
     title: "Multi-day Event",
-    start: new Date(2015, 3, 20, 19, 30, 0),
-    end: new Date(2015, 3, 22, 2, 0, 0),
+    start: new Date(2020, 7, 20, 19, 30, 0),
+    end: new Date(2020, 7, 22, 2, 0, 0),
   },
   {
     id: 14,
@@ -114,8 +114,8 @@ export default [
   {
     id: 16,
     title: "Video Record",
-    start: new Date(2015, 3, 14, 15, 30, 0),
-    end: new Date(2015, 3, 14, 19, 0, 0),
+    start: new Date(2020, 8, 11, 15, 30, 0),
+    end: new Date(2020, 8, 11, 19, 0, 0),
   },
   {
     id: 17,
