@@ -1,28 +1,18 @@
 import React, { useState } from "react";
 import {
-  Container,
-  Grid,
-  Paper,
-  makeStyles,
-  Modal,
-  Fade,
-  Backdrop,
-  TextField,
-  List,
-  ListItem,
-  ListItemText,
-  MenuItem,
-  Menu,
-  Chip,
-  IconButton,
-  InputAdornment,
+  Container, Grid, Paper, makeStyles, Modal, Fade, Backdrop, TextField, List,
+  ListItem, ListItemText, MenuItem, Menu, Chip, IconButton, InputAdornment,
   ListItemIcon,
 } from "@material-ui/core";
 import { Close, LocalOffer, LocalAirport, Room } from "@material-ui/icons";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
+import MomentUtils from "@date-io/moment";
+import { DatePicker, TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import data from "./data.js";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+
+moment.locale("en");
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -53,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-    width: "75ch",
+    width: "150ch",
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -84,11 +74,16 @@ const airSpaceOptions = [
 
 export default function CurrentSchedule() {
   const classes = useStyles();
+  const [locale, setLocale] = useState("en");
   const [events, setEvents] = useState(data);
   const [title, setTitle] = useState("");
-  const [startDate, setStart] = useState("");
-  const [endDate, setEnd] = useState("");
+  let today = new Date();
+  const [startDate, setStartDate] = useState(today);
+  const [endDate, setEndDate] = useState(today);
   const [open, setOpen] = useState(false);
+
+
+  
   // Modal functions
   const handleOpen = () => {
     setOpen(true);
@@ -155,14 +150,33 @@ export default function CurrentSchedule() {
   };
   // Calendar function
   const localizer = momentLocalizer(moment);
-  const handleSelect = ({ start, end }) => {
+
+  // const [startDate, setStart] = useState("");
+  // const [startTime, setStartTime] = useState("");
+  // const [endDate, setEndDate] = useState("");
+  // const [endTime, setEndTime]
+
+  const handleBigCalendarSelect = ({ start, end }) => {
     console.log("start", start, "end", end);
-
-    setStart(moment(start).format("YYYY-MM-DD hh:mm A"));
-    setEnd(moment(end).format("YYYY-MM-DD hh:mm A"));
-
+    // TODO make an option for AM/PM time (12 hours)
+    setStartDate(moment(start).toDate());
+    setEndDate(moment(end).toDate());
     handleOpen();
   };
+
+  const handleStartDateSelect = (date) => {
+    if (date._d > endDate) {
+      setEndDate(date);
+    }
+    setStartDate(date);
+  }
+
+  const handleEndDateSelect = (date) => {
+    if (date._d < startDate) {
+      setStartDate(date)
+    }
+    setEndDate(date);
+  }
 
   return (
     <Container maxWidth="lg" className={classes.container}>
@@ -304,7 +318,7 @@ export default function CurrentSchedule() {
                 }}
               />
               {/* Start Date/Time picker */}
-              <TextField
+              {/* <TextField
                 label="Start date"
                 id="margin-normal"
                 type="datetime-local"
@@ -317,22 +331,58 @@ export default function CurrentSchedule() {
                   setStart(moment(e.target.value).format("YYYY-MM-DDTHH:mm"));
                 }}
                 margin="dense"
-              />
-              {/* End Date/Time picker */}
-              <TextField
-                label="End date"
-                id="margin-normal"
-                type="datetime-local"
-                defaultValue={endDate}
-                className={classes.textField}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={(e) => {
-                  setEnd(moment(e.target.value).format("YYYY-MM-DDTHH:mm"));
-                }}
-                margin="dense"
-              />
+              /> */}
+              <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={locale}>
+                {/* Use Format for visual formatting */}
+                <DatePicker
+                  disableToolbar
+                  variant="dialog"
+                  label="Start Date"
+                  value={startDate}
+                  onChange={date => handleStartDateSelect(date)}
+                />
+                {/* Use Format for visual formatting */}
+                <TimePicker
+                  clearable
+                  ampm={false}
+                  label="Start Time"
+                  variant="dialog"
+                  value={startDate}
+                  onChange={date => handleStartDateSelect(date)}
+                />
+                {/* End Date/Time picker */}
+                {/* <TextField
+                  label="End date"
+                  id="margin-normal"
+                  type="datetime-local"
+                  defaultValue={endDate}
+                  className={classes.textField}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={(e) => {
+                    setEnd(moment(e.target.value).format("YYYY-MM-DDTHH:mm"));
+                  }}
+                  margin="dense"
+                /> */}
+                {/* Use Format for visual formatting */}
+                <DatePicker
+                  disableToolbar
+                  variant="dialog"
+                  label="End Date"
+                  value={endDate}
+                  onChange={date => handleEndDateSelect(date)}
+                />
+                {/* Use Format for visual formatting */}
+                <TimePicker
+                  clearable
+                  ampm={false}
+                  label="End Time"
+                  variant="dialog"
+                  value={endDate}
+                  onChange={date => handleEndDateSelect(date)}
+                />
+              </MuiPickersUtilsProvider>
               <div id="submit-btn" className={classes.submitBtn}>
                 <Chip
                   type="submit"
@@ -356,7 +406,7 @@ export default function CurrentSchedule() {
               startAccessor="start"
               endAccessor="end"
               style={{ height: "82vh" }}
-              onSelectSlot={handleSelect}
+              onSelectSlot={handleBigCalendarSelect}
             />
           </Paper>
         </Grid>
