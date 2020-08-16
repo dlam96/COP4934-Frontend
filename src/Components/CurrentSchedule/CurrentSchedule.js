@@ -158,8 +158,8 @@ export default function CurrentSchedule() {
   const handleSelect = ({ start, end }) => {
     console.log("start", start, "end", end);
 
-    setStart(moment(start).format("YYYY-MM-DDTHH:mm"));
-    setEnd(moment(end).format("YYYY-MM-DDTHH:mm"));
+    setStart(moment(start).format("YYYY-MM-DD hh:mm A"));
+    setEnd(moment(end).format("YYYY-MM-DD hh:mm A"));
 
     handleOpen();
   };

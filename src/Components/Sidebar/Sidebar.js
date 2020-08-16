@@ -15,6 +15,8 @@ import {
   LocalAirport,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import { useHistory } from "react-router-dom";
+
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -34,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Sidebar() {
   const classes = useStyles();
+  const history = useHistory();
   const routes = [
     { route: "Current Schedule", icon: "CalendarToday" },
     { route: "Create Schedule", icon: "Create" },
@@ -48,6 +51,7 @@ export default function Sidebar() {
   };
   const handleClick = (key) => {
     console.log("handling click", key);
+    history.push(key.replace(/\s/g, ""));
   };
   return (
     <Drawer
@@ -67,7 +71,6 @@ export default function Sidebar() {
               <ListItem
                 button
                 component="a"
-                href={`/Home/${key.route.replace(/\s/g, "")}`}
                 onClick={() => handleClick(key.route)}
               >
                 <ListItemIcon>{iconNames[key.icon]}</ListItemIcon>
