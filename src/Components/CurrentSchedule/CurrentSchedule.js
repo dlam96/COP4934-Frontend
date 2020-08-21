@@ -1,18 +1,10 @@
-import React, { useState } from "react";
-import {
-  Container, Grid, Paper, makeStyles, Modal, Fade, Backdrop, TextField, List,
-  ListItem, ListItemText, MenuItem, Menu, Chip, IconButton, InputAdornment,
-  ListItemIcon,
-} from "@material-ui/core";
-import { Close, LocalOffer, LocalAirport, Room } from "@material-ui/icons";
+import React, { useState, useRef } from "react";
+import { Container, Grid, Paper, makeStyles } from "@material-ui/core";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
-import MomentUtils from "@date-io/moment";
-import { DatePicker, TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import data from "./data.js";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-
-moment.locale("en");
+import MasterModal from "../MasterModal/MasterModal.js";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -43,359 +35,81 @@ const useStyles = makeStyles((theme) => ({
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-    width: "150ch",
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: "25ch",
+    width: "100vw",
+    height: "100vh",
   },
   menuPaper: {
-    // width: "15ch",
+    margin: theme.spacing(1, 3, 1, 3),
+  },
+  textField: {
+    margin: theme.spacing(1, 1, 1, 3),
+    width: "50vw",
+  },
+  titleResize: {
+    fontSize: 25,
+  },
+  descriptionResize: {
+    backgroundColor: "#dadce0",
+    padding: theme.spacing(3, 3, 3, 3),
+    borderRadius: "5px",
+  },
+  dateStyle: {
+    margin: theme.spacing(1, 1, 1, 3),
+  },
+  timeStyle: {
+    margin: theme.spacing(1, 3, 1, 0),
   },
   submitBtn: {
     paddingLeft: theme.spacing(3),
   },
 }));
-// options for aircraft menu
-const airCraftOptions = [
-  { aircraft: "Aircraft 1", disabled: true },
-  { aircraft: "Aircraft 2", disabled: false },
-  { aircraft: "Aircraft 3", disabled: false },
-  { aircraft: "Aircraft 4", disabled: false },
-];
-// options for airspace menu
-const airSpaceOptions = [
-  { airspace: "Moody AirForce Base", disabled: false },
-  { airspace: "Airspace 2", disabled: false },
-  { airspace: "Airspace 3", disabled: true },
-  { airspace: "Airspace 4", disabled: false },
-];
 
 export default function CurrentSchedule() {
   const classes = useStyles();
-  const [locale, setLocale] = useState("en");
   const [events, setEvents] = useState(data);
-  const [title, setTitle] = useState("");
   let today = new Date();
+  const localizer = momentLocalizer(moment);
+  // Event Modal functions
+  const selectedEventRef = useRef(null);
+  // const [eventModal, setEvent] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState({});
+  const [open, setOpen] = useState(false);
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
-  const [open, setOpen] = useState(false);
 
-
-  
-  // Modal functions
   const handleOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
-  // Aircraft Menu functions
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-
-  const handleClickListItem = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuItemClick = (event, index) => {
-    console.log("menu select", index);
-    setSelectedIndex(index);
-    setAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-  // Airspace Menu functions
-  const [anchorEl2, setAnchorEl2] = React.useState(null);
-  const [selectedIndex2, setSelectedIndex2] = React.useState(0);
-
-  const handleClickListItem2 = (event) => {
-    setAnchorEl2(event.currentTarget);
-  };
-
-  const handleMenuItemClick2 = (event, index) => {
-    console.log("menu select", index);
-    setSelectedIndex2(index);
-    setAnchorEl2(null);
-  };
-
-  const handleMenuClose2 = () => {
-    setAnchorEl2(null);
-  };
-
-  // adds new event to JSON object
-  // TODO: check for empty strings/fields
-  // TODO: check for start/endDate ranges
-  const onSubmit = () => {
-    console.log(
-      "aircraft",
-      airCraftOptions[selectedIndex].aircraft,
-      "title",
-      title,
-      "start",
-      startDate,
-      "end",
-      endDate
-    );
-    const newEvents = [
-      ...events,
-      { title: title, start: startDate, end: endDate },
-    ];
-    setEvents(newEvents);
-    handleClose();
-  };
-  // Calendar function
-  const localizer = momentLocalizer(moment);
-
-  // const [startDate, setStart] = useState("");
-  // const [startTime, setStartTime] = useState("");
-  // const [endDate, setEndDate] = useState("");
-  // const [endTime, setEndTime]
-
-  const handleBigCalendarSelect = ({ start, end }) => {
-    console.log("start", start, "end", end);
+  const [showAll, setShowAll] = useState(true);
+  const handleBigCalendarSelect = (event) => {
+    console.log(event);
+    console.log("start", event.start, "end", event.end);
     // TODO make an option for AM/PM time (12 hours)
-    setStartDate(moment(start).toDate());
-    setEndDate(moment(end).toDate());
+    setSelectedEvent(event);
+    setShowAll(true);
+    setStartDate(moment(event.start).toDate());
+    setEndDate(moment(event.end).toDate());
     handleOpen();
   };
 
-  const handleStartDateSelect = (date) => {
-    if (date._d > endDate) {
-      setEndDate(date);
-    }
-    setStartDate(date);
-  }
-
-  const handleEndDateSelect = (date) => {
-    if (date._d < startDate) {
-      setStartDate(date)
-    }
-    setEndDate(date);
-  }
-
   return (
     <Container maxWidth="lg" className={classes.container}>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
+      <MasterModal
+        handleClose={handleClose}
         open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={open}>
-          {/* Modal */}
-          <form>
-            <div className={classes.modalPaper}>
-              {/* Dropdown menu */}
-              <div id="Airspace-dropdown" className={classes.menuPaper}>
-                <Grid container direction="row">
-                  {/* Aircraft  menu */}
-                  <Grid item xs={5}>
-                    <List component="nav" aria-label="Aircraft">
-                      <ListItem
-                        button
-                        aria-haspopup="true"
-                        aria-controls="lock-menu"
-                        aria-label="Aircraft"
-                        onClick={handleClickListItem}
-                      >
-                        <ListItemIcon>
-                          <LocalAirport />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary="Aircraft"
-                          secondary={airCraftOptions[selectedIndex].aircraft}
-                        />
-                      </ListItem>
-                    </List>
-                    <Menu
-                      id="lock-menu"
-                      anchorEl={anchorEl}
-                      keepMounted
-                      open={Boolean(anchorEl)}
-                      onClose={handleMenuClose}
-                    >
-                      {airCraftOptions.map((airCraftOptions, index) => (
-                        <MenuItem
-                          key={airCraftOptions.aircraft}
-                          disabled={airCraftOptions.disabled}
-                          selected={index === selectedIndex}
-                          onClick={(event) => handleMenuItemClick(event, index)}
-                        >
-                          {airCraftOptions.aircraft}
-                        </MenuItem>
-                      ))}
-                    </Menu>
-                  </Grid>
-                  {/* Airspace menu */}
-                  <Grid item xs={5}>
-                    <List component="nav" aria-label="Airspace">
-                      <ListItem
-                        button
-                        aria-haspopup="true"
-                        aria-controls="lock-menu"
-                        aria-label="Airspace"
-                        onClick={handleClickListItem2}
-                      >
-                        <ListItemIcon>
-                          <Room />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary="Airspace"
-                          secondary={airSpaceOptions[selectedIndex2].airspace}
-                        />
-                      </ListItem>
-                    </List>
-                    <Menu
-                      id="lock-menu"
-                      anchorEl={anchorEl2}
-                      keepMounted
-                      open={Boolean(anchorEl2)}
-                      onClose={handleMenuClose2}
-                    >
-                      {airSpaceOptions.map((airSpaceOptions, index) => (
-                        <MenuItem
-                          key={airSpaceOptions.airspace}
-                          disabled={airSpaceOptions.disabled}
-                          selected={index === selectedIndex2}
-                          onClick={(event) =>
-                            handleMenuItemClick2(event, index)
-                          }
-                        >
-                          {airSpaceOptions.airspace}
-                        </MenuItem>
-                      ))}
-                    </Menu>
-                  </Grid>
-                  {/* Close button */}
-                  <Grid item xs={2} className={classes.submitBtn}>
-                    <IconButton aria-label="close" onClick={handleClose}>
-                      <Close />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </div>
-              <TextField
-                label="Title"
-                style={{ margin: 8 }}
-                placeholder="Placeholder"
-                // helperText="Full width!"
-                fullWidth
-                margin="normal"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LocalOffer />
-                    </InputAdornment>
-                  ),
-                }}
-                onChange={(e) => {
-                  setTitle(e.target.value);
-                }}
-              />
-              <TextField
-                label="Label"
-                style={{ margin: 8 }}
-                placeholder="Placeholder"
-                // helperText="Full width!"
-                fullWidth
-                margin="normal"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              {/* Start Date/Time picker */}
-              {/* <TextField
-                label="Start date"
-                id="margin-normal"
-                type="datetime-local"
-                defaultValue={startDate}
-                className={classes.textField}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={(e) => {
-                  setStart(moment(e.target.value).format("YYYY-MM-DDTHH:mm"));
-                }}
-                margin="dense"
-              /> */}
-              <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={locale}>
-                {/* Use Format for visual formatting */}
-                <DatePicker
-                  disableToolbar
-                  variant="dialog"
-                  label="Start Date"
-                  value={startDate}
-                  onChange={date => handleStartDateSelect(date)}
-                />
-                {/* Use Format for visual formatting */}
-                <TimePicker
-                  clearable
-                  ampm={false}
-                  label="Start Time"
-                  variant="dialog"
-                  value={startDate}
-                  onChange={date => handleStartDateSelect(date)}
-                />
-                {/* End Date/Time picker */}
-                {/* <TextField
-                  label="End date"
-                  id="margin-normal"
-                  type="datetime-local"
-                  defaultValue={endDate}
-                  className={classes.textField}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  onChange={(e) => {
-                    setEnd(moment(e.target.value).format("YYYY-MM-DDTHH:mm"));
-                  }}
-                  margin="dense"
-                /> */}
-                {/* Use Format for visual formatting */}
-                <DatePicker
-                  disableToolbar
-                  variant="dialog"
-                  label="End Date"
-                  value={endDate}
-                  onChange={date => handleEndDateSelect(date)}
-                />
-                {/* Use Format for visual formatting */}
-                <TimePicker
-                  clearable
-                  ampm={false}
-                  label="End Time"
-                  variant="dialog"
-                  value={endDate}
-                  onChange={date => handleEndDateSelect(date)}
-                />
-              </MuiPickersUtilsProvider>
-              <div id="submit-btn" className={classes.submitBtn}>
-                <Chip
-                  type="submit"
-                  label="Submit"
-                  color="primary"
-                  clickable
-                  onClick={onSubmit}
-                />
-              </div>
-            </div>
-          </form>
-        </Fade>
-      </Modal>
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={setStartDate}
+        setEndDate={setEndDate}
+        events={events}
+        setEvents={setEvents}
+        showAll={showAll}
+        setShowAll={setShowAll}
+        selectedEvent={selectedEvent}
+      />
       <Grid container spacing={3}>
         <Grid item xs={12} md={12} lg={12}>
           <Paper>
@@ -407,6 +121,7 @@ export default function CurrentSchedule() {
               endAccessor="end"
               style={{ height: "82vh" }}
               onSelectSlot={handleBigCalendarSelect}
+              onSelectEvent={handleBigCalendarSelect}
             />
           </Paper>
         </Grid>
