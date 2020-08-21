@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Container,
   Grid,
   Paper,
   makeStyles,
@@ -19,7 +18,7 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@material-ui/core";
-import { Close, LocalOffer, LocalAirport, Room } from "@material-ui/icons";
+import { Close, LocalAirport, Room } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
 import moment from "moment";
 import MomentUtils from "@date-io/moment";
@@ -154,7 +153,7 @@ export default function MasterModal(props) {
   // console.log("selected event title", props.selectedEvent);
   const [maximized, setMaximized] = useState(false);
   const [allDay, setAllDay] = useState(false);
-  const [selectedPilots, setPilots] = useState({});
+  const [selectedPilots, setPilots] = useState(null);
   // const [open, setOpen] = useState(false);
   useEffect(() => {
     setTitle(props.selectedEvent.title);
@@ -204,7 +203,7 @@ export default function MasterModal(props) {
     setAnchorEl2(null);
   };
 
-  // adds new event to JSON object
+  // adds new event/edit existing event to JSON object
   // TODO: check for empty strings/fields
   const onSubmit = () => {
     console.log(
@@ -225,16 +224,15 @@ export default function MasterModal(props) {
     );
 
     const objIndex = props.events.findIndex(
-      (obj) => obj.id == props.selectedEvent.id
+      (obj) => obj.id === props.selectedEvent.id
     );
-    console.log("Obj Index", objIndex);
+    // if index exist > -1, then modify object else create new object in array
     if (objIndex >= 0) {
-      console.log(props.events[objIndex]);
       props.events[objIndex] = {
         title: title,
         start: props.startDate,
         end: props.endDate,
-        allDay: allDay,
+        allDay: allDay ? allDay : false,
         airCraft: airCraftOptions[selectedIndex].aircraft,
         airSpace: airSpaceOptions[selectedIndex2].airspace,
         selectedPilots: selectedPilots,
@@ -247,7 +245,7 @@ export default function MasterModal(props) {
           title: title,
           start: props.startDate,
           end: props.endDate,
-          allDay: allDay,
+          allDay: allDay ? allDay : false,
           airCraft: airCraftOptions[selectedIndex].aircraft,
           airSpace: airSpaceOptions[selectedIndex2].airspace,
           selectedPilots: selectedPilots,
@@ -279,7 +277,7 @@ export default function MasterModal(props) {
     setAllDay(event.target.checked);
   };
   const handlePilots = (event, value) => {
-    console.log(value, "pilot", value[0].name);
+    // console.log(value, "pilot", value[0].name);
     setPilots(value);
   };
   // small modal functions
@@ -314,7 +312,7 @@ export default function MasterModal(props) {
                         <TextField
                           label="Title"
                           placeholder="Add Title"
-                          value={title}
+                          value={title ? title : ""}
                           className={classes.textField}
                           size="medium"
                           fullWidth
@@ -504,7 +502,7 @@ export default function MasterModal(props) {
                         id="tags-standard"
                         options={pilots}
                         getOptionLabel={(option) => option.name}
-                        value={selectedPilots}
+                        value={selectedPilots ? selectedPilots : []}
                         renderInput={(params) => (
                           <TextField
                             {...params}
@@ -580,7 +578,7 @@ export default function MasterModal(props) {
                           <TextField
                             label="Title"
                             placeholder="Add title"
-                            value={title}
+                            value={title ? title : ""}
                             // className={classes.textField}
                             size="medium"
                             fullWidth
@@ -778,7 +776,7 @@ export default function MasterModal(props) {
                             />
                           )}
                           className={classes.pilotStyle}
-                          value={selectedPilots}
+                          value={selectedPilots ? selectedPilots : []}
                         />
                       </Grid>
                       {/* Buttons */}

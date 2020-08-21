@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { Container, Grid, Paper, makeStyles } from "@material-ui/core";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -70,7 +70,7 @@ export default function CurrentSchedule() {
   let today = new Date();
   const localizer = momentLocalizer(moment);
   // Event Modal functions
-  const selectedEventRef = useRef(null);
+  // const selectedEventRef = useRef(null);
   // const [eventModal, setEvent] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState({});
   const [open, setOpen] = useState(false);
