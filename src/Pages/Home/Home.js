@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import CurrentSchedule from "../../Components/CurrentSchedule/CurrentSchedule.js";
 import CreateSchedule from "../../Components/CreateSchedule/CreateSchedule.js";
-import Pilots from "../../Components/Pilots/Pilots.jsx";
+import Pilots from "../../Components/Pilots/Pilots.js";
 import Sidebar from "../../Components/Sidebar/Sidebar.js";
 import { connect } from "react-redux";
 import { CssBaseline, Toolbar } from "@material-ui/core";
@@ -50,7 +50,7 @@ function Home(props) {
         {/* Toolbar is just to pad */}
         <Toolbar />
         <Switch>
-          <Route exact path="/Home/CurrentSchedule">
+          <Route exact path="/Home/Schedule">
             <CurrentSchedule />
           </Route>
           <Route exact path="/Home/CreateSchedule">
