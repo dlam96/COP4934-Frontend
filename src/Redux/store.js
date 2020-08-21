@@ -1,13 +1,45 @@
 import { createStore } from "redux";
 import rootReducer from "./reducers/rootReducer";
 import { loadState } from "../LocalCache/localStorage.js";
+import axios from "axios";
 
-let localCache = loadState();
-let store = createStore(rootReducer);
 
-console.log("Loading Cache!");
-console.log(localCache);
-if (localCache !== null) {
-  store = createStore(rootReducer, localCache);
+async function setupCachedState() {
+  let localCache = loadState();
+
+  console.log("Loading Cache!");
+  console.log(localCache);
+
+  if (localCache && localCache.loggedReducer && localCache.loggedReducer.logged) {
+    if (localCache.loggedReducer.accessTokenCreated && localCache.loggedReducer.accessTokenExpiresIn) {
+
+      let today = new Date();
+      let tokenDate = new Date(localCache.loggedReducer.accessTokenCreated);
+
+      let timeZoneOffset = today.getTimezoneOffset()*60*100;
+      today = new Date(today.getTime() + timeZoneOffset);
+
+      tokenDate = new Date(tokenDate.getTime() + localCache.loggedReducer.accessTokenExpiresIn * 1000);
+      console.log("Loading Token - Our Time:", today);
+      console.log("Loading Token - Token Time", tokenDate);
+
+      if (today > tokenDate) {
+        console.log("Access_Token has expired forcing logout");
+        localCache.loggedReducer.logged = false;
+      } else {
+        console.log("Setting access token from localCache");
+        let accessToken = localCache.loggedReducer.accessToken;
+        axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+      }
+    }
+  }
+
+
+  if (!localCache || !localCache.loggedReducer.logged) {
+    return createStore(rootReducer);
+  }
+
+  return createStore(rootReducer, localCache);
 }
-export default store;
+
+export default setupCachedState;

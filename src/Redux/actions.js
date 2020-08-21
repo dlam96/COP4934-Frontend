@@ -1,9 +1,14 @@
 import { LOGIN, LOGOUT, ONDARKMODE, OFFDARKMODE } from "./actionTypes.js";
 
-export const login = (username) => ({
+export const login = (loginObject) => ({
   type: LOGIN,
   payload: {
-    username: username,
+    accountUUID: loginObject.accountUUID,
+    email: loginObject.email,
+    role: loginObject.role,
+    accessToken: loginObject.accessToken,
+    accessTokenCreated: loginObject.accessTokenCreated,
+    accessTokenExpiresIn: loginObject.accessTokenExpiresIn
   },
 });
 
