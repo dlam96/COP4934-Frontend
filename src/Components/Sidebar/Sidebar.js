@@ -16,6 +16,7 @@ import {
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
+import { connect } from 'react-redux';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -34,25 +35,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Sidebar() {
+function Sidebar(props) {
   const classes = useStyles();
   const history = useHistory();
+
   const routes = [
-    { route: "Current Schedule", icon: "CalendarToday" },
-    { route: "Create Schedule", icon: "Create" },
-    { route: "Pilots", icon: "People" },
-    { route: "Aircrafts", icon: "LocalAirport" },
+    { routeName: "Schedule", path: "/Home/Schedule", icon: "CalendarToday" },
   ];
+
+  if (props.role === "Scheduler" || props.role === "Admin") {
+    routes.push({ routeName: "Create Schedule", path: "/Home/CreateSchedule", icon: "Create" });
+  } 
+  if (props.role === "Admin") {
+    routes.push({ routeName: "Pilots" ,path: "/Home/Pilots", icon: "People" });
+    routes.push({ routeName: "Aircrafts", path: "/Home/Aircrafts", icon: "LocalAirport" });
+  }
+
   const iconNames = {
     CalendarToday: <CalendarToday />,
     Create: <Create />,
     People: <People />,
     LocalAirport: <LocalAirport />,
   };
-  const handleClick = (key) => {
-    console.log("handling click", key);
-    history.push(key.replace(/\s/g, ""));
+
+  const handleClick = (path) => {
+    history.push(path);
   };
+
   return (
     <Drawer
       className={classes.drawer}
@@ -67,14 +76,14 @@ export default function Sidebar() {
         <List>
           {/* map json array to list */}
           {routes.map((key, index) => (
-            <div key={key.route}>
+            <div key={key.routeName}>
               <ListItem
                 button
                 component="a"
-                onClick={() => handleClick(key.route)}
+                onClick={() => handleClick(key.path)}
               >
                 <ListItemIcon>{iconNames[key.icon]}</ListItemIcon>
-                <ListItemText primary={key.route} />
+                <ListItemText primary={key.routeName} />
               </ListItem>
               <Divider />
             </div>
@@ -84,3 +93,14 @@ export default function Sidebar() {
     </Drawer>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    role: state.loggedReducer.role
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  null
+)(Sidebar)

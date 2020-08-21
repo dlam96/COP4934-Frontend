@@ -41,29 +41,50 @@ function Login(props) {
   const classes = useStyles();
   let history = useHistory();
   let [authFail, setAuthFail] = useState(false);
-  let [username, setUsername] = useState("");
+  let [acceptFail, setAcceptFail] = useState(false);
+  let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
 
   // TODO: axios
   function validateLogin(e) {
     e.preventDefault();
     if (authFail) setAuthFail(false);
+    if (acceptFail) setAcceptFail(false);
 
-    console.log("Email", username, " Password", password);
+    //console.log("Email", email, " Password", password);
     // Valid Credentials
-    axios
-      .post("/login", {
-        email: username,
+    axios.post("/login", {
+        email: email,
         password: password,
       })
       .then((response) => {
         console.log("Token", response.data.token);
-        props.loginAction(username);
-        history.push("/Home/CurrentSchedule");
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
+        props.loginAction(
+          { 
+            accountUUID: response.data.account_uuid,
+            email: email, 
+            role: response.data.role, 
+            accessToken: response.data.access_token,
+            accessTokenCreated: response.data.access_token_created,
+            accessTokenExpiresIn: response.data.access_token_expires_in
+          }
+        );
+        history.push("/Home/Schedule");
       })
       .catch((error) => {
-        console.log("Login Error:", error);
-        setAuthFail(true);
+        // console.log("Login Error:", error);
+        // console.log("Error Detail:", error.response);
+        if (error.response) {
+          if (error.response.data && error.response.data.error && error.response.data.error.message.includes("accepted")) {
+            setAcceptFail(true);
+          } else {
+            setAuthFail(true);
+          }
+        } else {
+          console.log("Might need to change when backend down?");
+          setAuthFail(true);
+        }
       });
   }
 
@@ -84,7 +105,16 @@ function Login(props) {
               variant="filled"
               onClose={() => setAuthFail(false)}
             >
-              Incorrect Username or Password
+              Incorrect email or Password
+            </Alert>
+          ) : null}
+          {acceptFail ? (
+            <Alert
+              severity="error"
+              variant="filled"
+              onClose={() => setAuthFail(false)}
+            >
+              You have not been accepted yet
             </Alert>
           ) : null}
           <TextField
@@ -98,7 +128,7 @@ function Login(props) {
             type="email"
             autoComplete="email"
             autoFocus
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             variant="outlined"

@@ -1,13 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
+import axios from 'axios';
 import { Container, Grid, Paper, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  content: {
-    flexGrow: 1,
-    height: "100vh",
-    overflow: "auto",
-  },
   container: {
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
@@ -26,6 +22,17 @@ const useStyles = makeStyles((theme) => ({
 export default function Pilots() {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  useEffect(() => {
+    axios.get('/approval')
+      .then((response) => {
+        console.log("Pilots:", response.data);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      })
+  }, [])
+
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Grid container spacing={3}>

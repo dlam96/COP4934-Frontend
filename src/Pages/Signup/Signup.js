@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import { useHistory } from "react-router-dom";
-import { connect } from "react-redux";
 import { makeStyles } from '@material-ui/core/styles';
 import { AssignmentIndRounded } from "@material-ui/icons";
 import { Container, CssBaseline, Avatar, 
@@ -39,11 +37,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Signup(props) {
   const classes = useStyles();
-  let history = useHistory();
   let [firstName, setFirstname] = useState("");
   let [lastName, setLastname] = useState("");
   let [militaryId, setMilid] = useState("");
-  let [rank, setRank] = useState("");
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
   let [confirmPass, setConfirm] = useState("");
@@ -54,7 +50,7 @@ export default function Signup(props) {
     // Prevent from reloading page
     e.preventDefault();
     console.log(
-      "First Name:", firstName, " Last Name:", lastName, " Military ID:", militaryId, " Rank:", rank, 
+      "First Name:", firstName, " Last Name:", lastName, " Military ID:", militaryId, 
       " E-mail:", email, " Password:", password, " Confirmation:", confirmPass,
     )
     //TODO check to make sure passwords match
@@ -72,7 +68,6 @@ export default function Signup(props) {
         email: email,
         password: password,
         military_id: militaryId,
-        rank_id: rank,
       })
       .then((response) => {
         console.log("Response:", response);
@@ -125,14 +120,6 @@ export default function Signup(props) {
             fullWidth
             required
             onChange={(e) => setMilid(e.target.value)}
-            className={classes.textField}
-          />
-          <TextField 
-            id="rank" name="rank" type="text"
-            margin="normal" label="Rank"
-            fullWidth 
-            required
-            onChange={(e) => setRank(e.target.value)}
             className={classes.textField}
           />
           <TextField
