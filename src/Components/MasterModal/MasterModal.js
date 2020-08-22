@@ -65,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
     // boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     width: "100vw",
+    minHeight: "100vh",
     height: "100%",
   },
   menuPaper: {
@@ -260,16 +261,16 @@ export default function MasterModal(props) {
 
   const handleStartDateSelect = (date) => {
     if (date._d > props.endDate) {
-      props.setEndDate(date);
+      props.setEndDate(moment(date).toDate());
     }
-    props.setStartDate(date);
+    props.setStartDate(moment(date).toDate());
   };
 
   const handleEndDateSelect = (date) => {
     if (date._d < props.startDate) {
-      props.setStartDate(date);
+      props.setStartDate(moment(date).toDate());
     }
-    props.setEndDate(date);
+    props.setEndDate(moment(date).toDate());
   };
 
   const handleCheckbox = (event) => {

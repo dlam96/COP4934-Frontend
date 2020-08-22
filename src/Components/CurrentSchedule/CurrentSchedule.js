@@ -85,14 +85,29 @@ export default function CurrentSchedule() {
   };
   const [showAll, setShowAll] = useState(true);
   const handleBigCalendarSelect = (event) => {
-    console.log(event);
-    console.log("start", event.start, "end", event.end);
+    // console.log(event);
+    // console.log("start", event.start, "end", event.end);
     // TODO make an option for AM/PM time (12 hours)
     setSelectedEvent(event);
     setShowAll(true);
     setStartDate(moment(event.start).toDate());
     setEndDate(moment(event.end).toDate());
     handleOpen();
+  };
+
+  const eventStyleGetter = (event) => {
+    // console.log("prop e", event);
+    var style = {
+      backgroundColor: event.color,
+      borderRadius: "0px",
+      opacity: 0.8,
+      color: "black",
+      border: "0px",
+      display: "block",
+    };
+    return {
+      style: style,
+    };
   };
 
   return (
@@ -122,6 +137,7 @@ export default function CurrentSchedule() {
               style={{ height: "82vh" }}
               onSelectSlot={handleBigCalendarSelect}
               onSelectEvent={handleBigCalendarSelect}
+              eventPropGetter={eventStyleGetter}
             />
           </Paper>
         </Grid>

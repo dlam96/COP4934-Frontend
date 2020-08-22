@@ -98,6 +98,7 @@ export default [
     title: "Multi-day Event",
     start: new Date(2020, 7, 20, 19, 30, 0),
     end: new Date(2020, 7, 22, 2, 0, 0),
+    color: "#00BCD4",
   },
   {
     id: 14,
