@@ -16,9 +16,19 @@ import {
   IconButton,
   ListItemIcon,
   Checkbox,
+  FormControl,
   FormControlLabel,
+  Select,
+  InputLabel,
+  Tooltip,
 } from "@material-ui/core";
-import { Close, LocalAirport, Room } from "@material-ui/icons";
+import {
+  Close,
+  LocalAirport,
+  Room,
+  FiberManualRecord,
+  CheckCircle,
+} from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
 import moment from "moment";
 import MomentUtils from "@date-io/moment";
@@ -73,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
   },
   textField: {
     margin: theme.spacing(1, 1, 1, 3),
-    width: "50vw",
+    width: "100%",
   },
   titleResize: {
     fontSize: 25,
@@ -98,6 +108,9 @@ const useStyles = makeStyles((theme) => ({
     "& > * + *": {
       marginTop: theme.spacing(3),
     },
+  },
+  colorPicker: {
+    margin: theme.spacing(0, 0, 0, 5),
   },
   // small Modal css
   smallModalPaper: {
@@ -150,16 +163,16 @@ export default function MasterModal(props) {
   const [locale, setLocale] = useState("en");
   // const [events, setEvents] = useState(data);
   const [title, setTitle] = useState("");
-
-  // console.log("selected event title", props.selectedEvent);
-  const [maximized, setMaximized] = useState(false);
+  const [maximized, setMaximized] = useState(true);
   const [allDay, setAllDay] = useState(false);
   const [selectedPilots, setPilots] = useState(null);
-  // const [open, setOpen] = useState(false);
+  const [selectedColor, setColor] = useState("");
+
   useEffect(() => {
     setTitle(props.selectedEvent.title);
     setPilots(props.selectedEvent.selectedPilots);
     setAllDay(props.selectedEvent.allDay);
+    if (props.selectedEvent.color) setColor(props.selectedEvent.color);
   }, [props.selectedEvent]);
   // Modal functions
 
@@ -208,6 +221,8 @@ export default function MasterModal(props) {
   // TODO: check for empty strings/fields
   const onSubmit = () => {
     console.log(
+      "color",
+      selectedColor,
       "id",
       props.selectedEvent.id - 1,
       "aircraft",
@@ -230,6 +245,7 @@ export default function MasterModal(props) {
     // if index exist > -1, then modify object else create new object in array
     if (objIndex >= 0) {
       props.events[objIndex] = {
+        color: selectedColor,
         title: title,
         start: props.startDate,
         end: props.endDate,
@@ -243,6 +259,7 @@ export default function MasterModal(props) {
         ...props.events,
         {
           id: props.events.length - 1,
+          color: selectedColor,
           title: title,
           start: props.startDate,
           end: props.endDate,
@@ -254,7 +271,8 @@ export default function MasterModal(props) {
       ];
       props.setEvents(newEvents);
     }
-
+    // reset color to default for next event
+    setColor("");
     handleClose();
   };
   // Calendar function
@@ -284,6 +302,11 @@ export default function MasterModal(props) {
   // small modal functions
   const toggleOptions = () => {
     setMaximized(!maximized);
+  };
+
+  const handleColor = (event) => {
+    console.log("color handle", event.target.value);
+    setColor(event.target.value);
   };
   return (
     <>
@@ -496,50 +519,169 @@ export default function MasterModal(props) {
                         </Menu>
                       </Grid>
                     </Grid>
-                    {/* Pilots */}
+                    {/* Pilots & color */}
                     <Grid item container direction="row">
-                      <Autocomplete
-                        multiple
-                        id="tags-standard"
-                        options={pilots}
-                        getOptionLabel={(option) => option.name}
-                        value={selectedPilots ? selectedPilots : []}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            variant="standard"
-                            label="Pilots"
-                            placeholder="Add pilots"
-                            InputLabelProps={{
-                              shrink: true,
+                      <Grid item sm={6} md={6} xl={6}>
+                        <Autocomplete
+                          multiple
+                          id="tags-standard"
+                          options={pilots}
+                          getOptionLabel={(option) => option.name}
+                          value={selectedPilots ? selectedPilots : []}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              variant="standard"
+                              label="Pilots"
+                              placeholder="Add pilots"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          )}
+                          onChange={handlePilots}
+                          className={classes.pilotStyle}
+                        />
+                      </Grid>
+                      {/*TODO: add tickmark icon when selected */}
+                      <Grid item sm={4} md={4} xl={4}>
+                        {/* Color picker */}
+                        <FormControl className={classes.colorPicker}>
+                          <InputLabel shrink>Color</InputLabel>
+                          <Select
+                            labelId="color-label"
+                            id="color-select"
+                            value={selectedColor}
+                            onChange={handleColor}
+                            displayEmpty
+                            renderValue={(e) => {
+                              console.log("color", e);
+                              return e === "" || e === undefined ? (
+                                <FiberManualRecord
+                                  style={{ color: "#3174ad" }}
+                                />
+                              ) : (
+                                <FiberManualRecord style={{ color: e }} />
+                              );
                             }}
-                          />
-                        )}
-                        onChange={handlePilots}
-                        className={classes.pilotStyle}
-                      />
+                          >
+                            {/* red */}
+                            <MenuItem value={"#f44336"}>
+                              <Tooltip title="Tomato" placement="right-start">
+                                {selectedColor === "#f44336" ? (
+                                  <CheckCircle style={{ color: "#f44336" }} />
+                                ) : (
+                                  <FiberManualRecord
+                                    style={{ color: "#f44336" }}
+                                  />
+                                )}
+                              </Tooltip>
+                            </MenuItem>
+                            {/* orange */}
+                            <MenuItem value={"#FF5722"}>
+                              <Tooltip
+                                title="Tangerine"
+                                placement="right-start"
+                              >
+                                {selectedColor === "#FF5722" ? (
+                                  <CheckCircle style={{ color: "#FF5722" }} />
+                                ) : (
+                                  <FiberManualRecord
+                                    style={{ color: "#FF5722" }}
+                                  />
+                                )}
+                              </Tooltip>
+                            </MenuItem>
+                            {/* yellow */}
+                            <MenuItem value={"#FFC107"}>
+                              <Tooltip title="Banana" placement="right-start">
+                                {selectedColor === "#FFC107" ? (
+                                  <CheckCircle style={{ color: "#FFC107" }} />
+                                ) : (
+                                  <FiberManualRecord
+                                    style={{ color: "#FFC107" }}
+                                  />
+                                )}
+                              </Tooltip>
+                            </MenuItem>
+                            {/* green */}
+                            <MenuItem value={"#4CAF50"}>
+                              <Tooltip title="Sage" placement="right-start">
+                                {selectedColor === "#4CAF50" ? (
+                                  <CheckCircle style={{ color: "#4CAF50" }} />
+                                ) : (
+                                  <FiberManualRecord
+                                    style={{ color: "#4CAF50" }}
+                                  />
+                                )}
+                              </Tooltip>
+                            </MenuItem>
+                            {/* blue */}
+                            <MenuItem value={"#3174ad"}>
+                              <Tooltip
+                                title="Blueberry"
+                                placement="right-start"
+                              >
+                                {selectedColor === "#3174ad" ? (
+                                  <CheckCircle style={{ color: "#3174ad" }} />
+                                ) : (
+                                  <FiberManualRecord
+                                    style={{ color: "#3174ad" }}
+                                  />
+                                )}
+                              </Tooltip>
+                            </MenuItem>
+                            {/* indigo */}
+                            <MenuItem value={"#3F51B5"}>
+                              <Tooltip title="Lavender" placement="right-start">
+                                {selectedColor === "#3F51B5" ? (
+                                  <CheckCircle style={{ color: "#3F51B5" }} />
+                                ) : (
+                                  <FiberManualRecord
+                                    style={{ color: "#3F51B5" }}
+                                  />
+                                )}
+                              </Tooltip>
+                            </MenuItem>
+                            {/* Violet */}
+                            <MenuItem value={"#9C27B0"}>
+                              <Tooltip title="Grape" placement="right-start">
+                                {selectedColor === "#9C27B0" ? (
+                                  <CheckCircle style={{ color: "#9C27B0" }} />
+                                ) : (
+                                  <FiberManualRecord
+                                    style={{ color: "#9C27B0" }}
+                                  />
+                                )}
+                              </Tooltip>
+                            </MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
                     </Grid>
-                    {/* Description */}
+                    {/* Description*/}
                     <Grid item container direction="row">
-                      <TextField
-                        // label="Label"
-                        placeholder="Add description"
-                        multiline
-                        rows={8}
-                        rowsMax={8}
-                        margin="normal"
-                        className={classes.textField}
-                        // InputLabelProps={{
-                        //   style:
-                        //   padding: ""
-                        // }}
-                        InputProps={{
-                          disableUnderline: true,
-                          classes: {
-                            input: classes.descriptionResize,
-                          },
-                        }}
-                      />
+                      <Grid item sm={6} md={6} xl={6}>
+                        <TextField
+                          // label="Label"
+                          placeholder="Add description"
+                          multiline
+                          rows={8}
+                          rowsMax={8}
+                          margin="normal"
+                          className={classes.textField}
+                          // InputLabelProps={{
+                          //   style:
+                          //   padding: ""
+                          // }}
+                          InputProps={{
+                            disableUnderline: true,
+                            classes: {
+                              input: classes.descriptionResize,
+                            },
+                          }}
+                        />
+                      </Grid>
                     </Grid>
                     <div id="submit-btn" className={classes.submitBtn}>
                       <Chip
@@ -555,6 +697,10 @@ export default function MasterModal(props) {
               </Fade>
             </Modal>
           ) : (
+            /* ==================================================
+					SMALL MODAL
+					================================================== */
+
             <Modal
               aria-labelledby="transition-modal-title"
               aria-describedby="transition-modal-description"

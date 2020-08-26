@@ -99,9 +99,9 @@ export default function CurrentSchedule() {
     // console.log("prop e", event);
     var style = {
       backgroundColor: event.color,
-      borderRadius: "0px",
+      borderRadius: "7px",
       opacity: 0.8,
-      color: "black",
+      color: "white",
       border: "0px",
       display: "block",
     };
