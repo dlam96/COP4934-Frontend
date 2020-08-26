@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Container, Grid, Paper, makeStyles } from "@material-ui/core";
+import {
+  Container,
+  Grid,
+  Paper,
+  makeStyles,
+  CssBaseline,
+} from "@material-ui/core";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import data from "./data.js";
@@ -112,6 +118,7 @@ export default function CurrentSchedule() {
 
   return (
     <Container maxWidth="lg" className={classes.container}>
+      <CssBaseline />
       <MasterModal
         handleClose={handleClose}
         open={open}

@@ -258,7 +258,7 @@ export default function MasterModal(props) {
       const newEvents = [
         ...props.events,
         {
-          id: props.events.length - 1,
+          id: props.events.length * 31 + 1,
           color: selectedColor,
           title: title,
           start: props.startDate,
