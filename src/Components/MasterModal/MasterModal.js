@@ -218,9 +218,12 @@ export default function MasterModal(props) {
     setAnchorEl2(null);
   };
   const handleDelete = () => {
-    const objIndex = props.events.findIndex(
-      (obj) => obj.id === props.selectedEvent.id
-    );
+    let objIndex = -1;
+    if (props.selectedEvent.id !== undefined) {
+      objIndex = props.events.findIndex(
+        (obj) => obj.id === props.selectedEvent.id
+      );
+    }
     if (objIndex >= 0) {
       delete props.events[objIndex];
     }
