@@ -250,12 +250,17 @@ export default function MasterModal(props) {
       selectedPilots
     );
 
-    const objIndex = props.events.findIndex(
-      (obj) => obj.id === props.selectedEvent.id
-    );
+    let objIndex = -1;
+    if (props.selectedEvent.id !== undefined) {
+      objIndex = props.events.findIndex(
+        (obj) => obj.id === props.selectedEvent.id
+      );
+    }
+
     // if index exist > -1, then modify object else create new object in array
     if (objIndex >= 0) {
       props.events[objIndex] = {
+        id: props.selectedEvent.id,
         color: selectedColor,
         title: title,
         start: props.startDate,

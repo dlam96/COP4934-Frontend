@@ -97,7 +97,7 @@ export default function CurrentSchedule() {
     // Sets boolean to disable/hide delete icon if not an event
     setDelete(true);
     if (event.id === undefined) {
-      console.log("not an event");
+      console.log("not an event", event);
       setDelete(false);
     }
     setSelectedEvent(event);
@@ -138,6 +138,7 @@ export default function CurrentSchedule() {
         setShowAll={setShowAll}
         selectedEvent={selectedEvent}
         showDelete={showDelete}
+        setDelete={setDelete}
       />
       <Grid container spacing={3}>
         <Grid item xs={12} md={12} lg={12}>
