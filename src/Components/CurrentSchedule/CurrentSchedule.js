@@ -82,7 +82,7 @@ export default function CurrentSchedule() {
   const [open, setOpen] = useState(false);
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
-
+  const [showDelete, setDelete] = useState(true);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -94,6 +94,12 @@ export default function CurrentSchedule() {
     // console.log(event);
     // console.log("start", event.start, "end", event.end);
     // TODO make an option for AM/PM time (12 hours)
+    // Sets boolean to disable/hide delete icon if not an event
+    setDelete(true);
+    if (event.id === undefined) {
+      console.log("not an event");
+      setDelete(false);
+    }
     setSelectedEvent(event);
     setShowAll(true);
     setStartDate(moment(event.start).toDate());
@@ -131,6 +137,7 @@ export default function CurrentSchedule() {
         showAll={showAll}
         setShowAll={setShowAll}
         selectedEvent={selectedEvent}
+        showDelete={showDelete}
       />
       <Grid container spacing={3}>
         <Grid item xs={12} md={12} lg={12}>

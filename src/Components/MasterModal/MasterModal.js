@@ -28,6 +28,7 @@ import {
   Room,
   FiberManualRecord,
   CheckCircle,
+  Delete,
 } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
 import moment from "moment";
@@ -82,8 +83,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1, 3, 1, 3),
   },
   textField: {
-    margin: theme.spacing(1, 1, 1, 3),
-    width: "100%",
+    margin: theme.spacing(0, 1, 1, 3),
+    width: "80%",
   },
   titleResize: {
     fontSize: 25,
@@ -100,7 +101,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1, 3, 1, 0),
   },
   submitBtn: {
-    paddingLeft: theme.spacing(3),
+    padding: theme.spacing(0, 0, 0, 0),
   },
   pilotStyle: {
     width: "50vw",
@@ -126,7 +127,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 20,
   },
   smallCloseBtn: {
-    padding: theme.spacing(0, 1, 0, 0),
+    // padding: theme.spacing(0, 1, 0, 0),
   },
   smallSubmitBtn: {
     margin: theme.spacing(1, 1, 1, 0),
@@ -163,7 +164,7 @@ export default function MasterModal(props) {
   const [locale, setLocale] = useState("en");
   // const [events, setEvents] = useState(data);
   const [title, setTitle] = useState("");
-  const [maximized, setMaximized] = useState(true);
+  const [maximized, setMaximized] = useState(false);
   const [allDay, setAllDay] = useState(false);
   const [selectedPilots, setPilots] = useState(null);
   const [selectedColor, setColor] = useState("");
@@ -216,7 +217,17 @@ export default function MasterModal(props) {
   const handleMenuClose2 = () => {
     setAnchorEl2(null);
   };
-
+  const handleDelete = () => {
+    const objIndex = props.events.findIndex(
+      (obj) => obj.id === props.selectedEvent.id
+    );
+    if (objIndex >= 0) {
+      delete props.events[objIndex];
+    }
+    // reset color to default for next event
+    setColor("");
+    handleClose();
+  };
   // adds new event/edit existing event to JSON object
   // TODO: check for empty strings/fields
   const onSubmit = () => {
@@ -332,7 +343,7 @@ export default function MasterModal(props) {
                     {/* Title and Close button */}
                     <Grid container item direction="row">
                       {/* Title */}
-                      <Grid item xs={11}>
+                      <Grid item xs={10}>
                         <TextField
                           label="Title"
                           placeholder="Add Title"
@@ -355,7 +366,22 @@ export default function MasterModal(props) {
                         />
                       </Grid>
                       {/* Close button */}
-                      <Grid item xs={1} className={classes.submitBtn}>
+                      <Grid
+                        item
+                        container
+                        xs={2}
+                        className={classes.submitBtn}
+                        justify="flex-end"
+                        alignItems="baseline"
+                      >
+                        {props.showDelete ? (
+                          <IconButton
+                            aria-label="delete"
+                            onClick={handleDelete}
+                          >
+                            <Delete />
+                          </IconButton>
+                        ) : null}
                         <IconButton aria-label="close" onClick={handleClose}>
                           <Close />
                         </IconButton>
@@ -566,13 +592,13 @@ export default function MasterModal(props) {
                             }}
                           >
                             {/* red */}
-                            <MenuItem value={"#f44336"}>
+                            <MenuItem value={"#D50000"}>
                               <Tooltip title="Tomato" placement="right-start">
-                                {selectedColor === "#f44336" ? (
-                                  <CheckCircle style={{ color: "#f44336" }} />
+                                {selectedColor === "#D50000" ? (
+                                  <CheckCircle style={{ color: "#D50000" }} />
                                 ) : (
                                   <FiberManualRecord
-                                    style={{ color: "#f44336" }}
+                                    style={{ color: "#D50000" }}
                                   />
                                 )}
                               </Tooltip>
@@ -721,7 +747,7 @@ export default function MasterModal(props) {
                       {/* Title and Close button */}
                       <Grid container item direction="row">
                         {/* Title */}
-                        <Grid item xs={11}>
+                        <Grid item xs={9}>
                           <TextField
                             label="Title"
                             placeholder="Add title"
@@ -729,6 +755,7 @@ export default function MasterModal(props) {
                             // className={classes.textField}
                             size="medium"
                             fullWidth
+                            multiline
                             margin="normal"
                             InputLabelProps={{
                               shrink: true,
@@ -744,7 +771,22 @@ export default function MasterModal(props) {
                           />
                         </Grid>
                         {/* Close button */}
-                        <Grid item xs={1} className={classes.smallCloseBtn}>
+                        <Grid
+                          container
+                          item
+                          xs={3}
+                          className={classes.smallCloseBtn}
+                          justify="flex-end"
+                          alignItems="baseline"
+                        >
+                          {props.showDelete ? (
+                            <IconButton
+                              aria-label="delete"
+                              onClick={handleDelete}
+                            >
+                              <Delete />
+                            </IconButton>
+                          ) : null}
                           <IconButton aria-label="close" onClick={handleClose}>
                             <Close fontSize="small" />
                           </IconButton>
