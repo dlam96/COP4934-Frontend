@@ -218,15 +218,7 @@ export default function MasterModal(props) {
     setAnchorEl2(null);
   };
   const handleDelete = () => {
-    let objIndex = -1;
-    if (props.selectedEvent.id !== undefined) {
-      objIndex = props.events.findIndex(
-        (obj) => obj.id === props.selectedEvent.id
-      );
-    }
-    if (objIndex >= 0) {
-      delete props.events[objIndex];
-    }
+    props.setEvents(props.events.filter(obj => obj.id !== props.selectedEvent.id))
     // reset color to default for next event
     setColor("");
     handleClose();
