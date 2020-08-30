@@ -40,7 +40,7 @@ import {
 } from "@material-ui/pickers";
 // import data from "../CurrentSchedule/data.js";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-
+import { connect } from "react-redux";
 moment.locale("en");
 
 const useStyles = makeStyles((theme) => ({
@@ -159,7 +159,7 @@ const pilots = [
     name: "Jane Doe",
   },
 ];
-export default function MasterModal(props) {
+function MasterModal(props) {
   const classes = useStyles();
   const [locale, setLocale] = useState("en");
   // const [events, setEvents] = useState(data);
@@ -218,7 +218,9 @@ export default function MasterModal(props) {
     setAnchorEl2(null);
   };
   const handleDelete = () => {
-    props.setEvents(props.events.filter(obj => obj.id !== props.selectedEvent.id))
+    props.setEvents(
+      props.events.filter((obj) => obj.id !== props.selectedEvent.id)
+    );
     // reset color to default for next event
     setColor("");
     handleClose();
@@ -230,7 +232,7 @@ export default function MasterModal(props) {
       "color",
       selectedColor,
       "id",
-      props.selectedEvent.id - 1,
+      props.selectedEvent.id,
       "aircraft",
       airCraftOptions[selectedIndex].aircraft,
       "title",
@@ -363,6 +365,7 @@ export default function MasterModal(props) {
                           onChange={(e) => {
                             setTitle(e.target.value);
                           }}
+                          disabled={props.role === "User" ? true : false}
                         />
                       </Grid>
                       {/* Close button */}
@@ -374,7 +377,7 @@ export default function MasterModal(props) {
                         justify="flex-end"
                         alignItems="baseline"
                       >
-                        {props.showDelete ? (
+                        {props.showDelete && props.role !== "User" ? (
                           <IconButton
                             aria-label="delete"
                             onClick={handleDelete}
@@ -404,6 +407,7 @@ export default function MasterModal(props) {
                             value={props.startDate}
                             onChange={(date) => handleStartDateSelect(date)}
                             className={classes.dateStyle}
+                            disabled={props.role === "User" ? true : false}
                           />
                           {/* Use Format for visual formatting */}
                           {allDay ? null : (
@@ -415,6 +419,7 @@ export default function MasterModal(props) {
                               value={props.startDate}
                               onChange={(date) => handleStartDateSelect(date)}
                               className={classes.timeStyle}
+                              disabled={props.role === "User" ? true : false}
                             />
                           )}
                           {/* End Date/Time picker */}
@@ -427,6 +432,7 @@ export default function MasterModal(props) {
                             value={props.endDate}
                             onChange={(date) => handleEndDateSelect(date)}
                             className={classes.dateStyle}
+                            disabled={props.role === "User" ? true : false}
                           />
                           {/* Use Format for visual formatting */}
                           {allDay ? null : (
@@ -438,6 +444,7 @@ export default function MasterModal(props) {
                               value={props.endDate}
                               onChange={(date) => handleEndDateSelect(date)}
                               className={classes.timeStyle}
+                              disabled={props.role === "User" ? true : false}
                             />
                           )}
                         </MuiPickersUtilsProvider>
@@ -447,6 +454,7 @@ export default function MasterModal(props) {
                               checked={allDay}
                               onChange={handleCheckbox}
                               color="primary"
+                              disabled={props.role === "User" ? true : false}
                             />
                           }
                           label="All day"
@@ -469,6 +477,7 @@ export default function MasterModal(props) {
                             aria-controls="lock-menu"
                             aria-label="Aircraft"
                             onClick={handleClickListItem}
+                            disabled={props.role === "User" ? true : false}
                           >
                             <ListItemIcon>
                               <LocalAirport />
@@ -511,6 +520,7 @@ export default function MasterModal(props) {
                             aria-controls="lock-menu"
                             aria-label="Airspace"
                             onClick={handleClickListItem2}
+                            disabled={props.role === "User" ? true : false}
                           >
                             <ListItemIcon>
                               <Room />
@@ -563,10 +573,12 @@ export default function MasterModal(props) {
                               InputLabelProps={{
                                 shrink: true,
                               }}
+                              disabled={props.role === "User" ? true : false}
                             />
                           )}
                           onChange={handlePilots}
                           className={classes.pilotStyle}
+                          disabled={props.role === "User" ? true : false}
                         />
                       </Grid>
                       {/*TODO: add tickmark icon when selected */}
@@ -580,6 +592,7 @@ export default function MasterModal(props) {
                             value={selectedColor}
                             onChange={handleColor}
                             displayEmpty
+                            disabled={props.role === "User" ? true : false}
                             renderValue={(e) => {
                               console.log("color", e);
                               return e === "" || e === undefined ? (
@@ -706,6 +719,7 @@ export default function MasterModal(props) {
                               input: classes.descriptionResize,
                             },
                           }}
+                          disabled={props.role === "User" ? true : false}
                         />
                       </Grid>
                     </Grid>
@@ -768,6 +782,7 @@ export default function MasterModal(props) {
                             onChange={(e) => {
                               setTitle(e.target.value);
                             }}
+                            disabled={props.role === "User" ? true : false}
                           />
                         </Grid>
                         {/* Close button */}
@@ -779,7 +794,7 @@ export default function MasterModal(props) {
                           justify="flex-end"
                           alignItems="baseline"
                         >
-                          {props.showDelete ? (
+                          {props.showDelete && props.role !== "User" ? (
                             <IconButton
                               aria-label="delete"
                               onClick={handleDelete}
@@ -809,6 +824,7 @@ export default function MasterModal(props) {
                               value={props.startDate}
                               onChange={(date) => handleStartDateSelect(date)}
                               className={classes.dateStyle}
+                              disabled={props.role === "User" ? true : false}
                             />
                             {/* Use Format for visual formatting */}
                             {allDay ? null : (
@@ -820,6 +836,7 @@ export default function MasterModal(props) {
                                 value={props.startDate}
                                 onChange={(date) => handleStartDateSelect(date)}
                                 className={classes.timeStyle}
+                                disabled={props.role === "User" ? true : false}
                               />
                             )}
                             {/* End Date/Time picker */}
@@ -832,6 +849,7 @@ export default function MasterModal(props) {
                               value={props.endDate}
                               onChange={(date) => handleEndDateSelect(date)}
                               className={classes.dateStyle}
+                              disabled={props.role === "User" ? true : false}
                             />
                             {/* Use Format for visual formatting */}
                             {allDay ? null : (
@@ -843,6 +861,7 @@ export default function MasterModal(props) {
                                 value={props.endDate}
                                 onChange={(date) => handleEndDateSelect(date)}
                                 className={classes.timeStyle}
+                                disabled={props.role === "User" ? true : false}
                               />
                             )}
                           </MuiPickersUtilsProvider>
@@ -852,6 +871,7 @@ export default function MasterModal(props) {
                                 checked={allDay}
                                 onChange={handleCheckbox}
                                 color="primary"
+                                disabled={props.role === "User" ? true : false}
                               />
                             }
                             label="All day"
@@ -869,6 +889,7 @@ export default function MasterModal(props) {
                               aria-controls="lock-menu"
                               aria-label="Aircraft"
                               onClick={handleClickListItem}
+                              disabled={props.role === "User" ? true : false}
                             >
                               <ListItemIcon>
                                 <LocalAirport />
@@ -911,6 +932,7 @@ export default function MasterModal(props) {
                               aria-controls="lock-menu"
                               aria-label="Airspace"
                               onClick={handleClickListItem2}
+                              disabled={props.role === "User" ? true : false}
                             >
                               <ListItemIcon>
                                 <Room />
@@ -962,10 +984,12 @@ export default function MasterModal(props) {
                               InputLabelProps={{
                                 shrink: true,
                               }}
+                              disabled={props.role === "User" ? true : false}
                             />
                           )}
                           className={classes.pilotStyle}
                           value={selectedPilots ? selectedPilots : []}
+                          disabled={props.role === "User" ? true : false}
                         />
                       </Grid>
                       {/* Buttons */}
@@ -998,3 +1022,11 @@ export default function MasterModal(props) {
     </>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    role: state.loggedReducer.role,
+  };
+};
+
+export default connect(mapStateToProps, null)(MasterModal);
