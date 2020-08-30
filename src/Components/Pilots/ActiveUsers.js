@@ -1,14 +1,31 @@
 import React from 'react'
-import { Paper, makeStyles } from "@material-ui/core";
+import { 
+  Paper, 
+  makeStyles,
+  Button,
+  IconButton,
+  Grid
+} from "@material-ui/core";
+import {
+  Delete,
+} from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
+    padding: theme.spacing(2),
     background: '#b7b7b7',
-    padding: '5px 20px 5px 30px ',
+    justifyContent: "center",
     color: '#000000',
-    margin: '5px',
+    margin: '3px',
   },
+  deleteBt: {
+    float: 'right',
+    margin: '3px',
+  }, 
+  editBt: {
+    float: 'right',
+  }, 
 }));
 
 export default function ActiveUsers(props) {
@@ -23,25 +40,33 @@ export default function ActiveUsers(props) {
 
   return( 
       <Paper className={classes.paper}>
-          <p>
+        <Grid container item direction="row">
+          <Grid xs={2} align="start">
             { firstName }
+          </Grid>
+          <Grid xs={2} align="start">
             { lastName }
+          </Grid>
+          <Grid xs={2} align="start">
             { militaryId }
+          </Grid>
+          <Grid xs={2} align="start">
             { rank }
-            <button style={deleteStyle}>Delete</button>
-            <button onClick={() => handleClick(editRoute.path)} style={editStyle}>Edit</button>
-          </p>
+          </Grid>
+          <Grid xs={4}>
+            <Button 
+              variant="contained"
+              size="small"
+              className={classes.editBt} 
+              onClick={() => handleClick(editRoute.path)}
+            >
+              Edit
+            </Button>
+          </Grid>
+        </Grid>
+
       </Paper>
 
   )
 
-}
-
-const editStyle = {
-  float: 'right',
-  margin: '5px',
-}
-const deleteStyle = {
-  float: 'right',
-  margin: '5px',
 }
