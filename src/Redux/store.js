@@ -16,7 +16,7 @@ async function setupCachedState() {
       let today = new Date();
       let tokenDate = new Date(localCache.loggedReducer.accessTokenCreated);
 
-      let timeZoneOffset = today.getTimezoneOffset()*60*100;
+      let timeZoneOffset = today.getTimezoneOffset()*60*1000;
       today = new Date(today.getTime() + timeZoneOffset);
 
       tokenDate = new Date(tokenDate.getTime() + localCache.loggedReducer.accessTokenExpiresIn * 1000);
@@ -30,6 +30,7 @@ async function setupCachedState() {
         console.log("Setting access token from localCache");
         let accessToken = localCache.loggedReducer.accessToken;
         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+        console.log("AccessToken:", accessToken);
       }
     }
   }

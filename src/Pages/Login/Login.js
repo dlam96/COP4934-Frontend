@@ -58,7 +58,7 @@ function Login(props) {
         password: password,
       })
       .then((response) => {
-        console.log("Token", response.data.token);
+        console.log("Token", response.data.access_token);
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
         props.loginAction(
           { 
