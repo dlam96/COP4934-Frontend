@@ -30,6 +30,7 @@ async function setupCachedState() {
         console.log("Setting access token from localCache");
         let accessToken = localCache.loggedReducer.accessToken;
         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+        console.log("AccessToken:", accessToken);
       }
     }
   }
