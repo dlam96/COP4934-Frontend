@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import { useHistory } from "react-router-dom";
+import React, { useState } from 'react';
 import { 
   Container, 
   Grid, 
@@ -15,8 +14,7 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
+    paddingTop: theme.spacing(2),
   },
   paper: {
     padding: theme.spacing(2),
@@ -25,140 +23,100 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   fixedInfo: {
-    height: 525,
-    padding: theme.spacing(2),
-    paddingTop: "50px",
+    height: 500,
     display: "flex",
     overflow: "auto",
     flexDirection: "column",
+    paddingTop: "50px",
+    padding: theme.spacing(2),
   },
   fixedPic: {
+    height: 200,
     display: "flex",
-    height: 300,
     justifyContent: "center",
-    paddingTop: "75px",
+    paddingTop: "20px",
   },
   picIcon: {
     fontSize: "150px",
   },
+  buttons: {
+    paddingTop: theme.spacing(4),
+  },
   saveBt: {
-    margin: "5px",
-  }, 
-  cancelBt: {
-    margin: '5px',
-  }, 
+    marginRight: "10px",
+  },
 }));
 
-export default function EditUser() {
+export default function EditUser(props) {
   const classes = useStyles();
-  let history = useHistory();
+  const fields = [
+    {label: "First Name", value: "firstName"}, 
+    {label: "Last Name", value: "lastName"}, 
+    {label: "Rank", value: "rank"}, 
+    {label: "Military ID", value: "militaryId"}
+  ];
+  const [user, setUser] = useState(props.user);
+
+  // console.log("editUser:", user);
+
+  // useEffect(()=>{
+  //   setUser(props.user);
+  // }, [props.user]) 
 
   return (
     <Container maxWidth="lg" className={classes.container}>
-      <Grid item spacing={3} xs={12} md={8} lg={9}>
+      {/* User pic default for fun */}
+      <Paper className={classes.fixedPic} variant="outlined">
+        <Face className={classes.picIcon}/>
+      </Paper>
 
-        <Paper className={classes.fixedPic} variant="outlined">
-          <Face className={classes.picIcon}/>
-        </Paper>
-  
-        <Paper className={classes.fixedInfo} variant="outlined">
+      {/* User information */}
+      <Paper className={classes.fixedInfo} variant="outlined">
 
+        {fields.map((item, index) => 
           <Grid container item direction="row">
-            <Grid xs={6} align="center">
-              <h2>First Name</h2> 
+            <Grid xs={3} />
+            <Grid xs={3} align="start">
+              <h2>{item.label}</h2> 
             </Grid>
             <Grid xs={6}>
               <TextField
                 variant="outlined"
                 size="small"
+                value={user[item.value]}
+                onChange={(e)=>
+                  {
+                    let newUser = {...user};
+                    newUser[item.value] = e.target.value;
+                    setUser(newUser);
+                  }
+                }
               />
             </Grid>
           </Grid>
-
-          <Grid container item direction="row">
-            <Grid xs={6} align="center">
-              <h2>Last Name</h2> 
-            </Grid>
-            <Grid xs={6}>
-              <TextField
-                variant="outlined"
-                size="small"
-              />
-            </Grid>
+        )}
+        
+        {/* Save and Cancel buttonss */}
+        <Grid container item direction="row">
+          <Grid xs={12} align="center" className={classes.buttons}>
+            <Button 
+              variant="contained" 
+              color="primary"
+              startIcon={<Save />}
+              className={classes.saveBt}
+              onClick={()=>props.handleEdit(user)}
+            >
+              Save
+            </Button>
+            <Button 
+              variant="contained"
+              onClick={()=>props.handleEdit()}
+            >
+              Cancel
+            </Button>
           </Grid>
-
-          <Grid container item direction="row">
-            <Grid xs={6} align="center">
-              <h2>E-Mail</h2> 
-            </Grid>
-            <Grid xs={6}>
-              <TextField
-                variant="outlined"
-                size="small"
-              />
-            </Grid>
-          </Grid>
-          
-          <Grid container item direction="row">
-            <Grid xs={6} align="center">
-              <h2>Occupation</h2> 
-            </Grid>
-            <Grid xs={6}>
-              <TextField
-                variant="outlined"
-                size="small"
-              />
-            </Grid>
-          </Grid>
-          
-          <Grid container item direction="row">
-            <Grid xs={6} align="center">
-              <h2>Rank</h2>
-            </Grid>
-            <Grid xs={6}>
-              <TextField
-                variant="outlined"
-                size="small"
-              />
-            </Grid>
-          </Grid>
-          
-          <Grid container item direction="row">
-            <Grid xs={6} align="center">
-              <h2>Military ID</h2>
-            </Grid>
-            <Grid xs={6}>
-              <TextField
-                variant="outlined"
-                size="small"
-              />
-            </Grid>
-          </Grid>
-          
-          <Grid container item direction="row">
-            <Grid xs={12} align="center">
-              <Button 
-                className={classes.saveBt} 
-                variant="contained" 
-                color="primary"
-                startIcon={<Save />}
-              >
-                Save
-              </Button>
-              <Button 
-                className={classes.cancelBt} 
-                variant="contained"
-                onClick={()=>history.goBack()}
-              >
-                Cancel
-              </Button>
-            </Grid>
-          </Grid>
-
-        </Paper>
-      
-
-      </Grid>
+        </Grid>
+      </Paper>
     </Container>
   );
 
