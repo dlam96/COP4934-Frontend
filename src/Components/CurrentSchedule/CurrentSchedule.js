@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import {
   Container,
   Grid,
@@ -9,8 +9,10 @@ import {
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import data from "./data.js";
+import { connect } from "react-redux";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import MasterModal from "../MasterModal/MasterModal.js";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -70,9 +72,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CurrentSchedule() {
+function CurrentSchedule(props) {
   const classes = useStyles();
-  const [events, setEvents] = useState(data);
+  const [events, setEvents] = useState(Object.values(props.events));
   let today = new Date();
   const localizer = momentLocalizer(moment);
   // Event Modal functions
@@ -160,3 +162,12 @@ export default function CurrentSchedule() {
     </Container>
   );
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    events: state.flightReducer,
+  };
+};
+
+export default connect(mapStateToProps, null)(CurrentSchedule);
