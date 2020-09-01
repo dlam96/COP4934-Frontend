@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Grid,
@@ -74,7 +74,11 @@ const useStyles = makeStyles((theme) => ({
 
 function CurrentSchedule(props) {
   const classes = useStyles();
-  const [events, setEvents] = useState(Object.values(props.events));
+  const [events, setEvents] = useState(null);
+  const { flightEvents } = props;
+  useEffect(() => {
+    setEvents(flightEvents);
+  }, flightEvents)
   let today = new Date();
   const localizer = momentLocalizer(moment);
   // Event Modal functions
@@ -125,48 +129,52 @@ function CurrentSchedule(props) {
   };
 
   return (
-    <Container maxWidth="lg" className={classes.container}>
-      <CssBaseline />
-      <MasterModal
-        handleClose={handleClose}
-        open={open}
-        startDate={startDate}
-        endDate={endDate}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
-        events={events}
-        setEvents={setEvents}
-        showAll={showAll}
-        setShowAll={setShowAll}
-        selectedEvent={selectedEvent}
-        showDelete={showDelete}
-        setDelete={setDelete}
-      />
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={12} lg={12}>
-          <Paper>
-            <Calendar
-              selectable
-              localizer={localizer}
-              events={events}
-              startAccessor="start"
-              endAccessor="end"
-              style={{ height: "82vh" }}
-              onSelectSlot={handleBigCalendarSelect}
-              onSelectEvent={handleBigCalendarSelect}
-              eventPropGetter={eventStyleGetter}
-            />
-          </Paper>
+    <>
+    {events && events.length > 0 ?
+      <Container maxWidth="lg" className={classes.container}>
+        <CssBaseline />
+        <MasterModal
+          handleClose={handleClose}
+          open={open}
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          events={events}
+          setEvents={setEvents}
+          showAll={showAll}
+          setShowAll={setShowAll}
+          selectedEvent={selectedEvent}
+          showDelete={showDelete}
+          setDelete={setDelete}
+        />
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={12} lg={12}>
+            <Paper>
+              <Calendar
+                selectable
+                localizer={localizer}
+                events={events}
+                startAccessor="start"
+                endAccessor="end"
+                style={{ height: "82vh" }}
+                onSelectSlot={handleBigCalendarSelect}
+                onSelectEvent={handleBigCalendarSelect}
+                eventPropGetter={eventStyleGetter}
+              />
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
+      :  null }
+    </>
   );
 }
 
 
 const mapStateToProps = (state) => {
   return {
-    events: state.flightReducer,
+    flightEvents: Object.values(state.flightReducer),
   };
 };
 
