@@ -219,7 +219,9 @@ function MasterModal(props) {
   };
   const handleDelete = () => {
     props.setEvents(
-      props.events.filter((obj) => obj.id !== props.selectedEvent.id)
+      props.events.filter(
+        (obj) => obj.flight_uuid !== props.selectedEvent.flight_uuid
+      )
     );
     // reset color to default for next event
     setColor("");
@@ -232,7 +234,7 @@ function MasterModal(props) {
       "color",
       selectedColor,
       "id",
-      props.selectedEvent.id,
+      props.selectedEvent.flight_uuid,
       "aircraft",
       airCraftOptions[selectedIndex].aircraft,
       "title",
@@ -248,16 +250,16 @@ function MasterModal(props) {
     );
 
     let objIndex = -1;
-    if (props.selectedEvent.id !== undefined) {
+    if (props.selectedEvent.flight_uuid !== undefined) {
       objIndex = props.events.findIndex(
-        (obj) => obj.id === props.selectedEvent.id
+        (obj) => obj.flight_uuid === props.selectedEvent.flight_uuid
       );
     }
 
     // if index exist > -1, then modify object else create new object in array
     if (objIndex >= 0) {
       props.events[objIndex] = {
-        id: props.selectedEvent.id,
+        id: props.selectedEvent.flight_uuid,
         color: selectedColor,
         title: title,
         start: props.startDate,

@@ -80,9 +80,9 @@ function CurrentSchedule(props) {
   useEffect(() => {
     if (flightEvents && flightEvents.length > 0) {
       setEvents(flightEvents);
+      console.log(flightEvents);
     }
-  }, flightEvents)
-
+  }, flightEvents);
 
   let today = new Date();
   const localizer = momentLocalizer(moment);
@@ -105,9 +105,8 @@ function CurrentSchedule(props) {
     // console.log(event);
     // console.log("start", event.start, "end", event.end);
     // TODO make an option for AM/PM time (12 hours)
-    // Sets boolean to disable/hide delete icon if not an event
     setDelete(true);
-    if (event.id === undefined) {
+    if (event.flight_uuid === undefined) {
       console.log("not an event", event);
       setDelete(false);
     }
@@ -135,51 +134,50 @@ function CurrentSchedule(props) {
 
   return (
     <>
-    {events && events.length > 0 ?
-      <Container maxWidth="lg" className={classes.container}>
-        <CssBaseline />
-        <MasterModal
-          handleClose={handleClose}
-          open={open}
-          startDate={startDate}
-          endDate={endDate}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-          events={events}
-          setEvents={setEvents}
-          showAll={showAll}
-          setShowAll={setShowAll}
-          selectedEvent={selectedEvent}
-          showDelete={showDelete}
-          setDelete={setDelete}
-        />
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={12} lg={12}>
-            <Paper>
-              <Calendar
-                selectable
-                localizer={localizer}
-                events={events}
-                startAccessor="start"
-                endAccessor="end"
-                style={{ height: "82vh" }}
-                onSelectSlot={handleBigCalendarSelect}
-                onSelectEvent={handleBigCalendarSelect}
-                eventPropGetter={eventStyleGetter}
-              />
-            </Paper>
+      {events && events.length > 0 ? (
+        <Container maxWidth="lg" className={classes.container}>
+          <CssBaseline />
+          <MasterModal
+            handleClose={handleClose}
+            open={open}
+            startDate={startDate}
+            endDate={endDate}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
+            events={events}
+            setEvents={setEvents}
+            showAll={showAll}
+            setShowAll={setShowAll}
+            selectedEvent={selectedEvent}
+            showDelete={showDelete}
+            setDelete={setDelete}
+          />
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={12} lg={12}>
+              <Paper>
+                <Calendar
+                  selectable
+                  localizer={localizer}
+                  events={events}
+                  startAccessor="start"
+                  endAccessor="end"
+                  style={{ height: "82vh" }}
+                  onSelectSlot={handleBigCalendarSelect}
+                  onSelectEvent={handleBigCalendarSelect}
+                  eventPropGetter={eventStyleGetter}
+                />
+              </Paper>
+            </Grid>
           </Grid>
-        </Grid>
-      </Container>
-      :  null }
+        </Container>
+      ) : null}
     </>
   );
 }
 
-
 const mapStateToProps = (state) => {
   return {
-    flightEvents: (state.flightReducer ? Object.values(state.flightReducer) : []),
+    flightEvents: state.flightReducer ? Object.values(state.flightReducer) : [],
   };
 };
 
