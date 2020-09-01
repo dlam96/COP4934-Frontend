@@ -76,9 +76,14 @@ function CurrentSchedule(props) {
   const classes = useStyles();
   const [events, setEvents] = useState(null);
   const { flightEvents } = props;
+
   useEffect(() => {
-    setEvents(flightEvents);
+    if (flightEvents && flightEvents.length > 0) {
+      setEvents(flightEvents);
+    }
   }, flightEvents)
+
+
   let today = new Date();
   const localizer = momentLocalizer(moment);
   // Event Modal functions
@@ -174,7 +179,7 @@ function CurrentSchedule(props) {
 
 const mapStateToProps = (state) => {
   return {
-    flightEvents: Object.values(state.flightReducer),
+    flightEvents: (state.flightReducer ? Object.values(state.flightReducer) : []),
   };
 };
 
