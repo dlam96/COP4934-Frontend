@@ -41,6 +41,7 @@ import {
 // import data from "../CurrentSchedule/data.js";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { connect } from "react-redux";
+import { setFlights } from "../../Redux/actions.js";
 moment.locale("en");
 
 const useStyles = makeStyles((theme) => ({
@@ -168,12 +169,14 @@ function MasterModal(props) {
   const [allDay, setAllDay] = useState(false);
   const [selectedPilots, setPilots] = useState(null);
   const [selectedColor, setColor] = useState("");
+  const [description, setDesc] = useState("");
 
   useEffect(() => {
     setTitle(props.selectedEvent.title);
-    setPilots(props.selectedEvent.selectedPilots);
+    setPilots(props.selectedEvent.crew_members);
     setAllDay(props.selectedEvent.allDay);
     if (props.selectedEvent.color) setColor(props.selectedEvent.color);
+    setDesc(props.selectedEvent.description);
   }, [props.selectedEvent]);
   // Modal functions
 
@@ -710,6 +713,7 @@ function MasterModal(props) {
                           rows={8}
                           rowsMax={8}
                           margin="normal"
+                          value={description ? description : ""}
                           className={classes.textField}
                           // InputLabelProps={{
                           //   style:
@@ -1030,6 +1034,10 @@ const mapStateToProps = (state) => {
     role: state.loggedReducer.role,
   };
 };
+const mapDispatchToProps = (state) => {
+  return {
+    setFlights: setFlights,
+  };
+};
 
-
-export default connect(mapStateToProps, null)(MasterModal);
+export default connect(mapStateToProps, mapDispatchToProps)(MasterModal);
