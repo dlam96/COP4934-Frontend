@@ -28,10 +28,16 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
+  hyperlinks: {
+    // color: theme.palette.secondary.main,
+    color: "inherit",
+    textDecoration: "none",
+  },
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
+
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
@@ -53,30 +59,35 @@ function Login(props) {
 
     //console.log("Email", email, " Password", password);
     // Valid Credentials
-    axios.post("/login", {
+    axios
+      .post("/login", {
         email: email,
         password: password,
       })
       .then((response) => {
         console.log("Token", response.data.access_token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
-        props.loginAction(
-          { 
-            accountUUID: response.data.account_uuid,
-            email: email, 
-            role: response.data.role, 
-            accessToken: response.data.access_token,
-            accessTokenCreated: response.data.access_token_created,
-            accessTokenExpiresIn: response.data.access_token_expires_in
-          }
-        );
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${response.data.access_token}`;
+        props.loginAction({
+          accountUUID: response.data.account_uuid,
+          email: email,
+          role: response.data.role,
+          accessToken: response.data.access_token,
+          accessTokenCreated: response.data.access_token_created,
+          accessTokenExpiresIn: response.data.access_token_expires_in,
+        });
         history.push("/Home/Schedule");
       })
       .catch((error) => {
         // console.log("Login Error:", error);
         // console.log("Error Detail:", error.response);
         if (error.response) {
-          if (error.response.data && error.response.data.error && error.response.data.error.message.includes("accepted")) {
+          if (
+            error.response.data &&
+            error.response.data.error &&
+            error.response.data.error.message.includes("accepted")
+          ) {
             setAcceptFail(true);
           } else {
             setAuthFail(true);
@@ -156,12 +167,16 @@ function Login(props) {
           </div>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link href="#" variant="body2" className={classes.hyperlinks}>
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/Signup" variant="body2">
+              <Link
+                href="/Signup"
+                variant="body2"
+                className={classes.hyperlinks}
+              >
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

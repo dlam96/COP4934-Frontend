@@ -91,8 +91,8 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 25,
   },
   descriptionResize: {
-    backgroundColor: "#dadce0",
     padding: theme.spacing(3, 3, 3, 3),
+    border: "1px solid grey",
     borderRadius: "5px",
   },
   dateStyle: {
@@ -714,6 +714,9 @@ function MasterModal(props) {
                           rowsMax={8}
                           margin="normal"
                           value={description ? description : ""}
+                          onChange={(e) => {
+                            setDesc(e.target.value);
+                          }}
                           className={classes.textField}
                           // InputLabelProps={{
                           //   style:

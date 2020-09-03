@@ -4,29 +4,49 @@ import Routes from "./Routes/Routes.js";
 import Navbar from "./Components/Navbar/Navbar.js";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import axios from "axios";
-import { setAircrafts, setLocations, setCrewPostions, setAirmen, setAircraftModels, setFlights } from "./Redux/actions.js";
+import {
+  setAircrafts,
+  setLocations,
+  setCrewPostions,
+  setAirmen,
+  setAircraftModels,
+  setFlights,
+} from "./Redux/actions.js";
 // import "./App.css";
 
 function App(props) {
   const palletType = props.darkState ? "dark" : "light";
-  const {aircraftAction, locationAction, crewPositionAction, airmenAction, aircraftModelAction, flightAction} = props;
+  const {
+    aircraftAction,
+    locationAction,
+    crewPositionAction,
+    airmenAction,
+    aircraftModelAction,
+    flightAction,
+  } = props;
   const darkTheme = createMuiTheme({
     palette: {
       type: palletType,
-      // primary: {
-      //   main: mainPrimaryColor
+      primary: {
+        main: "#00338F",
+      },
+      // background: {
+      //   default: "#222222",
       // },
-      // secondary: {
-      //   main: mainSecondaryColor
-      // }
+      secondary: {
+        main: "#D2AF39",
+      },
     },
   });
 
   useEffect(() => {
-    let date = new Date(), y = date.getFullYear(), m = date.getMonth();
+    let date = new Date(),
+      y = date.getFullYear(),
+      m = date.getMonth();
     let firstDay = new Date(y, m, 1);
     let lastDay = new Date(y, m + 1, 0, 23, 59, 59);
-    axios.get('/essential', {params: {start: firstDay, end: lastDay}})
+    axios
+      .get("/essential", { params: { start: firstDay, end: lastDay } })
       .then((response) => {
         console.log("Response Data:", response.data);
         aircraftAction(response.data.aircrafts);
@@ -38,8 +58,8 @@ function App(props) {
       })
       .catch((error) => {
         console.log("Get Error:", error);
-      })
-  }, [])
+      });
+  }, []);
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -63,7 +83,7 @@ const mapDispatchToProps = {
   crewPositionAction: setCrewPostions,
   airmenAction: setAirmen,
   aircraftModelAction: setAircraftModels,
-  flightAction: setFlights
-}
+  flightAction: setFlights,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

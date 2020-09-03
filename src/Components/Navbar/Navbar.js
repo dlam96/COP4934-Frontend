@@ -1,12 +1,26 @@
 import React from "react";
-import { AppBar, Toolbar, Button } from "@material-ui/core";
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  IconButton,
+  Tooltip,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+} from "@material-ui/core";
 import { connect } from "react-redux";
 import { logout, onDarkMode, offDarkMode } from "../../Redux/actions.js";
-import { IconButton, Tooltip } from "@material-ui/core";
-import { Brightness4, Brightness7 } from "@material-ui/icons";
+import {
+  Brightness4,
+  Brightness7,
+  AccountCircle,
+  ExitToApp,
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from 'react-router-dom';
-
+import { Link } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -25,15 +39,33 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   button: {
-    color: "white",
+    color: theme.palette.secondary.main,
+    textDecoration: "none",
     "&:focus": {
       outline: "none",
     },
+  },
+  menu: {
+    width: "200px",
+    minWidth: "100px",
+  },
+  link: {
+    color: "inherit",
+    textDecoration: "none",
   },
 }));
 
 function Navbar(props) {
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <div>
@@ -58,26 +90,49 @@ function Navbar(props) {
             {/* Uses logged redux state to determine what to display */}
             {props.logged ? (
               <div>
-                <Link to={'/'}>
-                <Button
-                  onClick={props.logoutAction}
-                  className={classes.button}
+                <IconButton onClick={handleClick} className={classes.button}>
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
                 >
-                  Log Out
-                </Button>
-                </Link>
+                  <MenuItem className={classes.menu}>
+                    {/* minwidth to reduce the gap */}
+                    <ListItemIcon style={{ minWidth: "35px" }}>
+                      <AccountCircle />
+                    </ListItemIcon>
+                    <ListItemText primary="Profile" />
+                  </MenuItem>
+                  <Divider style={{ margin: "5px 0 5px 0" }} />
+                  <Link to={"/"} className={classes.link}>
+                    <MenuItem onClick={props.logoutAction}>
+                      {/* minwidth to reduce the gap */}
+                      <ListItemIcon style={{ minWidth: "35px" }}>
+                        <ExitToApp />
+                      </ListItemIcon>
+                      <ListItemText primary="Logout" />
+                    </MenuItem>
+                  </Link>
+                </Menu>
+                {/* <Link to={"/"}>
+                  <Button
+                    onClick={props.logoutAction}
+                    className={classes.button}
+                  >
+                    Log Out
+                  </Button>
+                </Link> */}
               </div>
             ) : (
               <div>
-                <Link to={'/'}>
-                  <Button className={classes.button}>
-                    Login
-                  </Button>
+                <Link to={"/"}>
+                  <Button className={classes.button}>Login</Button>
                 </Link>
-                <Link to={'/signup'}>
-                  <Button className={classes.button}>
-                    Signup
-                  </Button>
+                <Link to={"/signup"}>
+                  <Button className={classes.button}>Signup</Button>
                 </Link>
               </div>
             )}

@@ -8,11 +8,10 @@ import {
 } from "@material-ui/core";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
-import data from "./data.js";
 import { connect } from "react-redux";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import MasterModal from "../MasterModal/MasterModal.js";
-import axios from "axios";
+// import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -132,6 +131,16 @@ function CurrentSchedule(props) {
     };
   };
 
+  const dayPropGetter = (event) => {
+    // console.log(event);
+    // const style = {
+    //   backgroundColor: "white",
+    //   // color: "white",
+    // };
+    // return {
+    //   style: style,
+    // };
+  };
   return (
     <>
       {events && events.length > 0 ? (
@@ -165,6 +174,7 @@ function CurrentSchedule(props) {
                   onSelectSlot={handleBigCalendarSelect}
                   onSelectEvent={handleBigCalendarSelect}
                   eventPropGetter={eventStyleGetter}
+                  // dayPropGetter={dayPropGetter}
                 />
               </Paper>
             </Grid>
