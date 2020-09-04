@@ -109,6 +109,11 @@ function CurrentSchedule(props) {
         flightAction(response.data.flights);
         crewPositionAction(response.data.crew_positions);
 
+        // Temp fix going to need to see if the backend can handle this?
+        Object.values(response.data.flights).forEach((item) => {
+          item.start = moment(item.start).toDate();
+          item.end = moment(item.end).toDate();
+        })
         setEvents(Object.values(response.data.flights));
 
       })
