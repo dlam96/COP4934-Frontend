@@ -99,8 +99,11 @@ function CurrentSchedule(props) {
     let date = new Date(),
       y = date.getFullYear(),
       m = date.getMonth();
-    let firstDay = new Date(y, m, 1);
-    let lastDay = new Date(y, m + 1, 0, 23, 59, 59);
+    let firstDay = moment().utc().startOf('month').format();
+    let lastDay = moment().utc().endOf('month').format();
+
+    console.log("FirstDay",firstDay);
+    console.log("LastDay", lastDay);
     axios
       .get("/essential", { params: { start: firstDay, end: lastDay } })
       .then((response) => {
