@@ -37,7 +37,10 @@ async function setupCachedState() {
 
 
   if (!localCache || !localCache.loggedReducer.logged) {
-    return createStore(rootReducer);
+    // Since we want to keep the dark mode persistent reguardless of logged in or out lets give it to the rootReducer
+    let persistentCache = {};
+    persistentCache["darkModeReducer"] = localCache.darkModeReducer;
+    return createStore(rootReducer, persistentCache);
   }
 
   return createStore(rootReducer, localCache);
