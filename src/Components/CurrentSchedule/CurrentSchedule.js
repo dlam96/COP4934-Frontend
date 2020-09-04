@@ -11,7 +11,15 @@ import moment from "moment";
 import { connect } from "react-redux";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import MasterModal from "../MasterModal/MasterModal.js";
-// import axios from "axios";
+import {
+  setAircrafts,
+  setLocations,
+  setCrewPostions,
+  setAirmen,
+  setAircraftModels,
+  setFlights,
+} from "../../Redux/actions.js";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -74,14 +82,40 @@ const useStyles = makeStyles((theme) => ({
 function CurrentSchedule(props) {
   const classes = useStyles();
   const [events, setEvents] = useState(null);
-  const { flightEvents } = props;
+  const {
+    aircraftAction,
+    locationAction,
+    crewPositionAction,
+    airmenAction,
+    aircraftModelAction,
+    flightAction,
+    flightEvents 
+  } = props;
 
   useEffect(() => {
-    if (flightEvents && flightEvents.length > 0) {
-      setEvents(flightEvents);
-      console.log(flightEvents);
-    }
-  }, flightEvents);
+    let date = new Date(),
+      y = date.getFullYear(),
+      m = date.getMonth();
+    let firstDay = new Date(y, m, 1);
+    let lastDay = new Date(y, m + 1, 0, 23, 59, 59);
+    axios
+      .get("/essential", { params: { start: firstDay, end: lastDay } })
+      .then((response) => {
+        console.log("Response Data:", response.data);
+        aircraftAction(response.data.aircrafts);
+        locationAction(response.data.locations);
+        airmenAction(response.data.airmen);
+        aircraftModelAction(response.data.aircraft_models);
+        flightAction(response.data.flights);
+        crewPositionAction(response.data.crew_positions);
+
+        setEvents(Object.values(response.data.flights));
+
+      })
+      .catch((error) => {
+        console.log("Get Error:", error);
+      });
+  }, [aircraftAction, locationAction, airmenAction, aircraftModelAction, flightAction, crewPositionAction]);
 
   let today = new Date();
   const localizer = momentLocalizer(moment);
@@ -191,4 +225,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(CurrentSchedule);
+const mapDispatchToProps = {
+  aircraftAction: setAircrafts,
+  locationAction: setLocations,
+  crewPositionAction: setCrewPostions,
+  airmenAction: setAirmen,
+  aircraftModelAction: setAircraftModels,
+  flightAction: setFlights,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CurrentSchedule);

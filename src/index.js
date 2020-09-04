@@ -18,8 +18,8 @@ axios.defaults.baseURL = "http://209.97.155.92:3000";
     // If the access token does not work, we need to save the null state when redux gets done with default values
     saveState(store.getState());
     store.subscribe(() => {
-      // console.log("Saving the state to local storage");
-      // console.log(store.getState());
+      //console.log("Saving the state to local storage");
+      //console.log(store.getState());
       saveState(store.getState());
     });
   
