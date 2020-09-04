@@ -9,6 +9,7 @@ import {
   Grid,
   Link,
   makeStyles,
+  withStyles,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { LockOutlined } from "@material-ui/icons";
@@ -42,6 +43,25 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
+
+const CssTextField = withStyles((theme) => ({
+  root: {
+    "& label.Mui-focused": {
+      color: theme.palette.secondary.main,
+    },
+    "& .MuiOutlinedInput-root": {
+      // "& fieldset": {
+      //   borderColor: "red",
+      // },
+      // "&:hover fieldset": {
+      //   borderColor: "yellow",
+      // },
+      "&.Mui-focused fieldset": {
+        borderColor: theme.palette.secondary.main,
+      },
+    },
+  },
+}))(TextField);
 
 function Login(props) {
   const classes = useStyles();
@@ -128,7 +148,7 @@ function Login(props) {
               You have not been accepted yet
             </Alert>
           ) : null}
-          <TextField
+          <CssTextField
             variant="outlined"
             margin="normal"
             required
@@ -141,7 +161,7 @@ function Login(props) {
             autoFocus
             onChange={(e) => setEmail(e.target.value)}
           />
-          <TextField
+          <CssTextField
             variant="outlined"
             margin="normal"
             required

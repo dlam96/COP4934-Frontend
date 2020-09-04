@@ -67,6 +67,10 @@ function Navbar(props) {
     setAnchorNav(null);
   };
 
+  const handleLogout = () => {
+    props.logoutAction();
+    handleClose();
+  };
   return (
     <div>
       <AppBar position="fixed" className={classes.appBar}>
@@ -90,34 +94,37 @@ function Navbar(props) {
             {/* Uses logged redux state to determine what to display */}
             {props.logged ? (
               <div>
-                {/* <IconButton onClick={handleClick} className={classes.button}>
+                <IconButton onClick={handleClick} className={classes.button}>
                   <AccountCircle />
-                </IconButton> */}
-                {/* <Menu
+                </IconButton>
+                <Menu
                   anchorEl={anchorNav}
                   keepMounted
                   open={Boolean(anchorNav)}
                   onClose={handleClose}
                 >
                   <MenuItem className={classes.menu}>
-                    <ListItemIcon style={{ minWidth: "35px" }}>
+                    <ListItemIcon
+                      style={{ minWidth: "35px" }}
+                      className={classes.button}
+                    >
                       <AccountCircle />
                     </ListItemIcon>
                     <ListItemText primary="Profile" />
                   </MenuItem>
                   <Divider style={{ margin: "5px 0 5px 0" }} />
                   <Link to={"/"} className={classes.link}>
-                    <MenuItem onClick={props.logoutAction}>
-                      <ListItemIcon style={{ minWidth: "35px" }}>
+                    <MenuItem onClick={handleLogout} className={classes.menu}>
+                      <ListItemIcon
+                        style={{ minWidth: "35px" }}
+                        className={classes.button}
+                      >
                         <ExitToApp />
                       </ListItemIcon>
                       <ListItemText primary="Logout" />
                     </MenuItem>
                   </Link>
-                </Menu> */}
-                <Link to={"/"}>
-                  <Button className={props.logoutAction}>Logout</Button>
-                </Link>
+                </Menu>
               </div>
             ) : (
               <div>
