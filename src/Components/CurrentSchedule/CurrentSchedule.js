@@ -10,6 +10,8 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { connect } from "react-redux";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+
 import MasterModal from "../MasterModal/MasterModal.js";
 import {
   setAircrafts,
@@ -20,6 +22,7 @@ import {
   setFlights,
 } from "../../Redux/actions.js";
 import axios from "axios";
+const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -89,7 +92,7 @@ function CurrentSchedule(props) {
     airmenAction,
     aircraftModelAction,
     flightAction,
-    flightEvents 
+    flightEvents,
   } = props;
 
   useEffect(() => {
@@ -113,14 +116,20 @@ function CurrentSchedule(props) {
         Object.values(response.data.flights).forEach((item) => {
           item.start = moment(item.start).toDate();
           item.end = moment(item.end).toDate();
-        })
+        });
         setEvents(Object.values(response.data.flights));
-
       })
       .catch((error) => {
         console.log("Get Error:", error);
       });
-  }, [aircraftAction, locationAction, airmenAction, aircraftModelAction, flightAction, crewPositionAction]);
+  }, [
+    aircraftAction,
+    locationAction,
+    airmenAction,
+    aircraftModelAction,
+    flightAction,
+    crewPositionAction,
+  ]);
 
   let today = new Date();
   const localizer = momentLocalizer(moment);
@@ -180,6 +189,15 @@ function CurrentSchedule(props) {
     //   style: style,
     // };
   };
+  const moveEvent = ({ event, start, end }) => {
+    console.log("Moving", event);
+    const idx = events.indexOf(event);
+    const updatedEvent = { ...event, start, end };
+    const nextEvents = [...events];
+    nextEvents.splice(idx, 1, updatedEvent);
+    setEvents(nextEvents);
+  };
+
   return (
     <>
       {events && events.length > 0 ? (
@@ -203,7 +221,7 @@ function CurrentSchedule(props) {
           <Grid container spacing={3}>
             <Grid item xs={12} md={12} lg={12}>
               <Paper>
-                <Calendar
+                <DragAndDropCalendar
                   selectable
                   localizer={localizer}
                   events={events}
@@ -214,6 +232,7 @@ function CurrentSchedule(props) {
                   onSelectEvent={handleBigCalendarSelect}
                   eventPropGetter={eventStyleGetter}
                   // dayPropGetter={dayPropGetter}
+                  onEventDrop={moveEvent}
                 />
               </Paper>
             </Grid>
