@@ -11,7 +11,7 @@ import moment from "moment";
 import { connect } from "react-redux";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-
+import CustomToolbar from "../CustomToolbar/CustomToolbar.js";
 import MasterModal from "../MasterModal/MasterModal.js";
 import {
   setAircrafts,
@@ -233,6 +233,7 @@ function CurrentSchedule(props) {
                   eventPropGetter={eventStyleGetter}
                   // dayPropGetter={dayPropGetter}
                   onEventDrop={moveEvent}
+                  components={{ toolbar: CustomToolbar }}
                 />
               </Paper>
             </Grid>
