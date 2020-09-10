@@ -8,7 +8,8 @@ import {
   makeStyles, 
   AppBar, 
   Tabs, 
-  Tab 
+  Tab, 
+  Button,
 } from "@material-ui/core";
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -48,6 +49,8 @@ const testUsers = [
   { firstName: "Hollow", lastName: "Knight", militaryId: "88888", rank: "O10" },
 ]
 
+const pendingUsers = [];
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -74,7 +77,9 @@ export default function Pilots() {
   const [edit, setEdit] = useState(false);
   const [editUser, setEditUser] = useState(null);
   const [users, setUsers] = useState(testUsers);
+
   const [approveUsers, setApproveUsers] = useState(testUsers);
+  const [checkedUsers, setCheckedUsers] = useState(pendingUsers);
 
   useEffect(() => {
     axios.get('/approval')
@@ -106,10 +111,13 @@ export default function Pilots() {
 
   const handleApprove = (user = null) => {
     if (!user) return;
-    let newApproveList = [...approveUsers];
-    let approveIndex = newApproveList.findIndex((element) => element.militaryId === user.militaryId)
-    newApproveList.splice(approveIndex, 1);
-    setApproveUsers(newApproveList);
+    let pendUsers = [...checkedUsers];
+    pendUsers.push(user);
+    setCheckedUsers(pendUsers);
+  };
+
+  const handleApproveAll = () => {
+    console.log(checkedUsers);
   };
 
   return (
@@ -136,18 +144,18 @@ export default function Pilots() {
               /> 
               :
               <>
-                <Grid container item direction="row" className={classes.labels}>
+                <Grid container item direction className={classes.labels}>
                   <Grid xs={2} align="start">
-                    First Name
+                    <p>First Name</p>
                   </Grid>
                   <Grid xs={2} align="start">
-                    Last Name
+                    <p>Last Name</p>
                   </Grid>
                   <Grid xs={2} align="start">
-                    Military ID
+                    <p>Military ID</p>
                   </Grid>
                   <Grid xs={2} align="start">
-                    Rank
+                    <p>Rank</p>
                   </Grid>
                 </Grid>
 
@@ -186,6 +194,16 @@ export default function Pilots() {
                 handleApprove={handleApprove}
               />
             ))}  
+
+            <Grid direction="row" align="right">
+              <Button
+                variant="contained"
+                onClick={() => handleApproveAll()}
+              >
+                Submit All
+              </Button>
+            </Grid>
+
           </TabPanel>  
           
         </Paper>

@@ -52,8 +52,9 @@ export default function EditUser(props) {
   const fields = [
     {label: "First Name", value: "firstName"}, 
     {label: "Last Name", value: "lastName"}, 
-    {label: "Rank", value: "rank"}, 
-    {label: "Military ID", value: "militaryId"}
+    {label: "Rank", value: "rank"},
+    {label: "Pilot Status", value: "pStatus"},
+    {label: "Role", value: "role"},
   ];
   const [user, setUser] = useState(props.user);
 
@@ -77,7 +78,7 @@ export default function EditUser(props) {
           <Grid container item direction="row">
             <Grid xs={3} />
             <Grid xs={3} align="start">
-              <h2>{item.label}</h2> 
+              <h3>{item.label}</h3> 
             </Grid>
             <Grid xs={6}>
               <TextField

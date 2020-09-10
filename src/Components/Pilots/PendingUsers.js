@@ -21,6 +21,11 @@ export default function PendingUsers(props) {
   const { user } = props
   const [approvCheck, setApproveCheck] = useState(false);
 
+  const handleCheck = (e) => {
+    setApproveCheck(e.target.checked);
+    props.handleApprove(user);
+  }
+
   return(
     <Paper className={classes.paper}>
       <Grid container item direction="row">
@@ -37,17 +42,9 @@ export default function PendingUsers(props) {
           { user.rank }
         </Grid>
         <Grid xs={4} align="right">
-          <Button 
-            variant="contained" 
-            size="small"
-            color="primary"
-            onClick={() => props.handleApprove(user)}
-          >
-            Approve
-          </Button>
           <Checkbox
             checked={approvCheck}
-            onChange={(e) => setApproveCheck(e.target.checked)}
+            onChange={(e) => handleCheck(e)}
             color="primary"
           />
         </Grid>
@@ -56,3 +53,4 @@ export default function PendingUsers(props) {
   )
 
 }
+
