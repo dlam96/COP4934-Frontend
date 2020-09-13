@@ -182,7 +182,7 @@ function MasterModal(props) {
       console.log("Event Opened:", props.selectedEvent);
       setTitle(props.selectedEvent.title);
       setPilots(props.selectedEvent.crew_members);
-      setAllDay(props.selectedEvent.allday);
+      setAllDay(props.selectedEvent.allDay);
       if (props.selectedEvent.color) setColor(props.selectedEvent.color);
       setDesc(props.selectedEvent.description);
       let locationIndex = propsLocations.findIndex((location) => location.location_uuid === props.selectedEvent.location_uuid)
