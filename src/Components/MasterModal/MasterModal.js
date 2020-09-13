@@ -449,6 +449,9 @@ function MasterModal(props) {
       {props.showAll ? (
         <>
           {maximized ? (
+            /* ==================================================
+					LARGE MODAL
+					================================================== */
             <Modal
               aria-labelledby="transition-modal-title"
               aria-describedby="transition-modal-description"
@@ -712,7 +715,6 @@ function MasterModal(props) {
                           disabled={props.role === "User" ? true : false}
                         />
                       </Grid>
-                      {/*TODO: add tickmark icon when selected */}
                       <Grid item sm={4} md={4} xl={4}>
                         {/* Color picker */}
                         <FormControl className={classes.colorPicker}>
