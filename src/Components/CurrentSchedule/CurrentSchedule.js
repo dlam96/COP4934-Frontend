@@ -164,19 +164,19 @@ function CurrentSchedule(props) {
     };
   };
 
-  const moveEvent = ({ event, start, end }) => {
+  const moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
     console.log("Moving", event);
     // const idx = events.indexOf(event);
     const updatedEvents = events.filter((item) => item.flight_uuid !== event.flight_uuid);
-    const updatedEvent = { ...event, start, end };
+    const updatedEvent = { ...event, start, end, allDay: droppedOnAllDaySlot };
     updatedEvents.push(updatedEvent);
     // Send A Put Request
+    console.log("AllDay BS:", droppedOnAllDaySlot);
     axios.patch("/flight/"+event.flight_uuid, 
       {
         start_time: start,
         end_time: end,
-        // TODO: Person might place this in All Day Area
-        // all_day: allDay ? allDay : false,
+        all_day: droppedOnAllDaySlot ? droppedOnAllDaySlot : false,
       },
       {headers: {"Content-Type": "application/json"}}
     )
