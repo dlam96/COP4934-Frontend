@@ -7,8 +7,8 @@ import { Provider } from "react-redux";
 import { saveState } from "./LocalCache/localStorage.js";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://209.97.155.92:3000";
-//axios.defaults.baseURL = "http://localhost:3000";
+// axios.defaults.baseURL = "http://209.97.155.92:3000";
+axios.defaults.baseURL = "http://localhost:3000";
 (async () => {
   try {
     console.log("Loading Cached states if any");

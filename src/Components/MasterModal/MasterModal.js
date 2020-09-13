@@ -1,47 +1,17 @@
 import React, { useState, useEffect } from "react";
-import {
-  Grid,
-  Paper,
-  makeStyles,
-  Modal,
-  Fade,
-  Backdrop,
-  TextField,
-  List,
-  ListItem,
-  ListItemText,
-  MenuItem,
-  Menu,
-  Chip,
-  IconButton,
-  ListItemIcon,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  Select,
-  InputLabel,
-  Tooltip,
+import { Grid, Paper, makeStyles, Modal, Fade, Backdrop, TextField, List, ListItem, ListItemText, MenuItem, Menu, Chip,
+  IconButton, ListItemIcon, Checkbox, FormControl, FormControlLabel, Select, InputLabel, Tooltip,
 } from "@material-ui/core";
-import {
-  Close,
-  LocalAirport,
-  Room,
-  FiberManualRecord,
-  CheckCircle,
-  Delete,
-} from "@material-ui/icons";
+import { Close, LocalAirport, Room, FiberManualRecord, CheckCircle, Delete, } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
 import moment from "moment";
 import MomentUtils from "@date-io/moment";
-import {
-  DatePicker,
-  TimePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+import { DatePicker, TimePicker, MuiPickersUtilsProvider, } from "@material-ui/pickers";
 // import data from "../CurrentSchedule/data.js";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { connect } from "react-redux";
 import { setFlights } from "../../Redux/actions.js";
+import axios from "axios";
 moment.locale("en");
 
 const useStyles = makeStyles((theme) => ({
@@ -134,20 +104,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1, 1, 1, 0),
   },
 }));
-// options for aircraft menu
-const airCraftOptions = [
-  { aircraft: "Aircraft 1", disabled: true },
-  { aircraft: "Aircraft 2", disabled: false },
-  { aircraft: "Aircraft 3", disabled: false },
-  { aircraft: "Aircraft 4", disabled: false },
-];
-// options for airspace menu
-const airSpaceOptions = [
-  { airspace: "Moody AirForce Base", disabled: false },
-  { airspace: "Airspace 2", disabled: false },
-  { airspace: "Airspace 3", disabled: true },
-  { airspace: "Airspace 4", disabled: false },
-];
 // options for pilots
 const pilots = [
   {
@@ -160,9 +116,11 @@ const pilots = [
     name: "Jane Doe",
   },
 ];
+
+
 function MasterModal(props) {
   const classes = useStyles();
-  const [locale, setLocale] = useState("en");
+  // const [locale, setLocale] = useState("en");
   // const [events, setEvents] = useState(data);
   const [title, setTitle] = useState("");
   const [maximized, setMaximized] = useState(false);
@@ -170,14 +128,69 @@ function MasterModal(props) {
   const [selectedPilots, setPilots] = useState(null);
   const [selectedColor, setColor] = useState("");
   const [description, setDesc] = useState("");
+  const [locations, setLocations] = useState(null);
+  const [selectedLocationIndex, setSelectedLocationIndex] = useState(0);
+  const [aircrafts, setAircrafts] = useState(null);
+  const [aircraftModels, setAircraftModels] = useState(null);
+  const [selectedAircraftIndex, setSelectedAircraftIndex] = useState(0);
+  let propsLocations = props.locations;
+  let propsAircrafts = props.aircrafts;
+  let propsAircraftModels = props.airacraft_models;
+
 
   useEffect(() => {
-    setTitle(props.selectedEvent.title);
-    setPilots(props.selectedEvent.crew_members);
-    setAllDay(props.selectedEvent.allDay);
-    if (props.selectedEvent.color) setColor(props.selectedEvent.color);
-    setDesc(props.selectedEvent.description);
-  }, [props.selectedEvent]);
+    if (propsLocations) {
+      setLocations(propsLocations.map((item) => { 
+        if (typeof item.disabled === 'undefined' || item.disabled === null) {
+          item.disabled = false;
+        }
+        return item;
+      }));
+    }
+  }, [propsLocations]);
+
+  useEffect(() => {
+    if (propsAircraftModels) {
+      let modelsObj = {};
+      for (const model of propsAircraftModels) {
+        modelsObj[model.model_uuid] = model;
+      }
+      setAircraftModels(modelsObj);
+    }
+  }, [propsAircraftModels]);
+
+
+  useEffect(() => {
+    if (propsAircrafts && aircraftModels) {
+      setAircrafts(propsAircrafts.map((item) => {
+        if (typeof item.diabled === 'undefined' || item.disabled === null) {
+          item.disabled = (item.status !== 'Available');
+          item.aircraft_name = aircraftModels[item.model_uuid].model_name;
+        }
+        return item;
+      }))
+    }
+  }, [propsAircrafts, aircraftModels]);
+
+
+  useEffect(() => {
+    console.log("Aircrafts:", aircrafts);
+  }, [aircrafts])
+
+  useEffect(() => {
+    if (props.selectedEvent) {
+      console.log("Event Opened:", props.selectedEvent);
+      setTitle(props.selectedEvent.title);
+      setPilots(props.selectedEvent.crew_members);
+      setAllDay(props.selectedEvent.allday);
+      if (props.selectedEvent.color) setColor(props.selectedEvent.color);
+      setDesc(props.selectedEvent.description);
+      let locationIndex = propsLocations.findIndex((location) => location.location_uuid === props.selectedEvent.location_uuid)
+      setSelectedLocationIndex(locationIndex !== -1 ? locationIndex : 0);
+      let aircraftIndex = aircrafts.findIndex((aircraft) => aircraft.aircraft_uuid === props.selectedEvent.aircraft_uuid)
+      setSelectedAircraftIndex(aircraftIndex !== -1 ? aircraftIndex : 0);
+    }
+  }, [props.selectedEvent, propsLocations, aircrafts]);
   // Modal functions
 
   const handleClose = () => {
@@ -188,15 +201,14 @@ function MasterModal(props) {
   };
   // Aircraft Menu functions
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+
 
   const handleClickListItem = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuItemClick = (event, index) => {
-    console.log("menu select", index);
-    setSelectedIndex(index);
+  const handleAircraftSelectClick = (event, index) => {
+    setSelectedAircraftIndex(index);
     setAnchorEl(null);
   };
 
@@ -205,22 +217,28 @@ function MasterModal(props) {
   };
   // Airspace Menu functions
   const [anchorEl2, setAnchorEl2] = React.useState(null);
-  const [selectedIndex2, setSelectedIndex2] = React.useState(0);
 
   const handleClickListItem2 = (event) => {
     setAnchorEl2(event.currentTarget);
   };
 
-  const handleMenuItemClick2 = (event, index) => {
-    console.log("menu select", index);
-    setSelectedIndex2(index);
+  const handleLocationSelectClick = (event, index) => {
+    setSelectedLocationIndex(index);
     setAnchorEl2(null);
   };
 
   const handleMenuClose2 = () => {
     setAnchorEl2(null);
   };
+
   const handleDelete = () => {
+    axios.delete("/flight/"+props.selectedEvent.flight_uuid)
+    .then((response) => {
+      console.log("Response from Delete:", response);
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+    });
     props.setEvents(
       props.events.filter(
         (obj) => obj.flight_uuid !== props.selectedEvent.flight_uuid
@@ -233,23 +251,14 @@ function MasterModal(props) {
   // adds new event/edit existing event to JSON object
   // TODO: check for empty strings/fields
   const onSubmit = () => {
-    console.log(
-      "color",
-      selectedColor,
-      "id",
-      props.selectedEvent.flight_uuid,
-      "aircraft",
-      airCraftOptions[selectedIndex].aircraft,
-      "title",
-      title,
-      "start",
-      props.startDate,
-      "end",
-      props.endDate,
-      "all day",
-      allDay,
-      "pilots",
-      selectedPilots
+    console.log("color", selectedColor,
+      "id", props.selectedEvent.flight_uuid,
+      "aircraft", aircrafts[selectedAircraftIndex].aircraft_uuid,
+      "title", title,
+      "start", props.startDate,
+      "end", props.endDate,
+      "all day", allDay,
+      "pilots", selectedPilots
     );
 
     let objIndex = -1;
@@ -258,36 +267,97 @@ function MasterModal(props) {
         (obj) => obj.flight_uuid === props.selectedEvent.flight_uuid
       );
     }
-
     // if index exist > -1, then modify object else create new object in array
+
+    // Updating existing Event
     if (objIndex >= 0) {
-      props.events[objIndex] = {
-        id: props.selectedEvent.flight_uuid,
+      const newEvents = [...props.events];
+      newEvents[objIndex] = {
+        flight_uuid: props.selectedEvent.flight_uuid,
         color: selectedColor,
         title: title,
         start: props.startDate,
         end: props.endDate,
         allDay: allDay ? allDay : false,
-        airCraft: airCraftOptions[selectedIndex].aircraft,
-        airSpace: airSpaceOptions[selectedIndex2].airspace,
-        selectedPilots: selectedPilots,
+        aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
+        location_uuid: locations[selectedLocationIndex].location_uuid,
+        crew_members: selectedPilots,
+        description: props.selectedEvent.description
       };
-    } else {
-      const newEvents = [
-        ...props.events,
+      props.setEvents(newEvents);
+
+      // Send A Put Request
+      axios.put("/flight/"+props.selectedEvent.flight_uuid, 
         {
-          id: props.events.length * 31 + 1,
+          flight_uuid: props.selectedEvent.flight_uuid,
           color: selectedColor,
           title: title,
-          start: props.startDate,
-          end: props.endDate,
-          allDay: allDay ? allDay : false,
-          airCraft: airCraftOptions[selectedIndex].aircraft,
-          airSpace: airSpaceOptions[selectedIndex2].airspace,
-          selectedPilots: selectedPilots,
+          start_time: props.startDate,
+          end_time: props.endDate,
+          all_day: allDay ? allDay : false,
+          aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
+          location_uuid: locations[selectedLocationIndex].location_uuid,
+          crew_members: selectedPilots,
+          description: props.selectedEvent.description
         },
-      ];
-      props.setEvents(newEvents);
+        {headers: {"Content-Type": "application/json"}}
+      )
+      .then((response) => {
+        console.log("Response from Put:", response);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
+
+    // Creating a new event
+    // TODO: 
+      // Need to fix description (add state and place to update description)
+      // Need to fix crew_members
+    } else {
+      
+      // Call A Post Request
+      // TODO: 
+        // Need to fix description (add state and place to update description)
+        // Need to fix crew_members
+      axios.post("/flight",
+        {
+          color: selectedColor !== "" ? selectedColor : "#3174ad",
+          title: title ? title : "",
+          start_time: props.startDate,
+          end_time: props.endDate,
+          all_day: allDay ? allDay : false,
+          aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
+          location_uuid: locations[selectedLocationIndex].location_uuid,
+          crew_members: [],
+          description: ""
+        }, 
+        {headers: {"Content-Type": "application/json"}}
+      )
+      .then((response) => {
+        console.log("Response from Post:", response);
+
+        const newEvents = [
+          ...props.events,
+          {
+            flight_uuid: response.data.flight_uuid,
+            color: selectedColor !== "" ? selectedColor : "#3174ad",
+            title: title,
+            start: props.startDate,
+            end: props.endDate,
+            allDay: allDay ? allDay : false,
+            aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
+            location_uuid: locations[selectedLocationIndex].location_uuid,
+            crew_members: [],
+            description: "",
+          },
+        ];
+        props.setEvents(newEvents);
+
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
+      // Need to update id we get back
     }
     // reset color to default for next event
     setColor("");
@@ -401,7 +471,7 @@ function MasterModal(props) {
                         <MuiPickersUtilsProvider
                           libInstance={moment}
                           utils={MomentUtils}
-                          locale={locale}
+                          //locale={locale}
                         >
                           {/* Use Format for visual formatting */}
                           <DatePicker
@@ -490,7 +560,7 @@ function MasterModal(props) {
                             <ListItemText
                               primary="Aircraft"
                               secondary={
-                                airCraftOptions[selectedIndex].aircraft
+                                aircrafts ? aircrafts[selectedAircraftIndex].aircraft_name : null
                               }
                             />
                           </ListItem>
@@ -502,16 +572,16 @@ function MasterModal(props) {
                           open={Boolean(anchorEl)}
                           onClose={handleMenuClose}
                         >
-                          {airCraftOptions.map((airCraftOptions, index) => (
+                          {aircrafts && aircrafts.map((aircraft, index) => (
                             <MenuItem
-                              key={airCraftOptions.aircraft}
-                              disabled={airCraftOptions.disabled}
-                              selected={index === selectedIndex}
+                              key={aircraft.aircraft_name+index}
+                              disabled={aircraft.disabled}
+                              selected={index === selectedAircraftIndex}
                               onClick={(event) =>
-                                handleMenuItemClick(event, index)
+                                handleAircraftSelectClick(event, index)
                               }
                             >
-                              {airCraftOptions.aircraft}
+                              {aircraft.aircraft_name}
                             </MenuItem>
                           ))}
                         </Menu>
@@ -523,7 +593,7 @@ function MasterModal(props) {
                             button
                             aria-haspopup="true"
                             aria-controls="lock-menu"
-                            aria-label="Airspace"
+                            aria-label="Location"
                             onClick={handleClickListItem2}
                             disabled={props.role === "User" ? true : false}
                           >
@@ -531,9 +601,9 @@ function MasterModal(props) {
                               <Room />
                             </ListItemIcon>
                             <ListItemText
-                              primary="Airspace"
+                              primary="Location"
                               secondary={
-                                airSpaceOptions[selectedIndex2].airspace
+                                locations ? locations[selectedLocationIndex].location_name : null
                               }
                             />
                           </ListItem>
@@ -545,16 +615,16 @@ function MasterModal(props) {
                           open={Boolean(anchorEl2)}
                           onClose={handleMenuClose2}
                         >
-                          {airSpaceOptions.map((airSpaceOptions, index) => (
+                          {locations && locations.map((location, index) => (
                             <MenuItem
-                              key={airSpaceOptions.airspace}
-                              disabled={airSpaceOptions.disabled}
-                              selected={index === selectedIndex2}
+                              key={location.location_name}
+                              disabled={location.disabled}
+                              selected={index === selectedLocationIndex}
                               onClick={(event) =>
-                                handleMenuItemClick2(event, index)
+                                handleLocationSelectClick(event, index)
                               }
                             >
-                              {airSpaceOptions.airspace}
+                              {location.location_name}
                             </MenuItem>
                           ))}
                         </Menu>
@@ -822,7 +892,7 @@ function MasterModal(props) {
                           <MuiPickersUtilsProvider
                             libInstance={moment}
                             utils={MomentUtils}
-                            locale={locale}
+                            //locale={locale}
                           >
                             {/* Use Format for visual formatting */}
                             <DatePicker
@@ -906,7 +976,7 @@ function MasterModal(props) {
                               <ListItemText
                                 primary="Aircraft"
                                 secondary={
-                                  airCraftOptions[selectedIndex].aircraft
+                                  aircrafts ? aircrafts[selectedAircraftIndex].aircraft_name : null
                                 }
                               />
                             </ListItem>
@@ -918,16 +988,16 @@ function MasterModal(props) {
                             open={Boolean(anchorEl)}
                             onClose={handleMenuClose}
                           >
-                            {airCraftOptions.map((airCraftOptions, index) => (
+                            {aircrafts && aircrafts.map((aircraft, index) => (
                               <MenuItem
-                                key={airCraftOptions.aircraft}
-                                disabled={airCraftOptions.disabled}
-                                selected={index === selectedIndex}
+                                key={aircraft.aircraft_name+index}
+                                disabled={aircraft.disabled}
+                                selected={index === selectedAircraftIndex}
                                 onClick={(event) =>
-                                  handleMenuItemClick(event, index)
+                                  handleAircraftSelectClick(event, index)
                                 }
                               >
-                                {airCraftOptions.aircraft}
+                                {aircraft.aircraft_name}
                               </MenuItem>
                             ))}
                           </Menu>
@@ -947,9 +1017,9 @@ function MasterModal(props) {
                                 <Room />
                               </ListItemIcon>
                               <ListItemText
-                                primary="Airspace"
+                                primary="Location"
                                 secondary={
-                                  airSpaceOptions[selectedIndex2].airspace
+                                  locations ? locations[selectedLocationIndex].location_name : null
                                 }
                               />
                             </ListItem>
@@ -961,16 +1031,16 @@ function MasterModal(props) {
                             open={Boolean(anchorEl2)}
                             onClose={handleMenuClose2}
                           >
-                            {airSpaceOptions.map((airSpaceOptions, index) => (
+                            {locations && locations.map((location, index) => (
                               <MenuItem
-                                key={airSpaceOptions.airspace}
-                                disabled={airSpaceOptions.disabled}
-                                selected={index === selectedIndex2}
+                                key={location.location_name}
+                                disabled={location.disabled}
+                                selected={index === selectedLocationIndex}
                                 onClick={(event) =>
-                                  handleMenuItemClick2(event, index)
+                                  handleLocationSelectClick(event, index)
                                 }
                               >
-                                {airSpaceOptions.airspace}
+                                {location.location_name}
                               </MenuItem>
                             ))}
                           </Menu>
@@ -1035,6 +1105,9 @@ function MasterModal(props) {
 const mapStateToProps = (state) => {
   return {
     role: state.loggedReducer.role,
+    locations: state.locationReducer,
+    aircrafts: state.aircraftReducer,
+    airacraft_models: state.aircraftmodelReducer
   };
 };
 const mapDispatchToProps = (state) => {
