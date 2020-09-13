@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import Routes from "./Routes/Routes.js";
 import Navbar from "./Components/Navbar/Navbar.js";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import axios from "axios";
-// import "./App.css";
 
 function App(props) {
   const palletType = props.darkState ? "dark" : "light";

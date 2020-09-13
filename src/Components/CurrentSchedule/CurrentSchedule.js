@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Grid,
-  Paper,
-  makeStyles,
-  CssBaseline,
-} from "@material-ui/core";
+import { Container, Grid, Paper, makeStyles, CssBaseline, } from "@material-ui/core";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { connect } from "react-redux";
@@ -13,14 +7,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import CustomToolbar from "../CustomToolbar/CustomToolbar.js";
 import MasterModal from "../MasterModal/MasterModal.js";
-import {
-  setAircrafts,
-  setLocations,
-  setCrewPostions,
-  setAirmen,
-  setAircraftModels,
-  setFlights,
-} from "../../Redux/actions.js";
+import { setAircrafts, setLocations, setCrewPostions, setAirmen, setAircraftModels, setFlights, } from "../../Redux/actions.js";
 import axios from "axios";
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
@@ -92,20 +79,15 @@ function CurrentSchedule(props) {
     airmenAction,
     aircraftModelAction,
     flightAction,
-    flightEvents,
   } = props;
 
   useEffect(() => {
-    let date = new Date(),
-      y = date.getFullYear(),
-      m = date.getMonth();
     let firstDay = moment().utc().startOf('month').format();
     let lastDay = moment().utc().endOf('month').format();
 
     console.log("FirstDay",firstDay);
     console.log("LastDay", lastDay);
-    axios
-      .get("/essential", { params: { start: firstDay, end: lastDay } })
+    axios.get("/essential", { params: { start: firstDay, end: lastDay } })
       .then((response) => {
         console.log("Response Data:", response.data);
         aircraftAction(response.data.aircrafts);
@@ -115,12 +97,12 @@ function CurrentSchedule(props) {
         flightAction(response.data.flights);
         crewPositionAction(response.data.crew_positions);
 
-        // Temp fix going to need to see if the backend can handle this?
-        Object.values(response.data.flights).forEach((item) => {
+        // Since backend gives us UTC, we can easily convert UCT to our browser time zone just by converting it to a Date Object
+        response.data.flights.forEach((item) => {
           item.start = moment(item.start).toDate();
           item.end = moment(item.end).toDate();
         });
-        setEvents(Object.values(response.data.flights));
+        setEvents(response.data.flights);
       })
       .catch((error) => {
         console.log("Get Error:", error);
@@ -139,7 +121,7 @@ function CurrentSchedule(props) {
   // Event Modal functions
   // const selectedEventRef = useRef(null);
   // const [eventModal, setEvent] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState({});
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [open, setOpen] = useState(false);
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
@@ -182,23 +164,30 @@ function CurrentSchedule(props) {
     };
   };
 
-  const dayPropGetter = (event) => {
-    // console.log(event);
-    // const style = {
-    //   backgroundColor: "white",
-    //   // color: "white",
-    // };
-    // return {
-    //   style: style,
-    // };
-  };
   const moveEvent = ({ event, start, end }) => {
     console.log("Moving", event);
-    const idx = events.indexOf(event);
+    // const idx = events.indexOf(event);
+    const updatedEvents = events.filter((item) => item.flight_uuid !== event.flight_uuid);
     const updatedEvent = { ...event, start, end };
-    const nextEvents = [...events];
-    nextEvents.splice(idx, 1, updatedEvent);
-    setEvents(nextEvents);
+    updatedEvents.push(updatedEvent);
+    // Send A Put Request
+    axios.patch("/flight/"+event.flight_uuid, 
+      {
+        start_time: start,
+        end_time: end,
+        // TODO: Person might place this in All Day Area
+        // all_day: allDay ? allDay : false,
+      },
+      {headers: {"Content-Type": "application/json"}}
+    )
+    .then((response) => {
+      console.log("Response from Put:", response);
+      // Reason we only update until we get a good response back is because the backend will check for conflicts
+      setEvents(updatedEvents);
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+    });
   };
 
   return (
@@ -247,12 +236,6 @@ function CurrentSchedule(props) {
   );
 }
 
-const mapStateToProps = (state) => {
-  return {
-    flightEvents: state.flightReducer ? Object.values(state.flightReducer) : [],
-  };
-};
-
 const mapDispatchToProps = {
   aircraftAction: setAircrafts,
   locationAction: setLocations,
@@ -262,4 +245,4 @@ const mapDispatchToProps = {
   flightAction: setFlights,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CurrentSchedule);
+export default connect(null, mapDispatchToProps)(CurrentSchedule);
