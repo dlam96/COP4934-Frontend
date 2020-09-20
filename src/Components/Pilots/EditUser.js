@@ -76,11 +76,11 @@ export default function EditUser(props) {
 
         {fields.map((item, index) => 
           <Grid container item direction="row">
-            <Grid xs={3} />
-            <Grid xs={3} align="start">
+            <Grid item xs={3} />
+            <Grid item xs={3} align="start">
               <h3>{item.label}</h3> 
             </Grid>
-            <Grid xs={6}>
+            <Grid item xs={6}>
               <TextField
                 variant="outlined"
                 size="small"
@@ -99,7 +99,7 @@ export default function EditUser(props) {
         
         {/* Save and Cancel buttonss */}
         <Grid container item direction="row">
-          <Grid xs={12} align="center" className={classes.buttons}>
+          <Grid item xs={12} align="center" className={classes.buttons}>
             <Button 
               variant="contained" 
               color="primary"
