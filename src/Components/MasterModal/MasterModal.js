@@ -97,9 +97,15 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
   },
   dateStyle: {
-    margin: theme.spacing(1, 1, 1, 3),
+    margin: theme.spacing(1, 1, 1, 0),
   },
   timeStyle: {
+    margin: theme.spacing(1, 3, 1, 0),
+  },
+  largeDateStyle: {
+    margin: theme.spacing(1, 1, 1, 3),
+  },
+  largeTimeStyle: {
     margin: theme.spacing(1, 3, 1, 0),
   },
   submitBtn: {
@@ -135,8 +141,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1, 1, 1, 0),
   },
   positionField: {
-    color: 'black !important',
-  }
+    color: "black !important",
+  },
 }));
 // options for pilots
 const pilots = [
@@ -167,13 +173,13 @@ function MasterModal(props) {
 
   //
   const [aircraftModels, setAircraftModels] = useState(null);
-  
+
   // The selected aircraft in the flight also changes with user aicraft select
   const [selectedAircraftIndex, setSelectedAircraftIndex] = useState(0);
 
   // All positoins but in a hash table to quickly look up positions by uuid
   const [positions, setPositions] = useState(null);
-  
+
   // Current crew positions of this aircraft
   const [flightPositions, setFlightPositions] = useState(null);
 
@@ -185,7 +191,6 @@ function MasterModal(props) {
   let propsAircraftModels = props.airacraft_models;
   let propsCrewPositions = props.crew_positions;
   let propsAirmen = props.airmen;
-
 
   // Main use Effect which updates the selected flight a user opens
   useEffect(() => {
@@ -241,7 +246,7 @@ function MasterModal(props) {
       });
       setPositions(positions);
     }
-  }, [propsCrewPositions])
+  }, [propsCrewPositions]);
 
   useEffect(() => {
     if (propsAircrafts && aircraftModels) {
@@ -257,7 +262,6 @@ function MasterModal(props) {
     }
   }, [propsAircrafts, aircraftModels]);
 
-
   useEffect(() => {
     if (positions && aircraftModels && aircrafts) {
       let modelUUID = aircrafts[selectedAircraftIndex].model_uuid;
@@ -270,8 +274,7 @@ function MasterModal(props) {
         );
       }
     }
-  }, [positions, aircraftModels, selectedAircraftIndex, aircrafts])
-
+  }, [positions, aircraftModels, selectedAircraftIndex, aircrafts]);
 
   useEffect(() => {
     if (selectedPilots) {
@@ -281,15 +284,13 @@ function MasterModal(props) {
       });
       setFlightCrew(flightCrewObj);
     }
-  }, [selectedPilots])
+  }, [selectedPilots]);
 
   useEffect(() => {
     if (flightPositions) {
       console.log("Flight Positions:", flightPositions);
     }
   }, [flightPositions]);
-
-
 
   // Modal functions
 
@@ -335,11 +336,14 @@ function MasterModal(props) {
     console.log("Selected Value:", event.target.value);
     console.log("Position_uuid:", position_uuid);
     let newSelectedPilots = [...selectedPilots];
-    let changeIndex = newSelectedPilots.findIndex((member) => 
-      member.crew_position_uuid === position_uuid
-    )
+    let changeIndex = newSelectedPilots.findIndex(
+      (member) => member.crew_position_uuid === position_uuid
+    );
     if (changeIndex === -1) {
-      newSelectedPilots.push({ airman_uuid: event.target.value, crew_position_uuid: position_uuid});
+      newSelectedPilots.push({
+        airman_uuid: event.target.value,
+        crew_position_uuid: position_uuid,
+      });
     } else {
       newSelectedPilots[changeIndex].airman_uuid = event.target.value;
     }
@@ -607,7 +611,7 @@ function MasterModal(props) {
                             label="Start Date"
                             value={props.startDate}
                             onChange={(date) => handleStartDateSelect(date)}
-                            className={classes.dateStyle}
+                            className={classes.largeDateStyle}
                             disabled={props.role === "User" ? true : false}
                           />
                           {/* Use Format for visual formatting */}
@@ -619,7 +623,7 @@ function MasterModal(props) {
                               variant="inline"
                               value={props.startDate}
                               onChange={(date) => handleStartDateSelect(date)}
-                              className={classes.timeStyle}
+                              className={classes.largeTimeStyle}
                               disabled={props.role === "User" ? true : false}
                             />
                           )}
@@ -632,7 +636,7 @@ function MasterModal(props) {
                             label="End Date"
                             value={props.endDate}
                             onChange={(date) => handleEndDateSelect(date)}
-                            className={classes.dateStyle}
+                            className={classes.largeDateStyle}
                             disabled={props.role === "User" ? true : false}
                           />
                           {/* Use Format for visual formatting */}
@@ -644,22 +648,11 @@ function MasterModal(props) {
                               variant="inline"
                               value={props.endDate}
                               onChange={(date) => handleEndDateSelect(date)}
-                              className={classes.timeStyle}
+                              className={classes.largeTimeStyle}
                               disabled={props.role === "User" ? true : false}
                             />
                           )}
                         </MuiPickersUtilsProvider>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={allDay}
-                              onChange={handleCheckbox}
-                              color="primary"
-                              disabled={props.role === "User" ? true : false}
-                            />
-                          }
-                          label="All day"
-                        />
                       </Grid>
                     </Grid>
                     {/* Dropdown menu */}
@@ -767,9 +760,7 @@ function MasterModal(props) {
                     {/* Pilots & color */}
                     <Grid item container direction="row">
                       {/* pilots WORK */}
-                      <Grid item sm={6} md={6} xl={6}>
-
-                      </Grid>
+                      <Grid item sm={6} md={6} xl={6}></Grid>
                       <Grid item sm={4} md={4} xl={4}>
                         {/* Color picker */}
                         <FormControl className={classes.colorPicker}>
@@ -949,7 +940,11 @@ function MasterModal(props) {
                 {/* Modal */}
                 <Paper>
                   <form>
-                    <Grid container className={classes.smallModalPaper} spacing={2}>
+                    <Grid
+                      container
+                      className={classes.smallModalPaper}
+                      spacing={2}
+                    >
                       {/* Title and Close button */}
                       <Grid container item direction="row">
                         {/* Title */}
@@ -1001,13 +996,13 @@ function MasterModal(props) {
                       </Grid>
                       {/* Date/Time */}
                       <Grid container item direction="row">
-                        <Grid item xs={12}>
-                          <MuiPickersUtilsProvider
-                            libInstance={moment}
-                            utils={MomentUtils}
-                            //locale={locale}
-                          >
-                            {/* Use Format for visual formatting */}
+                        <MuiPickersUtilsProvider
+                          libInstance={moment}
+                          utils={MomentUtils}
+                          //locale={locale}
+                        >
+                          {/* Use Format for visual formatting */}
+                          <Grid item xs={12}>
                             <DatePicker
                               autoOk
                               disableToolbar
@@ -1031,8 +1026,23 @@ function MasterModal(props) {
                                 disabled={props.role === "User" ? true : false}
                               />
                             )}
-                            {/* End Date/Time picker */}
-                            {/* Use Format for visual formatting */}
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={allDay}
+                                  onChange={handleCheckbox}
+                                  color="primary"
+                                  disabled={
+                                    props.role === "User" ? true : false
+                                  }
+                                />
+                              }
+                              label="All day"
+                            />
+                          </Grid>
+                          {/* End Date/Time picker */}
+                          {/* Use Format for visual formatting */}
+                          <Grid item xs={12}>
                             <DatePicker
                               disableToolbar
                               autoOk
@@ -1056,19 +1066,8 @@ function MasterModal(props) {
                                 disabled={props.role === "User" ? true : false}
                               />
                             )}
-                          </MuiPickersUtilsProvider>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={allDay}
-                                onChange={handleCheckbox}
-                                color="primary"
-                                disabled={props.role === "User" ? true : false}
-                              />
-                            }
-                            label="All day"
-                          />
-                        </Grid>
+                          </Grid>
+                        </MuiPickersUtilsProvider>
                       </Grid>
                       {/* Dropdown menu */}
                       <Grid container item direction="row">
@@ -1169,30 +1168,50 @@ function MasterModal(props) {
                       </Grid>
                       {/* Pilots WORK*/}
                       <Grid container item direction="row" spacing={2}>
-                        {flightPositions && flightPositions.map((item) => (
-                          <Grid container item direction="column" key={"Grid"+item.crew_position_uuid} sm>
-                            <TextField
-                              id=""
-                              select
-                              required={item.required}
-                              label={item.position}
-                              value={ flightCrew && flightCrew[item.crew_position_uuid] ?
-                                flightCrew[item.crew_position_uuid].airman_uuid
-                                : '' 
-                              }
-                              onChange={(event) => handleCrewSelectClick(event, item.crew_position_uuid)} 
-                              variant="outlined"
-                              fullWidth
-                              InputLabelProps={{className: classes.positionField}}
+                        {flightPositions &&
+                          flightPositions.map((item) => (
+                            <Grid
+                              container
+                              item
+                              direction="column"
+                              key={"Grid" + item.crew_position_uuid}
+                              sm
                             >
-                              {propsAirmen.map((airman) => (
-                                <MenuItem key={airman.account_uuid} value={airman.account_uuid}>
-                                  {airman.first_name+" "+airman.last_name}
-                                </MenuItem>
-                              ))}                      
-                            </TextField>
-                          </Grid>
-                        ))}
+                              <TextField
+                                id=""
+                                select
+                                required={item.required}
+                                label={item.position}
+                                value={
+                                  flightCrew &&
+                                  flightCrew[item.crew_position_uuid]
+                                    ? flightCrew[item.crew_position_uuid]
+                                        .airman_uuid
+                                    : ""
+                                }
+                                onChange={(event) =>
+                                  handleCrewSelectClick(
+                                    event,
+                                    item.crew_position_uuid
+                                  )
+                                }
+                                variant="outlined"
+                                fullWidth
+                                InputLabelProps={{
+                                  className: classes.positionField,
+                                }}
+                              >
+                                {propsAirmen.map((airman) => (
+                                  <MenuItem
+                                    key={airman.account_uuid}
+                                    value={airman.account_uuid}
+                                  >
+                                    {airman.first_name + " " + airman.last_name}
+                                  </MenuItem>
+                                ))}
+                              </TextField>
+                            </Grid>
+                          ))}
                       </Grid>
                       {/* Buttons */}
                       <Grid container item direction="row">
@@ -1232,7 +1251,7 @@ const mapStateToProps = (state) => {
     aircrafts: state.aircraftReducer,
     airacraft_models: state.aircraftmodelReducer,
     crew_positions: state.crewpositionReducer,
-    airmen: state.airmenReducer, 
+    airmen: state.airmenReducer,
   };
 };
 const mapDispatchToProps = (state) => {
