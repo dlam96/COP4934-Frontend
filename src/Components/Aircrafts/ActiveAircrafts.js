@@ -2,8 +2,7 @@ import React from 'react'
 import { 
   Paper, 
   makeStyles,
-  Button,
-  Grid
+  Grid,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -22,13 +21,13 @@ export default function ActiveAircrafts(props) {
   return( 
     <Paper className={classes.paper}>
       <Grid container item direction="row">
-        <Grid xs={3} align="start">
+        <Grid item xs={3} align="start">
           { aircrafts.aircraft }
         </Grid>
-        <Grid xs={3} align="start">
+        <Grid item xs={3} align="start">
           { aircrafts.numCrew }
         </Grid>
-        <Grid xs={6} align="start" />
+        <Grid item xs={6} align="start" />
       </Grid>
     </Paper>
   )
