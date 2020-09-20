@@ -1,6 +1,6 @@
 import { LOGIN, LOGOUT, ONDARKMODE, OFFDARKMODE,
   SETAIRMEN, SETAIRCRAFTMODELS, SETLOCATIONS, SETAIRCRAFTS,
-  SETFLIGHTS, SETCREWPOSITION, SETRANKS, SETAIRCRAFTSTATUS, SETUSERSTATUS 
+  SETFLIGHTS, SETCREWPOSITION, SETRANKS, SETAIRCRAFTSTATUS, SETUSERSTATUS, GOTINITIALESSENTIALREQUEST
   } from "./actionTypes.js";
 
 
@@ -19,6 +19,10 @@ export const login = (loginObject) => ({
 export const logout = () => ({  
   type: LOGOUT,
 });
+
+export const gotEssentialPayload = () => ({
+  type: GOTINITIALESSENTIALREQUEST,
+})
 
 export const onDarkMode = () => ({
   type: ONDARKMODE,
@@ -69,6 +73,7 @@ export const setCrewPostions = (crewPositions) => ({
     crewposition: crewPositions
   }
 });
+
 
 export const setRanks = (ranks) => ({
   type: SETRANKS,

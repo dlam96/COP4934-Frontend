@@ -28,6 +28,10 @@ async function setupCachedState() {
         localCache.loggedReducer.logged = false;
       } else {
         console.log("Setting access token from localCache");
+        
+        // Set gotEssentialPayload back to false to get request on page reload
+        localCache.loggedReducer.gotEssentialRequest = false;
+
         let accessToken = localCache.loggedReducer.accessToken;
         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
         console.log("AccessToken:", accessToken);
