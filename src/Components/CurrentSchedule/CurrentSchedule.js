@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Container, Grid, Paper, makeStyles, CssBaseline, } from "@material-ui/core";
+import {
+  Container,
+  Grid,
+  Paper,
+  makeStyles,
+  CssBaseline,
+} from "@material-ui/core";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { connect } from "react-redux";
@@ -7,7 +13,14 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import CustomToolbar from "../CustomToolbar/CustomToolbar.js";
 import MasterModal from "../MasterModal/MasterModal.js";
-import { setAircrafts, setLocations, setCrewPostions, setAirmen, setAircraftModels, setFlights, } from "../../Redux/actions.js";
+import {
+  setAircrafts,
+  setLocations,
+  setCrewPostions,
+  setAirmen,
+  setAircraftModels,
+  setFlights,
+} from "../../Redux/actions.js";
 import axios from "axios";
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
@@ -82,12 +95,13 @@ function CurrentSchedule(props) {
   } = props;
 
   useEffect(() => {
-    let firstDay = moment().utc().startOf('month').format();
-    let lastDay = moment().utc().endOf('month').format();
+    let firstDay = moment().utc().startOf("month").format();
+    let lastDay = moment().utc().endOf("month").format();
 
-    console.log("FirstDay",firstDay);
+    console.log("FirstDay", firstDay);
     console.log("LastDay", lastDay);
-    axios.get("/essential", { params: { start: firstDay, end: lastDay } })
+    axios
+      .get("/essential", { params: { start: firstDay, end: lastDay } })
       .then((response) => {
         console.log("Response Data:", response.data);
         aircraftAction(response.data.aircrafts);
@@ -167,27 +181,33 @@ function CurrentSchedule(props) {
   const moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
     console.log("Moving", event);
     // const idx = events.indexOf(event);
-    const updatedEvents = events.filter((item) => item.flight_uuid !== event.flight_uuid);
+    // removes event from current events
+    const updatedEvents = events.filter(
+      (item) => item.flight_uuid !== event.flight_uuid
+    );
+    // adds the new event w/ updated parameters
     const updatedEvent = { ...event, start, end, allDay: droppedOnAllDaySlot };
     updatedEvents.push(updatedEvent);
     // Send A Put Request
     console.log("AllDay BS:", droppedOnAllDaySlot);
-    axios.patch("/flight/"+event.flight_uuid, 
-      {
-        start_time: start,
-        end_time: end,
-        all_day: droppedOnAllDaySlot ? droppedOnAllDaySlot : false,
-      },
-      {headers: {"Content-Type": "application/json"}}
-    )
-    .then((response) => {
-      console.log("Response from Put:", response);
-      // Reason we only update until we get a good response back is because the backend will check for conflicts
-      setEvents(updatedEvents);
-    })
-    .catch((error) => {
-      console.log("Error:", error);
-    });
+    axios
+      .patch(
+        "/flight/" + event.flight_uuid,
+        {
+          start_time: start,
+          end_time: end,
+          all_day: droppedOnAllDaySlot ? droppedOnAllDaySlot : false,
+        },
+        { headers: { "Content-Type": "application/json" } }
+      )
+      .then((response) => {
+        console.log("Response from Put:", response);
+        // Reason we only update until we get a good response back is because the backend will check for conflicts
+        setEvents(updatedEvents);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
   };
 
   return (
