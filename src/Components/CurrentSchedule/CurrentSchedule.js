@@ -148,9 +148,6 @@ function CurrentSchedule(props) {
   };
   const [showAll, setShowAll] = useState(true);
   const handleBigCalendarSelect = (event) => {
-    // console.log(event);
-    // console.log("start", event.start, "end", event.end);
-    // TODO make an option for AM/PM time (12 hours)
     setDelete(true);
     if (event.flight_uuid === undefined) {
       console.log("not an event", event);

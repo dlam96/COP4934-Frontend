@@ -35,9 +35,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const testAircrafts = [
-  { aircraft: "Pave Hawk", numCrew: 4 },
-  { aircraft: "Combat King", numCrew: 5 },
-  { aircraft: "Thunderbolt", numCrew: 1 },  
+  { aircraft: "Pave Hawk", numCrew: 4, craftId: 1},
+  { aircraft: "Combat King", numCrew: 5, craftId: 2},
+  { aircraft: "Thunderbolt", numCrew: 1, craftId: 3},  
 ]
 
 function TabPanel(props) {
@@ -52,7 +52,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          <Typography component={'span'} variant={'body2'}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -96,18 +96,19 @@ export default function Aircrafts() {
           <TabPanel value={value} index={0}>
 
             <Grid container item direction="row" className={classes.labels}>
-              <Grid xs={3} align="start">
+              <Grid item xs={3} align="start">
                 Aircraft
               </Grid>
-              <Grid xs={3} align="start">
+              <Grid item xs={3} align="start">
                 Crew
               </Grid>
-              <Grid xs={6} align="start" />
+              <Grid item xs={6} align="start" />
             </Grid>
 
             {testAircrafts.map(aircraft => (
                   <ActiveAircrafts
                     aircrafts={aircraft}
+                    key={aircraft.craftId}
                   />
             ))} 
 
@@ -117,18 +118,19 @@ export default function Aircrafts() {
           <TabPanel value={value} index={1}>
             
             <Grid container item direction="row" className={classes.labels}>
-              <Grid xs={3} align="start">
+              <Grid item xs={3} align="start">
                 Aircraft
               </Grid>
-              <Grid xs={3} align="start">
+              <Grid item xs={3} align="start">
                 Crew
               </Grid>
-              <Grid xs={6} align="start" />
+              <Grid item xs={6} align="start" />
             </Grid>
 
             {testAircrafts.map(aircraft => (
                   <Maitenance
                     aircrafts={aircraft}
+                    key={aircraft.craftId}
                   />
             ))} 
             

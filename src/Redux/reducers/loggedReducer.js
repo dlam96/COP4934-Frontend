@@ -1,7 +1,8 @@
-import { LOGIN, LOGOUT } from "../actionTypes.js";
+import { LOGIN, LOGOUT, GOTINITIALESSENTIALREQUEST } from "../actionTypes.js";
 
 export default function loggedReducer(
-  state = { logged: false, username: null, role: null, token: null },
+  state = { logged: false, username: null, role: null, accessToken: null, accessTokenCreated: null,
+    accessTokenExpiresIn: null, gotEssentialRequest: false },
   action
 ) {
   switch (action.type) {
@@ -13,7 +14,8 @@ export default function loggedReducer(
         role: action.payload.role,
         accessToken: action.payload.accessToken,
         accessTokenCreated: action.payload.accessTokenCreated,
-        accessTokenExpiresIn: action.payload.accessTokenExpiresIn
+        accessTokenExpiresIn: action.payload.accessTokenExpiresIn,
+        gotEssentialRequest: false
       };
     }
 
@@ -22,8 +24,17 @@ export default function loggedReducer(
         logged: false,
         username: null,
         role: null,
-        token: null
+        accessToken: null,
+        accessTokenCreated: null,
+        accessTokenExpiresIn: null,
+        gotEssentialRequest: false
       };
+    }
+
+    case GOTINITIALESSENTIALREQUEST: {
+      return {
+        ...state, gotEssentialRequest: true
+      }
     }
 
     default: {

@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "10px",
     // boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-    width: "40vw",
+    width: "50vw",
     height: "80%",
   },
   smallTitleResize: {
@@ -134,6 +134,9 @@ const useStyles = makeStyles((theme) => ({
   smallSubmitBtn: {
     margin: theme.spacing(1, 1, 1, 0),
   },
+  positionField: {
+    color: 'black !important',
+  }
 }));
 // options for pilots
 const pilots = [
@@ -155,17 +158,57 @@ function MasterModal(props) {
   const [title, setTitle] = useState("");
   const [maximized, setMaximized] = useState(false);
   const [allDay, setAllDay] = useState(false);
-  const [selectedPilots, setPilots] = useState(null);
+  const [selectedPilots, setSelectedPilots] = useState(null);
   const [selectedColor, setColor] = useState("");
   const [description, setDesc] = useState("");
   const [locations, setLocations] = useState(null);
   const [selectedLocationIndex, setSelectedLocationIndex] = useState(0);
   const [aircrafts, setAircrafts] = useState(null);
+
+  //
   const [aircraftModels, setAircraftModels] = useState(null);
+  
+  // The selected aircraft in the flight also changes with user aicraft select
   const [selectedAircraftIndex, setSelectedAircraftIndex] = useState(0);
+
+  // All positoins but in a hash table to quickly look up positions by uuid
+  const [positions, setPositions] = useState(null);
+  
+  // Current crew positions of this aircraft
+  const [flightPositions, setFlightPositions] = useState(null);
+
+  // Current crew members of this selected aircraft
+  const [flightCrew, setFlightCrew] = useState(null);
+
   let propsLocations = props.locations;
   let propsAircrafts = props.aircrafts;
   let propsAircraftModels = props.airacraft_models;
+  let propsCrewPositions = props.crew_positions;
+  let propsAirmen = props.airmen;
+
+
+  // Main use Effect which updates the selected flight a user opens
+  useEffect(() => {
+    if (props.selectedEvent) {
+      console.log("Event Opened:", props.selectedEvent);
+      setTitle(props.selectedEvent.title);
+      console.log("Pilots list:", props.selectedEvent.crew_members);
+      setSelectedPilots(props.selectedEvent.crew_members);
+      setAllDay(props.selectedEvent.allDay);
+      if (props.selectedEvent.color) setColor(props.selectedEvent.color);
+      setDesc(props.selectedEvent.description);
+      let locationIndex = propsLocations.findIndex(
+        (location) =>
+          location.location_uuid === props.selectedEvent.location_uuid
+      );
+      setSelectedLocationIndex(locationIndex !== -1 ? locationIndex : 0);
+      let aircraftIndex = aircrafts.findIndex(
+        (aircraft) =>
+          aircraft.aircraft_uuid === props.selectedEvent.aircraft_uuid
+      );
+      setSelectedAircraftIndex(aircraftIndex !== -1 ? aircraftIndex : 0);
+    }
+  }, [props.selectedEvent, propsLocations, aircrafts]);
 
   useEffect(() => {
     if (propsLocations) {
@@ -191,6 +234,16 @@ function MasterModal(props) {
   }, [propsAircraftModels]);
 
   useEffect(() => {
+    if (propsCrewPositions) {
+      let positions = {};
+      propsCrewPositions.forEach((item) => {
+        positions[item.crew_position_uuid] = item;
+      });
+      setPositions(positions);
+    }
+  }, [propsCrewPositions])
+
+  useEffect(() => {
     if (propsAircrafts && aircraftModels) {
       setAircrafts(
         propsAircrafts.map((item) => {
@@ -204,30 +257,40 @@ function MasterModal(props) {
     }
   }, [propsAircrafts, aircraftModels]);
 
-  useEffect(() => {
-    console.log("Aircrafts:", aircrafts);
-  }, [aircrafts]);
 
   useEffect(() => {
-    if (props.selectedEvent) {
-      console.log("Event Opened:", props.selectedEvent);
-      setTitle(props.selectedEvent.title);
-      setPilots(props.selectedEvent.crew_members);
-      setAllDay(props.selectedEvent.allDay);
-      if (props.selectedEvent.color) setColor(props.selectedEvent.color);
-      setDesc(props.selectedEvent.description);
-      let locationIndex = propsLocations.findIndex(
-        (location) =>
-          location.location_uuid === props.selectedEvent.location_uuid
-      );
-      setSelectedLocationIndex(locationIndex !== -1 ? locationIndex : 0);
-      let aircraftIndex = aircrafts.findIndex(
-        (aircraft) =>
-          aircraft.aircraft_uuid === props.selectedEvent.aircraft_uuid
-      );
-      setSelectedAircraftIndex(aircraftIndex !== -1 ? aircraftIndex : 0);
+    if (positions && aircraftModels && aircrafts) {
+      let modelUUID = aircrafts[selectedAircraftIndex].model_uuid;
+      let model = aircraftModels[modelUUID];
+      if (model && positions) {
+        setFlightPositions(
+          model.positions.map((item) => {
+            return positions[item.crew_position_uuid];
+          })
+        );
+      }
     }
-  }, [props.selectedEvent, propsLocations, aircrafts]);
+  }, [positions, aircraftModels, selectedAircraftIndex, aircrafts])
+
+
+  useEffect(() => {
+    if (selectedPilots) {
+      let flightCrewObj = {};
+      selectedPilots.forEach((member) => {
+        flightCrewObj[member.crew_position_uuid] = member;
+      });
+      setFlightCrew(flightCrewObj);
+    }
+  }, [selectedPilots])
+
+  useEffect(() => {
+    if (flightPositions) {
+      console.log("Flight Positions:", flightPositions);
+    }
+  }, [flightPositions]);
+
+
+
   // Modal functions
 
   const handleClose = () => {
@@ -265,6 +328,22 @@ function MasterModal(props) {
 
   const handleMenuClose2 = () => {
     setAnchorEl2(null);
+  };
+
+  const handleCrewSelectClick = (event, position_uuid) => {
+    console.log("New Pilot Selected:");
+    console.log("Selected Value:", event.target.value);
+    console.log("Position_uuid:", position_uuid);
+    let newSelectedPilots = [...selectedPilots];
+    let changeIndex = newSelectedPilots.findIndex((member) => 
+      member.crew_position_uuid === position_uuid
+    )
+    if (changeIndex === -1) {
+      newSelectedPilots.push({ airman_uuid: event.target.value, crew_position_uuid: position_uuid});
+    } else {
+      newSelectedPilots[changeIndex].airman_uuid = event.target.value;
+    }
+    setSelectedPilots(newSelectedPilots);
   };
 
   const handleDelete = () => {
@@ -430,10 +509,6 @@ function MasterModal(props) {
   const handleCheckbox = (event) => {
     console.log("checkbox", event.target.checked);
     setAllDay(event.target.checked);
-  };
-  const handlePilots = (event, value) => {
-    // console.log(value, "pilot", value[0].name);
-    setPilots(value);
   };
   // small modal functions
   const toggleOptions = () => {
@@ -691,29 +766,9 @@ function MasterModal(props) {
                     </Grid>
                     {/* Pilots & color */}
                     <Grid item container direction="row">
+                      {/* pilots WORK */}
                       <Grid item sm={6} md={6} xl={6}>
-                        <Autocomplete
-                          multiple
-                          id="tags-standard"
-                          options={pilots}
-                          getOptionLabel={(option) => option.name}
-                          value={selectedPilots ? selectedPilots : []}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              variant="standard"
-                              label="Pilots"
-                              placeholder="Add pilots"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                              disabled={props.role === "User" ? true : false}
-                            />
-                          )}
-                          onChange={handlePilots}
-                          className={classes.pilotStyle}
-                          disabled={props.role === "User" ? true : false}
-                        />
+
                       </Grid>
                       <Grid item sm={4} md={4} xl={4}>
                         {/* Color picker */}
@@ -894,7 +949,7 @@ function MasterModal(props) {
                 {/* Modal */}
                 <Paper>
                   <form>
-                    <Grid container className={classes.smallModalPaper}>
+                    <Grid container className={classes.smallModalPaper} spacing={2}>
                       {/* Title and Close button */}
                       <Grid container item direction="row">
                         {/* Title */}
@@ -1112,30 +1167,32 @@ function MasterModal(props) {
                           </Menu>
                         </Grid>
                       </Grid>
-                      {/* Pilots */}
-                      <Grid container item direction="row">
-                        <Autocomplete
-                          multiple
-                          id="tags-standard"
-                          options={pilots}
-                          getOptionLabel={(option) => option.name}
-                          onChange={handlePilots}
-                          renderInput={(params) => (
+                      {/* Pilots WORK*/}
+                      <Grid container item direction="row" spacing={2}>
+                        {flightPositions && flightPositions.map((item) => (
+                          <Grid container item direction="column" key={"Grid"+item.crew_position_uuid} sm>
                             <TextField
-                              {...params}
-                              variant="standard"
-                              label="Pilots"
-                              placeholder="Add pilots"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                              disabled={props.role === "User" ? true : false}
-                            />
-                          )}
-                          className={classes.pilotStyle}
-                          value={selectedPilots ? selectedPilots : []}
-                          disabled={props.role === "User" ? true : false}
-                        />
+                              id=""
+                              select
+                              required={item.required}
+                              label={item.position}
+                              value={ flightCrew && flightCrew[item.crew_position_uuid] ?
+                                flightCrew[item.crew_position_uuid].airman_uuid
+                                : '' 
+                              }
+                              onChange={(event) => handleCrewSelectClick(event, item.crew_position_uuid)} 
+                              variant="outlined"
+                              fullWidth
+                              InputLabelProps={{className: classes.positionField}}
+                            >
+                              {propsAirmen.map((airman) => (
+                                <MenuItem key={airman.account_uuid} value={airman.account_uuid}>
+                                  {airman.first_name+" "+airman.last_name}
+                                </MenuItem>
+                              ))}                      
+                            </TextField>
+                          </Grid>
+                        ))}
                       </Grid>
                       {/* Buttons */}
                       <Grid container item direction="row">
@@ -1174,6 +1231,8 @@ const mapStateToProps = (state) => {
     locations: state.locationReducer,
     aircrafts: state.aircraftReducer,
     airacraft_models: state.aircraftmodelReducer,
+    crew_positions: state.crewpositionReducer,
+    airmen: state.airmenReducer, 
   };
 };
 const mapDispatchToProps = (state) => {
