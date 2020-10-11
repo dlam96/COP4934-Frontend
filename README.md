@@ -12,8 +12,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/dlam96/Knight-Hacks-2020">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/dlam96/cop4934-frontend">
+    <img src="images/logo.png" alt="Logo" width="80" height="100">
   </a>
 
   <h2 align="center">COP4934 Senior Design II FrontEnd</h2>
@@ -22,11 +22,11 @@
     A Calendar Scheduler Web Application Built for United State Air Force Flight Scheduling
     <br />
     <br />
-    <a href="https://devpost.com/software/fe-academy?ref_content=user-portfolio&ref_feature=in_progress">View Demo</a>
+    <a href="https://github.com/dlam96/cop4934-frontend">View Demo</a>
     ·
-    <a href="https://github.com/dlam96/Knight-Hacks-2020/issues">Report Bug</a>
+    <a href="https://github.com/dlam96/cop4934-frontend/issues">Report Bug</a>
     ·
-    <a href="https://github.com/dlam96/Knight-Hacks-2020/issues">Request Feature</a>
+    <a href="https://github.com/dlam96/cop4934-frontend/issues">Request Feature</a>
   </p>
 </p>
 
@@ -49,7 +49,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 <p align="center">
-  <a href="https://github.com/dlam96/Knight-Hacks-2020">
+  <a href="https://github.com/dlam96/cop4934-frontend">
     <img src="images/demo1.png" alt="Logo" width="1000" height="450">
   </a>
 </p>
