@@ -63,7 +63,11 @@ Our goal is to provide a software solution that is easy to use and increases pro
     <img src="images/demo2.png" alt="Logo" width="1000" height="450">
   </a>
 </p>
-
+<p align="center">
+  <a href="https://github.com/dlam96/Knight-Hacks-2020">
+    <img src="images/demo3.png" alt="Logo" width="1000" height="450">
+  </a>
+</p>
 ### Built With
 * [ReactJS](https://reactjs.org)
 * [React Redux](https://react-redux.js.org/)
