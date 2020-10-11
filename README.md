@@ -54,12 +54,9 @@
   </a>
 </p>
 
-At the University of Central Florida, emerging Computer Science students are required to take a Foundation Exam (FE) in order to get accepted into the college. Although there are many great resources available online to learn about Data Structures and Algorithms, Our team didn't find one that really suit my needs when I was a student studying for the FE exam so we created FE Academy. The solutions posted from previous exams were just one way of solving the problem and we wanted to create a way to detect if other variations of solutions would also solve the same problem. So we created an immersive, interactive experience so amazing that it'll be the last resource you'll ever need to prepare for the Foundation Exam.
+Moody Air Force Base, located in Lowndes County, Georgia, created this project with the goal of developing an easier, more efficient, and more reliable method for scheduling flights [and viewing flight schedules] at Moody (with a stretch goal of expanding the use of the software to other United States Air Force bases). The current software they use has proven unreliable (often the system is unavailable). They have resorted to entering data, which has been given to schedulers verbally, into static Excel sheets. This method is prone to clerical errors and is extremely time consuming.
 
-Here's why:
-* Your time should be focused on mastering Computer Science fundamentals, not searching high and low trying to find the right resources.
-* All topics in one place. No need to keep track of whether you missed studying any of the topics, FE Academy has all the fundamental topics in one place!
-* See feedback immediately! FE Academy has a built-in text editor and compiler that will run your code through our handwritten testcases for each problem. 
+Our goal is to provide a software solution that is easy to use and increases productivity; additionally, the software aids in preventing human, clerical errors.
 
 <p align="center">
   <a href="https://github.com/dlam96/Knight-Hacks-2020">
@@ -69,7 +66,7 @@ Here's why:
 
 ### Built With
 * [ReactJS](https://reactjs.org)
-* [CodeMirror2](https://www.npmjs.com/package/react-codemirror2)
+* [React Redux](https://react-redux.js.org/)
 * [Material-UI](https://material-ui.com/)
 
 <!-- GETTING STARTED -->
@@ -79,7 +76,7 @@ Here's why:
 
 1. Clone the repo
 ```sh
-git clone https://github.com/dlam96/Knight-Hacks-2020
+git clone https://github.com/dlam96/cop4934-frontend
 ```
 2. Install NPM packages
 ```sh
@@ -104,16 +101,11 @@ Distributed under the MIT License.
 
 [Justin Hawtree](https://github.com/JustinHawtree) - BackEnd Lead - [Linked-in](https://www.linkedin.com/in/justin-hawtree) - JustinHawtree@knights.ucf.edu
 
-[Leo Zhang](https://github.com/leozhang1) - FrontEnd Dev 
-
-Project Link: [DevPost](https://devpost.com/software/fe-academy?ref_content=user-portfolio&ref_feature=in_progress)
-
 
 
 <!-- ACKNOWLEDGEMENTS -->
-## Acknowledgements
-* [Knight Hacks](https://knighthacks.org/)
-* [FE Academy BackEnd Repo](https://github.com/JustinHawtree/FoundationHelper_KnightHacks2020)
+<!-- ## Acknowledgements-->
+
 
 
 
