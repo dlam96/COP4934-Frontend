@@ -1,68 +1,122 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<!-- PROJECT SHIELDS -->
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+-->
 
-## Available Scripts
 
-In the project directory, you can run:
 
-### `yarn start`
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <a href="https://github.com/dlam96/Knight-Hacks-2020">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+  <h2 align="center">FE Academy FrontEnd</h2>
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+  <p align="center">
+    An interactive coding environment that teaches Computer Science fundamentals!
+    <br />
+    <br />
+    <a href="https://devpost.com/software/fe-academy?ref_content=user-portfolio&ref_feature=in_progress">View Demo</a>
+    ·
+    <a href="https://github.com/dlam96/Knight-Hacks-2020/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/dlam96/Knight-Hacks-2020/issues">Request Feature</a>
+  </p>
+</p>
 
-### `yarn test`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `yarn build`
+<!-- TABLE OF CONTENTS -->
+## Table of Contents
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* [About the Project](#about-the-project)
+  * [Built With](#built-with)
+* [Getting Started](#getting-started)
+  * [Installation](#installation)
+* [Contributing](#contributing)
+* [License](#license)
+* [Contact](#contact)
+* [Acknowledgements](#acknowledgements)
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
+<!-- ABOUT THE PROJECT -->
+## About The Project
+<p align="center">
+  <a href="https://github.com/dlam96/Knight-Hacks-2020">
+    <img src="images/demo1.png" alt="Logo" width="1000" height="450">
+  </a>
+</p>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+At the University of Central Florida, emerging Computer Science students are required to take a Foundation Exam (FE) in order to get accepted into the college. Although there are many great resources available online to learn about Data Structures and Algorithms, Our team didn't find one that really suit my needs when I was a student studying for the FE exam so we created FE Academy. The solutions posted from previous exams were just one way of solving the problem and we wanted to create a way to detect if other variations of solutions would also solve the same problem. So we created an immersive, interactive experience so amazing that it'll be the last resource you'll ever need to prepare for the Foundation Exam.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Here's why:
+* Your time should be focused on mastering Computer Science fundamentals, not searching high and low trying to find the right resources.
+* All topics in one place. No need to keep track of whether you missed studying any of the topics, FE Academy has all the fundamental topics in one place!
+* See feedback immediately! FE Academy has a built-in text editor and compiler that will run your code through our handwritten testcases for each problem. 
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+<p align="center">
+  <a href="https://github.com/dlam96/Knight-Hacks-2020">
+    <img src="images/demo2.png" alt="Logo" width="1000" height="450">
+  </a>
+</p>
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Built With
+* [ReactJS](https://reactjs.org)
+* [CodeMirror2](https://www.npmjs.com/package/react-codemirror2)
+* [Material-UI](https://material-ui.com/)
 
-## Learn More
+<!-- GETTING STARTED -->
+## Getting Started
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Installation
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Clone the repo
+```sh
+git clone https://github.com/dlam96/Knight-Hacks-2020
+```
+2. Install NPM packages
+```sh
+yarn install
+```
+3. Start the server
+```sh
+yarn start
+```
 
-### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+<!-- LICENSE -->
+## License
 
-### Analyzing the Bundle Size
+Distributed under the MIT License. 
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
 
-### Making a Progressive Web App
+<!-- CONTACT -->
+## Contact
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+[Daniel Lam](https://github.com/dlam96) - FrontEnd Lead - [Linked-in](https://www.linkedin.com/in/dlam96) - dlam96@knights.ucf.edu
 
-### Advanced Configuration
+[Justin Hawtree](https://github.com/JustinHawtree) - BackEnd Lead - [Linked-in](https://www.linkedin.com/in/justin-hawtree) - JustinHawtree@knights.ucf.edu
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+[Leo Zhang](https://github.com/leozhang1) - FrontEnd Dev 
 
-### Deployment
+Project Link: [DevPost](https://devpost.com/software/fe-academy?ref_content=user-portfolio&ref_feature=in_progress)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
 
-### `yarn build` fails to minify
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+<!-- ACKNOWLEDGEMENTS -->
+## Acknowledgements
+* [Knight Hacks](https://knighthacks.org/)
+* [FE Academy BackEnd Repo](https://github.com/JustinHawtree/FoundationHelper_KnightHacks2020)
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[product-screenshot]: images/demo1.png
