@@ -16,10 +16,10 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h2 align="center">FE Academy FrontEnd</h2>
-
+  <h2 align="center">COP4934 Senior Design II FrontEnd</h2>
+  <h6 align="center">Formerly sponsored by US Moody Air Force Base</h6>
   <p align="center">
-    An interactive coding environment that teaches Computer Science fundamentals!
+    A Calendar Scheduler Web Application Built for United State Air Force Flight Scheduling
     <br />
     <br />
     <a href="https://devpost.com/software/fe-academy?ref_content=user-portfolio&ref_feature=in_progress">View Demo</a>
