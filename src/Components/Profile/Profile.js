@@ -5,48 +5,83 @@ import {
   makeStyles,
   Avatar,
   Typography,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  ListSubheader,
+  Paper,
 } from "@material-ui/core";
 import { connect } from "react-redux";
+// mock data
+import { useUserRecords } from "./data";
+
 const useStyles = makeStyles((theme) => ({
   avatar: {
     width: 175,
     height: 175,
   },
-  firstRow: {
+  firstCol: {
     padding: theme.spacing(3, 0, 0, 0),
+  },
+  secondCol: {
+    maxHeight: "250px",
   },
   subtitle: {
     color: "grey",
+    padding: theme.spacing(3, 0, 0, 0),
   },
   name: {
-    padding: theme.spacing(3, 0, 3, 0),
+    padding: theme.spacing(5, 0, 3, 0),
   },
   valueStyling: {
-    padding: theme.spacing(1, 0, 3, 0),
+    padding: theme.spacing(1, 0, 1, 0),
+  },
+  listDimensions: {
+    maxHeight: "90vh",
+    width: "100%",
+    overflow: "auto",
+  },
+  listAvatar: {
+    border: "4px green solid",
+  },
+  listAvatarOffline: {
+    border: "4px #708090 solid",
   },
 }));
 
+const TOTALCOUNT = 20;
+
 function Profile(props) {
   const classes = useStyles();
-  // useEffect(() => {
-  //   console.log("props", props);
-  // });
+  // call mock data function (returns array)
+  const loadedUsers = useUserRecords(TOTALCOUNT);
   return (
-    <Container maxWidth="md">
+    <Container disableGutters={true}>
       <Grid container>
-        <Grid container item direction="row" className={classes.firstRow}>
-          <Grid item xs={3}>
-            <Avatar className={classes.avatar}>H</Avatar>
+        <Grid container item direction="row">
+          <Grid
+            item
+            container
+            xs={3}
+            // alignItems="center"
+            justify="center"
+            className={classes.firstCol}
+          >
+            <Avatar className={classes.avatar}>
+              {`${props.first_name.substr(0, 1)} 
+							${props.last_name.substr(0, 1)}`}
+            </Avatar>
           </Grid>
-          <Grid item container xs={6}>
+          <Grid item container xs={5} className={classes.secondCol}>
             {/* Name */}
-            <Grid item xs={12}>
-              <Typography variant="h4" className={classes.name}>
-                {props.first_name + " " + props.last_name}
-              </Typography>
-            </Grid>
-            {/* Role / Rank headings*/}
             <Grid item container xs={12}>
+              <Grid item xs={12}>
+                <Typography variant="h4" className={classes.name}>
+                  {`${props.first_name}  ${props.last_name}`}
+                </Typography>
+              </Grid>
+              {/* Role / Rank headings*/}
               <Grid item xs={6}>
                 <Typography variant="body2" className={classes.subtitle}>
                   Role
@@ -57,9 +92,7 @@ function Profile(props) {
                   Rank
                 </Typography>
               </Grid>
-            </Grid>
-            {/* Role / Rank values */}
-            <Grid item container xs={12}>
+              {/* Role / Rank values */}
               <Grid item xs={6}>
                 <Typography variant="h6" className={classes.valueStyling}>
                   {props.role}
@@ -70,9 +103,7 @@ function Profile(props) {
                   Rank
                 </Typography>
               </Grid>
-            </Grid>
-            {/* Email / ??? headings*/}
-            <Grid item container xs={12}>
+              {/* Email / ??? headings*/}
               <Grid item xs={6}>
                 <Typography variant="body2" className={classes.subtitle}>
                   Email
@@ -83,9 +114,7 @@ function Profile(props) {
                   ????
                 </Typography>
               </Grid>
-            </Grid>
-            {/* Email / ??? values */}
-            <Grid item container xs={12}>
+              {/* Email / ??? values */}
               <Grid item xs={6}>
                 <Typography variant="h6" className={classes.valueStyling}>
                   {props.email}
@@ -97,6 +126,31 @@ function Profile(props) {
                 </Typography>
               </Grid>
             </Grid>
+          </Grid>
+          <Grid item container xs={4}>
+            <Paper className={classes.listDimensions}>
+              <ListSubheader>Contacts</ListSubheader>
+              <List>
+                {loadedUsers.map((index, key) => {
+                  return (
+                    <ListItem key={key}>
+                      <ListItemAvatar>
+                        <Avatar
+                          alt="avatar"
+                          src={index.avatar}
+                          className={
+                            index.isOnline
+                              ? classes.listAvatar
+                              : classes.listAvatarOffline
+                          }
+                        />
+                      </ListItemAvatar>
+                      <ListItemText primary={index.name} />
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </Paper>
           </Grid>
         </Grid>
       </Grid>
