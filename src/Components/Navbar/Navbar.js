@@ -71,6 +71,7 @@ function Navbar(props) {
     props.logoutAction();
     handleClose();
   };
+
   return (
     <div>
       <AppBar position="fixed" className={classes.appBar}>
@@ -103,15 +104,17 @@ function Navbar(props) {
                   open={Boolean(anchorNav)}
                   onClose={handleClose}
                 >
-                  <MenuItem className={classes.menu}>
-                    <ListItemIcon
-                      style={{ minWidth: "35px" }}
-                      className={classes.button}
-                    >
-                      <AccountCircle />
-                    </ListItemIcon>
-                    <ListItemText primary="Profile" />
-                  </MenuItem>
+                  <Link to={"/Home/Profile"} className={classes.link}>
+                    <MenuItem className={classes.menu}>
+                      <ListItemIcon
+                        style={{ minWidth: "35px" }}
+                        className={classes.button}
+                      >
+                        <AccountCircle />
+                      </ListItemIcon>
+                      <ListItemText primary="Profile" />
+                    </MenuItem>
+                  </Link>
                   <Divider style={{ margin: "5px 0 5px 0" }} />
                   <Link to={"/"} className={classes.link}>
                     <MenuItem onClick={handleLogout} className={classes.menu}>

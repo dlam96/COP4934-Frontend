@@ -1,28 +1,44 @@
-import { LOGIN, LOGOUT, ONDARKMODE, OFFDARKMODE,
-  SETAIRMEN, SETAIRCRAFTMODELS, SETLOCATIONS, SETAIRCRAFTS,
-  SETFLIGHTS, SETCREWPOSITION, SETRANKS, SETAIRCRAFTSTATUS, SETUSERSTATUS, GOTINITIALESSENTIALREQUEST
-  } from "./actionTypes.js";
+import {
+  LOGIN,
+  LOGOUT,
+  ONDARKMODE,
+  OFFDARKMODE,
+  SETAIRMEN,
+  SETAIRCRAFTMODELS,
+  SETLOCATIONS,
+  SETAIRCRAFTS,
+  SETFLIGHTS,
+  SETCREWPOSITION,
+  SETRANKS,
+  SETAIRCRAFTSTATUS,
+  SETUSERSTATUS,
+  GOTINITIALESSENTIALREQUEST,
+} from "./actionTypes.js";
 
+export const login = (loginObject) => (
+  console.log("LoginObject", loginObject),
+  {
+    type: LOGIN,
+    payload: {
+      accountUUID: loginObject.accountUUID,
+      email: loginObject.email,
+      first_name: loginObject.first_name,
+      last_name: loginObject.last_name,
+      role: loginObject.role,
+      accessToken: loginObject.accessToken,
+      accessTokenCreated: loginObject.accessTokenCreated,
+      accessTokenExpiresIn: loginObject.accessTokenExpiresIn,
+    },
+  }
+);
 
-export const login = (loginObject) => ({
-  type: LOGIN,
-  payload: {
-    accountUUID: loginObject.accountUUID,
-    email: loginObject.email,
-    role: loginObject.role,
-    accessToken: loginObject.accessToken,
-    accessTokenCreated: loginObject.accessTokenCreated,
-    accessTokenExpiresIn: loginObject.accessTokenExpiresIn
-  },
-});
-
-export const logout = () => ({  
+export const logout = () => ({
   type: LOGOUT,
 });
 
 export const gotEssentialPayload = () => ({
   type: GOTINITIALESSENTIALREQUEST,
-})
+});
 
 export const onDarkMode = () => ({
   type: ONDARKMODE,
@@ -35,64 +51,62 @@ export const offDarkMode = () => ({
 export const setAirmen = (airmen) => ({
   type: SETAIRMEN,
   payload: {
-    airmen: airmen
-  }
+    airmen: airmen,
+  },
 });
 
 export const setAircraftModels = (aircraftModels) => ({
   type: SETAIRCRAFTMODELS,
   payload: {
-    aircraftmodel: aircraftModels
-  }
+    aircraftmodel: aircraftModels,
+  },
 });
 
 export const setLocations = (locations) => ({
   type: SETLOCATIONS,
   payload: {
-    location: locations
-  }
+    location: locations,
+  },
 });
 
 export const setAircrafts = (aircrafts) => ({
   type: SETAIRCRAFTS,
   payload: {
-    aircraft: aircrafts
-  }
+    aircraft: aircrafts,
+  },
 });
 
 export const setFlights = (flights) => ({
   type: SETFLIGHTS,
   payload: {
-    flight: flights
-  }
+    flight: flights,
+  },
 });
 
 export const setCrewPostions = (crewPositions) => ({
   type: SETCREWPOSITION,
   payload: {
-    crewposition: crewPositions
-  }
+    crewposition: crewPositions,
+  },
 });
-
 
 export const setRanks = (ranks) => ({
   type: SETRANKS,
   payload: {
-    rank: ranks
-  }
+    rank: ranks,
+  },
 });
 
 export const setAircraftStatus = (aircraftStatus) => ({
   type: SETAIRCRAFTSTATUS,
   payload: {
-    aircraftstatus: aircraftStatus
-  }
+    aircraftstatus: aircraftStatus,
+  },
 });
 
 export const setUserStatus = (userStatus) => ({
   type: SETUSERSTATUS,
   payload: {
-    userstatus: userStatus
-  }
+    userstatus: userStatus,
+  },
 });
-

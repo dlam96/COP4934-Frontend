@@ -5,6 +5,7 @@ import CreateSchedule from "../../Components/CreateSchedule/CreateSchedule.js";
 import Pilots from "../../Components/Pilots/Pilots.js";
 import Aircrafts from "../../Components/Aircrafts/Aircrafts.js";
 import Sidebar from "../../Components/Sidebar/Sidebar.js";
+import Profile from "../../Components/Profile/Profile.js";
 import { connect } from "react-redux";
 import { CssBaseline, Toolbar } from "@material-ui/core";
 
@@ -62,6 +63,9 @@ function Home(props) {
           </Route>
           <Route exact path="/Home/Aircrafts">
             <Aircrafts />
+          </Route>
+          <Route exact path="/Home/Profile">
+            <Profile />
           </Route>
         </Switch>
         {/* <Container maxWidth="lg" className={classes.container}>

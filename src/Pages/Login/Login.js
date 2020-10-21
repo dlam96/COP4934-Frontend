@@ -93,6 +93,8 @@ function Login(props) {
           accountUUID: response.data.account_uuid,
           email: email,
           role: response.data.role,
+          first_name: response.data.first_name,
+          last_name: response.data.last_name,
           accessToken: response.data.access_token,
           accessTokenCreated: response.data.access_token_created,
           accessTokenExpiresIn: response.data.access_token_expires_in,

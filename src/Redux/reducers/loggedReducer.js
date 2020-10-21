@@ -1,8 +1,15 @@
 import { LOGIN, LOGOUT, GOTINITIALESSENTIALREQUEST } from "../actionTypes.js";
 
 export default function loggedReducer(
-  state = { logged: false, username: null, role: null, accessToken: null, accessTokenCreated: null,
-    accessTokenExpiresIn: null, gotEssentialRequest: false },
+  state = {
+    logged: false,
+    username: null,
+    role: null,
+    accessToken: null,
+    accessTokenCreated: null,
+    accessTokenExpiresIn: null,
+    gotEssentialRequest: false,
+  },
   action
 ) {
   switch (action.type) {
@@ -11,11 +18,13 @@ export default function loggedReducer(
         logged: true,
         accountUUID: action.payload.accountUUID,
         email: action.payload.email,
+        first_name: action.payload.first_name,
+        last_name: action.payload.last_name,
         role: action.payload.role,
         accessToken: action.payload.accessToken,
         accessTokenCreated: action.payload.accessTokenCreated,
         accessTokenExpiresIn: action.payload.accessTokenExpiresIn,
-        gotEssentialRequest: false
+        gotEssentialRequest: false,
       };
     }
 
@@ -27,14 +36,15 @@ export default function loggedReducer(
         accessToken: null,
         accessTokenCreated: null,
         accessTokenExpiresIn: null,
-        gotEssentialRequest: false
+        gotEssentialRequest: false,
       };
     }
 
     case GOTINITIALESSENTIALREQUEST: {
       return {
-        ...state, gotEssentialRequest: true
-      }
+        ...state,
+        gotEssentialRequest: true,
+      };
     }
 
     default: {
@@ -42,6 +52,3 @@ export default function loggedReducer(
     }
   }
 }
-
- 
-

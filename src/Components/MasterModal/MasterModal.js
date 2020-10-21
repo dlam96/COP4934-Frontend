@@ -142,6 +142,8 @@ const useStyles = makeStyles((theme) => ({
   },
   positionField: {
     color: "black !important",
+    // overflow: "auto",
+    // fontSize: 15,
   },
 }));
 // options for pilots
@@ -1167,7 +1169,7 @@ function MasterModal(props) {
                         </Grid>
                       </Grid>
                       {/* Pilots WORK*/}
-                      <Grid container item direction="row" spacing={2}>
+                      <Grid container item direction="row" spacing={3}>
                         {flightPositions &&
                           flightPositions.map((item) => (
                             <Grid
@@ -1175,7 +1177,8 @@ function MasterModal(props) {
                               item
                               direction="column"
                               key={"Grid" + item.crew_position_uuid}
-                              sm
+                              // sm
+                              xs={4}
                             >
                               <TextField
                                 id=""
@@ -1195,7 +1198,7 @@ function MasterModal(props) {
                                     item.crew_position_uuid
                                   )
                                 }
-                                variant="outlined"
+                                variant="standard"
                                 fullWidth
                                 InputLabelProps={{
                                   className: classes.positionField,
