@@ -15,22 +15,19 @@ import {
   GOTINITIALESSENTIALREQUEST,
 } from "./actionTypes.js";
 
-export const login = (loginObject) => (
-  console.log("LoginObject", loginObject),
-  {
-    type: LOGIN,
-    payload: {
-      accountUUID: loginObject.accountUUID,
-      email: loginObject.email,
-      first_name: loginObject.first_name,
-      last_name: loginObject.last_name,
-      role: loginObject.role,
-      accessToken: loginObject.accessToken,
-      accessTokenCreated: loginObject.accessTokenCreated,
-      accessTokenExpiresIn: loginObject.accessTokenExpiresIn,
-    },
-  }
-);
+export const login = (loginObject) => ({
+  type: LOGIN,
+  payload: {
+    accountUUID: loginObject.accountUUID,
+    email: loginObject.email,
+    first_name: loginObject.first_name,
+    last_name: loginObject.last_name,
+    role: loginObject.role,
+    accessToken: loginObject.accessToken,
+    accessTokenCreated: loginObject.accessTokenCreated,
+    accessTokenExpiresIn: loginObject.accessTokenExpiresIn,
+  },
+});
 
 export const logout = () => ({
   type: LOGOUT,
