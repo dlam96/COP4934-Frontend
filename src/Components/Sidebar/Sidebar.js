@@ -47,7 +47,7 @@ function Sidebar(props) {
     routes.push({ routeName: "Create Schedule", path: "/Home/CreateSchedule", icon: "Create" });
   } 
   if (props.role === "Admin") {
-    routes.push({ routeName: "Users" ,path: "/Home/Pilots", icon: "People" });
+    routes.push({ routeName: "Users" ,path: "/Home/Users", icon: "People" });
     routes.push({ routeName: "Aircrafts", path: "/Home/Aircrafts", icon: "LocalAirport" });
   }
 

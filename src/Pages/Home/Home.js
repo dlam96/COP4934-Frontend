@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import CurrentSchedule from "../../Components/CurrentSchedule/CurrentSchedule.js";
 import CreateSchedule from "../../Components/CreateSchedule/CreateSchedule.js";
-import Pilots from "../../Components/Pilots/Pilots.js";
+import Users from "../../Components/Users/Users.js";
 import Aircrafts from "../../Components/Aircrafts/Aircrafts.js";
 import Sidebar from "../../Components/Sidebar/Sidebar.js";
 import { connect } from "react-redux";
@@ -57,8 +57,8 @@ function Home(props) {
           <Route exact path="/Home/CreateSchedule">
             <CreateSchedule />
           </Route>
-          <Route exact path="/Home/Pilots">
-            <Pilots />
+          <Route exact path="/Home/Users">
+            <Users />
           </Route>
           <Route exact path="/Home/Aircrafts">
             <Aircrafts />
