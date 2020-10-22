@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import clsx from "clsx";
 import axios from 'axios';
 import { 
   Container,
@@ -8,12 +7,26 @@ import {
   makeStyles, 
   AppBar, 
   Tabs, 
-  Tab 
+  Tab,
+  Typography,
+  Box,
+  Button,
 } from "@material-ui/core";
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import {
+  Add,
+} from "@material-ui/icons";
+import {
+  green,
+} from '@material-ui/core/colors';
 import ActiveAircrafts from './ActiveAircrafts.js';
-import Maitenance from './Maitenance.js';
+import AircraftModels from './AircraftModels.js';
+import AircraftCrew from './AircraftCrew.js';
+import EditAircraft from './EditAircraft.js';
+import EditAircraftModel from './EditAircraftModel.js';
+import NewAircraft from './NewAircraft.js';
+
+import { connect } from 'react-redux';
+import { setAircrafts } from '../../Redux/actions.js'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -25,19 +38,30 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     overflow: "auto",
     flexDirection: "column",
-  },
-  fixedHeight: {
+    width: '100%',
     height: 800,
   },
-  labels: {
-    padding: theme.spacing(2),
+  newModelPaper: {
+    background: '#F1F1F1',
+    height: '175px',
+    width: '100%',
+    opacity: '90%',
+  },
+  newAircraftBt: {
+    background: '#F1F1F1',
+    height: '50px',
+    width: '100%',
+    opacity: '80%',
+  },
+  addBt: {
+    marginTop: '20px',
   },
 }));
 
 const testAircrafts = [
-  { aircraft: "Pave Hawk", numCrew: 4, craftId: 1},
-  { aircraft: "Combat King", numCrew: 5, craftId: 2},
-  { aircraft: "Thunderbolt", numCrew: 1, craftId: 3},  
+  { aircraft: "Pave Hawk", numCrew: 4, crew: ['pilot1', 'pilot2', 'flightEng', 'gunner'], craftId: "PH-001", aStatus: "Unavailable"},
+  { aircraft: "Combat King", numCrew: 5, crew: ['pilot1', 'pilot2', 'cmbtSysOfficer', 'loadmaster1', 'loadmaster2'], craftId: "CK-001", aStatus: "Maintenance"},
+  { aircraft: "Thunderbolt", numCrew: 1, crew: ['pilot1'], craftId: "T-001", aStatus: "Available"},  
 ]
 
 function TabPanel(props) {
@@ -59,15 +83,36 @@ function TabPanel(props) {
   );
 }
 
-export default function Aircrafts() {
+function Aircrafts(props) {
   const classes = useStyles();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const [value, setValue] = useState(0);
+  const [crafts, setCrafts] = useState(testAircrafts);
+  const [edit, setEdit] = useState(false);
+  const [editAircraft, setEditAircraft] = useState(null);
+  const [editAircraftModel, setEditAircraftModel] = useState(null);
+
+  const [addNew, setAddNew] = useState(false);
+  const [editAllCrafts, setEditAllCrafts] = useState(null);
+
+  const {
+    aircraftAction,
+  } = props;
+
+  useEffect(() => {
+    axios.get('/aircrafts')
+      .then((response) => {
+        console.log('Aircraft Data:', response.data);
+        aircraftAction(response.data.aircrafts);
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+      })
+  }, [aircraftAction])
 
   useEffect(() => {
     axios.get('/approval')
       .then((response) => {
-        console.log("Pilots:", response.data);
+        console.log("Aircrafts:", response.data);
       })
       .catch((error) => {
         console.log("Error:", error);
@@ -78,68 +123,176 @@ export default function Aircrafts() {
     setValue(newValue);
   };
 
+  const handleEdit = (aircraft = null) => {
+    if (!edit) {
+      setEditAircraft(aircraft);
+      setEdit(true);
+    } else {
+      setEdit(false);
+      if (!aircraft) return;
+      let newAircrafts = [...crafts];
+      let index = newAircrafts.findIndex((element) => element.craftId === aircraft.craftId)
+      newAircrafts[index] = aircraft;
+      setCrafts(newAircrafts);
+    }
+  }
+
+  const handleModelEdit = (aircraft = null) => {
+    if (!edit) {
+      setEditAircraftModel(aircraft);
+      setEdit(true);
+    } else {
+      setEdit(false);
+      if (!aircraft) return;
+      let newAircrafts = [...crafts];
+      let index = newAircrafts.findIndex((element) => element.craftId === aircraft.craftId)
+      newAircrafts[index] = aircraft;
+      setCrafts(newAircrafts);
+    }
+  }
+
+  const handleNewCraft = (aircraft = null) => {
+    if (!addNew) {
+      setAddNew(true);
+    } else {
+      setAddNew(false);
+      if (!aircraft) return;
+      let newAircrafts = [...crafts, aircraft];
+      setCrafts(newAircrafts);
+    }
+  }
+
   return (
     <Container maxWidth="lg" className={classes.container}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={8} lg={9}>
+      <Grid container item xs={9} md={9} lg={9} spacing={3}>
 
         <AppBar position="static">
-            <Tabs value={value} onChange={handleChange}>
-                <Tab label="Active" />
-                <Tab label="Maitenance" />
-            </Tabs> 
+          <Tabs value={value} onChange={handleChange}>
+              <Tab label="Aircrafts" />
+              <Tab label="Models" />
+              <Tab label="Crew" />
+          </Tabs> 
         </AppBar>
 
-        <Paper className={fixedHeightPaper} variant="outlined">
-
+        <Paper className={classes.paper} variant="outlined">
           {/* Active Aircrafts */}
-          <TabPanel value={value} index={0}>
+          {edit ?
+            <TabPanel value={value} index={0}>
+              <Grid container spacing={2}>
+                <EditAircraft
+                  aircraft={editAircraft}
+                  handleEdit={handleEdit}
+                />
+              </Grid>
+            </TabPanel>
+            :
+            <TabPanel value={value} index={0}>
+              {addNew ?
+                <Grid container spacing={2}>
+                  <NewAircraft 
+                    aircrafts={crafts}
+                    handleNewCraft={handleNewCraft}
+                  />
+                </Grid>
+                :     
+                <Grid container spacing={2}>
+                  <Grid item xs={2}>Aircraft ID</Grid>
+                  <Grid item xs={2}>Aircraft</Grid>
+                  <Grid item xs={1}>Crew</Grid>
+                  <Grid item xs={3}>Status</Grid>
+                  {crafts.map(aircraft => (
+                    <ActiveAircrafts
+                      aircraft={aircraft}
+                      handleEdit={handleEdit}
+                      key={aircraft.craftId}
+                    />
+                  ))}
+                  {/* New Aircraft button */}
+                  <Grid item xs={3} md={12}>
+                    <Paper className={classes.newAircraftBt}>
+                      <Button 
+                        startIcon={<Add />}
+                        fullWidth={true}
+                        size="large"
+                        onClick={()=>handleNewCraft()}
+                        style={{
+                          color: green[500],
+                          minHeight: '100%',
+                        }}
+                      />
+                    </Paper>
+                  </Grid>
+                </Grid>
+              }
+            </TabPanel>  
+          }
+          
+          {/* Aircraft Models */}
+          {edit ?
+            <TabPanel value={value} index={1}>
+              <EditAircraftModel
+                aircraft={editAircraftModel}
+                handleModelEdit={handleModelEdit}
+              />
+            </TabPanel>
+            :
+            <TabPanel value={value} index={1}>
+              <Grid container spacing={2} >
+                {testAircrafts.map(aircraft => (
+                  <AircraftModels
+                    aircraft={aircraft}
+                    handleModelEdit={handleModelEdit}
+                    key={aircraft.craftId}
+                  />
+                ))}  
+                {/* New Model button */}
+                <Grid item xs={3} sm={6}>
+                  <Paper className={classes.newModelPaper}>
+                    <Button 
+                        startIcon={<Add />}
+                        fullWidth={true}
+                        size="large"
+                        style={{
+                          color: green[500],
+                          minHeight: '100%',
+                        }}
+                    />
+                  </Paper>
+                </Grid>
+              </Grid>
+            </TabPanel>  
+          } 
 
+          {/* Aircraft Crew */}
+          <TabPanel value={value} index={2}>
+            
             <Grid container item direction="row" className={classes.labels}>
-              <Grid item xs={3} align="start">
-                Aircraft
-              </Grid>
-              <Grid item xs={3} align="start">
-                Crew
-              </Grid>
-              <Grid item xs={6} align="start" />
+              <Grid item xs={3} align="start">Aircraft</Grid>
+              <Grid item xs={3} align="start"> Crew</Grid>
             </Grid>
 
             {testAircrafts.map(aircraft => (
-                  <ActiveAircrafts
+                  <AircraftCrew
                     aircrafts={aircraft}
                     key={aircraft.craftId}
                   />
             ))} 
-
-          </TabPanel>  
-          
-          {/* Maitenance */}
-          <TabPanel value={value} index={1}>
-            
-            <Grid container item direction="row" className={classes.labels}>
-              <Grid item xs={3} align="start">
-                Aircraft
-              </Grid>
-              <Grid item xs={3} align="start">
-                Crew
-              </Grid>
-              <Grid item xs={6} align="start" />
-            </Grid>
-
-            {testAircrafts.map(aircraft => (
-                  <Maitenance
-                    aircrafts={aircraft}
-                    key={aircraft.craftId}
-                  />
-            ))} 
             
           </TabPanel>  
-          
         </Paper>
-
-        </Grid>
       </Grid>
     </Container>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    aircrafts: state.aircraftReducer,
+  }
+}
+
+const mapDispatchToProps = {
+  aircraftAction: setAircrafts,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Aircrafts)

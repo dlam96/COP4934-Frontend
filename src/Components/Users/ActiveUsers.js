@@ -22,18 +22,10 @@ export default function ActiveUsers(props) {
   return( 
     <Paper className={classes.paper}>
       <Grid container item direction="row">
-        <Grid item xs={2} align="start">
-          { user.firstName }
-        </Grid>
-        <Grid item xs={3} align="start">
-          { user.lastName }
-        </Grid>
-        <Grid item xs={2} align="start">
-          { user.militaryId }
-        </Grid>
-        <Grid item xs={2} align="start">
-          { user.rank }
-        </Grid>
+        <Grid item xs={2} align="start">{ user.firstName }</Grid>
+        <Grid item xs={3} align="start">{ user.lastName }</Grid>
+        <Grid item xs={2} align="start">{ user.militaryId }</Grid>
+        <Grid item xs={2} align="start">{ user.rank }</Grid>
         <Grid item xs={3} align="right">
           <Button 
             variant="contained"
