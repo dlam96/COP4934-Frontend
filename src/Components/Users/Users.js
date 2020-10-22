@@ -10,9 +10,9 @@ import {
   Tabs, 
   Tab, 
   Button,
+  Typography,
+  Box,
 } from "@material-ui/core";
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import ActiveUsers from "./ActiveUsers";
 import PendingUsers from "./PendingUsers";
 import EditUser from "./EditUser.js";
@@ -37,16 +37,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const testUsers = [
-  { firstName: "John", lastName: "Doe", militaryId: "***453", rank: "O1" },
-  { firstName: "Jane", lastName: "Doe", militaryId: "***367", rank: "O2" },
-  { firstName: "Joe", lastName: "Schmoe", militaryId: "***533", rank: "O3" },
-  { firstName: "Jane", lastName: "Bloggs", militaryId: "***432", rank: "O4" },
-  { firstName: "Juan", lastName: "Perez", militaryId: "***543", rank: "O5" },
-  { firstName: "Sammy", lastName: "Soe", militaryId: "***414", rank: "O6" },
-  { firstName: "Marty", lastName: "McFly", militaryId: "***187", rank: "O7" },
-  { firstName: "Shoto", lastName: "Todoroki", militaryId: "***191", rank: "O8" },
-  { firstName: "Nezuko", lastName: "Kamado", militaryId: "***478", rank: "O9" },
-  { firstName: "Mikasa", lastName: "Ackerman", militaryId: "***983", rank: "O10" },
+  { firstName: "John", lastName: "Doe", militaryId: "***453", rank: "O1", pStatus: "Training", role: "Flight Engineer", uStatus: "Available" },
+  { firstName: "Jane", lastName: "Doe", militaryId: "***367", rank: "O2", pStatus: "PTO - Vacation", role: "Pilot", uStatus: "Unavailable"},
+  { firstName: "Joe", lastName: "Schmoe", militaryId: "***533", rank: "O3", pStatus: "Training", role: "Pilot", uStatus: "Available" },
+  { firstName: "Jane", lastName: "Bloggs", militaryId: "***432", rank: "O4", pStatus: "Training", role: "Flight Engineer", uStatus: "Available" },
+  { firstName: "Juan", lastName: "Perez", militaryId: "***543", rank: "O5", pStatus: "Training", role: "Flight Engineer", uStatus: "Available" },
+  { firstName: "Sammy", lastName: "Soe", militaryId: "***414", rank: "O6", pStatus: "Training", role: "Flight Engineer", uStatus: "Unavailable" },
+  { firstName: "Marty", lastName: "McFly", militaryId: "***187", rank: "O7", pStatus: "Training", role: "Flight Engineer", uStatus: "Unavailable" },
+  { firstName: "Shoto", lastName: "Todoroki", militaryId: "***191", rank: "O8", pStatus: "Training", role: "Flight Engineer", uStatus: "Available" },
+  { firstName: "Nezuko", lastName: "Kamado", militaryId: "***478", rank: "O9", pStatus: "Training", role: "Flight Engineer", uStatus: "Available" },
+  { firstName: "Mikasa", lastName: "Ackerman", militaryId: "***983", rank: "O10", pStatus: "Training", role: "Flight Engineer", uStatus: "Unavailable" },
 ]
 
 const pendingUsers = [];
@@ -70,7 +70,7 @@ function TabPanel(props) {
   );
 }
 
-export default function Pilots() {
+export default function Users() {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const [value, setValue] = useState(0);
@@ -84,7 +84,7 @@ export default function Pilots() {
   useEffect(() => {
     axios.get('/approval')
       .then((response) => {
-        console.log("Pilots:", response.data);
+        console.log("Users:", response.data);
       })
       .catch((error) => {
         console.log("Error:", error);
@@ -103,7 +103,7 @@ export default function Pilots() {
       setEdit(false);
       if (!user) return;
       let newUsers = [...users];
-      let index = newUsers.findIndex((element)=> element.militaryId === user.militaryId)
+      let index = newUsers.findIndex((element) => element.militaryId === user.militaryId)
       newUsers[index] = user;
       setUsers(newUsers);
     }
@@ -126,48 +126,40 @@ export default function Pilots() {
         <Grid item xs={12} md={8} lg={9}>
 
         <AppBar position="static">
-            <Tabs value={value} onChange={handleChange}>
-                <Tab label="Users" />
-                <Tab label="New Users Approval" />
-            </Tabs> 
+          <Tabs value={value} onChange={handleChange}>
+            <Tab label="Users" />
+            <Tab label="New Users Approval" />
+          </Tabs> 
         </AppBar>
 
         <Paper className={fixedHeightPaper} variant="outlined">
 
           {/* Active Users */}
-            {edit ?
-              <TabPanel value={value} index={0}>
-                <EditUser 
-                  user={editUser}
+          {edit ?
+            <TabPanel value={value} index={0}>
+              <EditUser 
+                user={editUser}
+                handleEdit={handleEdit}
+              /> 
+            </TabPanel>
+            :
+            <TabPanel value={value} index={0}>
+              <Grid container item className={classes.labels}>
+                <Grid item xs={2} align="start">First Name</Grid>
+                <Grid item xs={3} align="start">Last Name</Grid>
+                <Grid item xs={2} align="start">ID</Grid>
+                <Grid item xs={2} align="start">Rank</Grid>
+              </Grid>
+              
+              {users.map(user => (
+                <ActiveUsers
+                  user={user}
                   handleEdit={handleEdit}
-                /> 
-              </TabPanel>
-              :
-              <TabPanel value={value} index={0}>
-                <Grid container item className={classes.labels}>
-                  <Grid item xs={2} align="start">
-                    First Name
-                  </Grid>
-                  <Grid item xs={3} align="start">
-                    Last Name
-                  </Grid>
-                  <Grid item xs={2} align="start">
-                    ID
-                  </Grid>
-                  <Grid item xs={2} align="start">
-                    Rank
-                  </Grid>
-                </Grid>
-                
-                {users.map(user => (
-                  <ActiveUsers
-                    user={user}
-                    handleEdit={handleEdit}
-                    key={user.militaryId}
-                  />
-                ))}
-              </TabPanel>
-            }
+                  key={user.militaryId}
+                />
+              ))}
+            </TabPanel>
+          }
 
           {/* Users Waiting for Approval */}
           <TabPanel value={value} index={1}>

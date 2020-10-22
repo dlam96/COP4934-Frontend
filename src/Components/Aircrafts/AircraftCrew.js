@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Maitenance(props) {
+export default function AircraftCrew(props) {
   const classes = useStyles();
   const { aircrafts } = props;
 
