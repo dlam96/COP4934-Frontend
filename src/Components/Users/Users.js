@@ -49,8 +49,6 @@ const testUsers = [
   { firstName: "Mikasa", lastName: "Ackerman", militaryId: "***983", rank: "O10", pStatus: "Training", role: "Flight Engineer", uStatus: "Unavailable" },
 ]
 
-const pendingUsers = [];
-
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -78,8 +76,9 @@ export default function Users() {
   const [editUser, setEditUser] = useState(null);
   const [users, setUsers] = useState(testUsers);
 
-  const [approveUsers, setApproveUsers] = useState(testUsers);
-  const [checkedUsers, setCheckedUsers] = useState(pendingUsers);
+  const [approveUsers, setApproveUsers] = useState(null);
+  setApproveUsers(testUsers);
+  // const [checkedUsers, setCheckedUsers] = useState(pendingUsers);
 
   useEffect(() => {
     axios.get('/approval')
@@ -109,16 +108,17 @@ export default function Users() {
     }
   };
 
-  const handleApprove = (user = null) => {
-    if (!user) return;
-    let pendUsers = [...checkedUsers];
-    pendUsers.push(user);
-    setCheckedUsers(pendUsers);
-  };
+  // TODO Approve Users
+  // const handleApprove = (user = null) => {
+  //   if (!user) return;
+  //   let pendUsers = [...checkedUsers];
+  //   pendUsers.push(user);
+  //   setCheckedUsers(pendUsers);
+  // };
 
-  const handleApproveAll = () => {
-    console.log(checkedUsers);
-  };
+  // const handleApproveAll = () => {
+  //   console.log(checkedUsers);
+  // };
 
   return (
     <Container maxWidth="lg" className={classes.container}>
@@ -182,7 +182,7 @@ export default function Users() {
             {approveUsers.map(user => (
               <PendingUsers
                 user={user}
-                handleApprove={handleApprove}
+                // handleApprove={handleApprove}
                 key={user.militaryId}
               />
             ))}  
@@ -190,7 +190,7 @@ export default function Users() {
             <Grid container direction="row" align="right">
               <Button
                 variant="contained"
-                onClick={() => handleApproveAll()}
+                // onClick={() => handleApproveAll()}
               >
                 Submit All
               </Button>
