@@ -6,9 +6,6 @@ import {
   makeStyles,
   TextField,
   Button,
-  Select,
-  InputLabel,
-  FormControl,
 } from "@material-ui/core";
 import {
   Save,
@@ -49,12 +46,8 @@ export default function EditAircraftModel(props) {
     { label: "Crew Size", value: "numCrew" },
   ];
   const [aircraft, setAircraft] = useState(props.aircraft);
-  const [crewSize, setCrewSize] = useState(0);
-  const [index, setIndex] = useState(0);
-
-  const findIndex = (pos = null) => {
-    
-  }
+  // const [crewSize, setCrewSize] = useState(0);
+  // const [index, setIndex] = useState(0);
 
   return (
     <Container maxWidth="lg" className={classes.container}>
