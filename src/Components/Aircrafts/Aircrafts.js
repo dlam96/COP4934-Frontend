@@ -92,7 +92,7 @@ function Aircrafts(props) {
   const [editAircraftModel, setEditAircraftModel] = useState(null);
 
   const [addNew, setAddNew] = useState(false);
-  const [editAllCrafts, setEditAllCrafts] = useState(null);
+  // const [editAllCrafts, setEditAllCrafts] = useState(null);
 
   const {
     aircraftAction,
