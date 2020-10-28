@@ -27,19 +27,32 @@ export default function AircraftModels(props) {
   const classes = useStyles();
   const { aircraft } = props;
 
+  const modelIdSlice = ( id = null) => {
+    let str = id;
+    let res = str.slice(0, 8);
+    return res;
+  }
+
   return( 
     <Grid item xs={3} sm={6}>
       <Paper className={classes.paper}>
         <div className={classes.modelInfo}>
           <Grid item>
             <Typography gutterBottom variant='h5'>
-              {aircraft.aircraft}
+              {aircraft.model_name}
             </Typography>
           </Grid>
-          <Grid item>
-            <Typography variant='body2'>
-              Max crew: {aircraft.numCrew}
-            </Typography>
+          <Grid container item direction='row'>
+            <Grid item md={6}>
+              <Typography variant='body2'>
+                Model id: {modelIdSlice(aircraft.model_uuid)}
+              </Typography>
+            </Grid>
+            <Grid item md={6}>
+              <Typography variant='body2'>
+                Max crew: {aircraft.positions.length}
+              </Typography>
+            </Grid>
           </Grid>
         </div>
         <Divider variant='middle' />
@@ -49,7 +62,7 @@ export default function AircraftModels(props) {
             size="small"
             onClick={() => props.handleModelEdit(aircraft)}
           >
-            Edit
+            Details
           </Button>
         </div>
       </Paper>

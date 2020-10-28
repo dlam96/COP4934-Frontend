@@ -1,31 +1,24 @@
 import React, { useState } from 'react';
 import {
+  Container,
   Grid,
   Paper,
   makeStyles,
   TextField,
   Button,
-  Select,
   FormControl,
-  Typography,
+  Select,
 } from "@material-ui/core";
 import {
   Save,
 } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    paddingTop: theme.spacing(2),
-    width: '100%',
-  },
   fixedInfo: {
     height: '100%',
     width: '100%',
     paddingTop: "50px",
     padding: theme.spacing(2),
-  },
-  crewPos: {
-    width: '100%',
   },
   buttons: {
     paddingTop: theme.spacing(4),
@@ -33,62 +26,49 @@ const useStyles = makeStyles((theme) => ({
   saveBt: {
     marginRight: "10px",
   },
-  posInfo: {
-    margin: theme.spacing(1),
-    paddingLeft: '50%',
-  },
 }));
 
-export default function EditAircraft(props) {
+export default function EditCrew(props) {
   const classes = useStyles();
-  const { aircraftModels } = props;
-  const [aircraft, setAircraft] = useState(props.aircraft);
-
-  const getModelName = ( aircraft = null ) => {
-    let index = aircraftModels.findIndex((element) => element.model_uuid === aircraft.model_uuid)
-    return aircraftModels[index].model_name;
-  }
+  const [position, setPosition] = useState(props.position);
 
   return (
     <Paper className={classes.fixedInfo} variant="outlined">
-      <Grid container item direction='column' spacing={2}>
-
-        {/* Aircraft Info */}
+      <Grid container item direct='column' spacing={2}>
+        
         <Grid container item direction='row'>
-          <Grid item xs={4} align='right'>Aircraft ID</Grid>
+          <Grid item xs={4} align='right'>Position</Grid>
           <Grid item xs={1} />
-          <Grid item xs={4} align='start'>{ aircraft.aircraft_uuid }</Grid>
+          <Grid item xs={4} align='start'>{ position.position }</Grid>
         </Grid>
         <Grid container item direction='row'>
-          <Grid item xs={4} align='right'>Aircraft Model</Grid>
+          <Grid item xs={4} align='right'>Position id</Grid>
           <Grid item xs={1} />
-          <Grid item xs={4} align='start'>{ getModelName(aircraft) }</Grid>
+          <Grid item xs={4} align='start'>{ position.crew_position_uuid }</Grid>
         </Grid>
         <Grid container item direction='row'>
-          <Grid item xs={4} align='right'>Status</Grid>
+          <Grid item xs={4} align='right'>Required</Grid>
           <Grid item xs={1} />
           <Grid item xs={4} alight='start'>
             <FormControl size='small'>
               <Select
                 native
-                value={aircraft.status}
+                value={position.required}
                 onChange={(e) =>
                   {
-                    let newAircraft = {...aircraft};
-                    newAircraft['status'] = e.target.value;
-                    setAircraft(newAircraft)
+                    let newPosition = {...position};
+                    newPosition['required'] = e.target.value;
+                    setPosition(newPosition)
                   }
                 }
               >
-                <option value="Unavailable">Unavailable</option>
-                <option value="Available">Available</option>
-                <option value="Maitenance">Maitenance</option>
+                <option value="True">Yes</option>
+                <option value="False">No</option>
               </Select>
             </FormControl>
           </Grid>
         </Grid>
 
-        {/* Save and Cancel buttons */}
         <Grid container item>
           <Grid item xs={12} align="center" className={classes.buttons}>
             <Button
@@ -96,13 +76,13 @@ export default function EditAircraft(props) {
               color="primary"
               startIcon={<Save />}
               className={classes.saveBt}
-              onClick={()=>props.handleEdit(aircraft)}
+              onClick={()=>props.handleCrewEdit(position)}
             >
               Save
             </Button>
             <Button
               variant="contained"
-              onClick={()=>props.handleEdit()}
+              onClick={()=>props.handleCrewEdit()}
             >
               Cancel
             </Button>
@@ -112,5 +92,4 @@ export default function EditAircraft(props) {
       </Grid>
     </Paper>
   )
-
 }
