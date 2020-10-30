@@ -146,17 +146,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 // options for pilots
-const pilots = [
-  {
-    name: "Franz Ferdinand",
-  },
-  {
-    name: "John Doe",
-  },
-  {
-    name: "Jane Doe",
-  },
-];
+// const pilots = [
+//   {
+//     name: "Franz Ferdinand",
+//   },
+//   {
+//     name: "John Doe",
+//   },
+//   {
+//     name: "Jane Doe",
+//   },
+// ];
 
 function MasterModal(props) {
   const classes = useStyles();

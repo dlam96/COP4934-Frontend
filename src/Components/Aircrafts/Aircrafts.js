@@ -11,6 +11,7 @@ import {
   Typography,
   Box,
   Button,
+  Divider,
 } from "@material-ui/core";
 import {
   Add,
@@ -23,10 +24,11 @@ import AircraftModels from './AircraftModels.js';
 import AircraftCrew from './AircraftCrew.js';
 import EditAircraft from './EditAircraft.js';
 import EditAircraftModel from './EditAircraftModel.js';
+import EditCrew from './EditCrew.js';
 import NewAircraft from './NewAircraft.js';
 
-import { connect } from 'react-redux';
-import { setAircrafts } from '../../Redux/actions.js'
+import { connect } from 'react-redux';  
+import { setAircraftModels, setAircrafts, setCrewPostions } from '../../Redux/actions.js'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -40,6 +42,12 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     width: '100%',
     height: 800,
+  },
+  aircraftList: {
+    padding: theme.spacing(1),
+    paddingLeft: '10px',
+    paddingTop: '20px',
+    background: '#96a1a7'
   },
   newModelPaper: {
     background: '#F1F1F1',
@@ -90,24 +98,10 @@ function Aircrafts(props) {
   const [edit, setEdit] = useState(false);
   const [editAircraft, setEditAircraft] = useState(null);
   const [editAircraftModel, setEditAircraftModel] = useState(null);
+  const [editCrew, setEditCrew] = useState(null);
 
   const [addNew, setAddNew] = useState(false);
   // const [editAllCrafts, setEditAllCrafts] = useState(null);
-
-  const {
-    aircraftAction,
-  } = props;
-
-  useEffect(() => {
-    axios.get('/aircrafts')
-      .then((response) => {
-        console.log('Aircraft Data:', response.data);
-        aircraftAction(response.data.aircrafts);
-      })
-      .catch((error) => {
-        console.log('Error:', error);
-      })
-  }, [aircraftAction])
 
   useEffect(() => {
     axios.get('/approval')
@@ -129,11 +123,12 @@ function Aircrafts(props) {
       setEdit(true);
     } else {
       setEdit(false);
-      if (!aircraft) return;
-      let newAircrafts = [...crafts];
-      let index = newAircrafts.findIndex((element) => element.craftId === aircraft.craftId)
-      newAircrafts[index] = aircraft;
-      setCrafts(newAircrafts);
+      if (!aircraft) {
+        return;
+      } else {
+        console.log('Aircraft Update:', aircraft);
+        // TODO: axios
+      }
     }
   }
 
@@ -144,10 +139,16 @@ function Aircrafts(props) {
     } else {
       setEdit(false);
       if (!aircraft) return;
-      let newAircrafts = [...crafts];
-      let index = newAircrafts.findIndex((element) => element.craftId === aircraft.craftId)
-      newAircrafts[index] = aircraft;
-      setCrafts(newAircrafts);
+    }
+  }
+
+  const handleCrewEdit = (position = null) => {
+    if (!edit) {
+      setEditCrew(position);
+      setEdit(true);
+    } else {
+      setEdit(false);
+      if (!position) return;
     }
   }
 
@@ -175,12 +176,14 @@ function Aircrafts(props) {
         </AppBar>
 
         <Paper className={classes.paper} variant="outlined">
+
           {/* Active Aircrafts */}
           {edit ?
             <TabPanel value={value} index={0}>
               <Grid container spacing={2}>
                 <EditAircraft
                   aircraft={editAircraft}
+                  aircraftModels={props.aircraftModels}
                   handleEdit={handleEdit}
                 />
               </Grid>
@@ -196,19 +199,29 @@ function Aircrafts(props) {
                 </Grid>
                 :     
                 <Grid container spacing={2}>
-                  <Grid item xs={2}>Aircraft ID</Grid>
-                  <Grid item xs={2}>Aircraft</Grid>
-                  <Grid item xs={1}>Crew</Grid>
-                  <Grid item xs={3}>Status</Grid>
-                  {crafts.map(aircraft => (
-                    <ActiveAircrafts
-                      aircraft={aircraft}
-                      handleEdit={handleEdit}
-                      key={aircraft.craftId}
-                    />
-                  ))}
+                  {/* Active Aircraft List*/}
+                  <Paper className={classes.aircraftList}>
+                    <Grid container item xs={12} md={12} style={{marginBottom: '10px', paddingLeft: '10px'}}>
+                      <Grid item xs={2} >Aircraft ID</Grid>
+                      <Grid item xs={3} >Aircraft Model</Grid>
+                      <Grid item xs={2} >Status</Grid>
+                    </Grid>
+                    <Divider variant='fullWidth'/>
+                    <Grid container item xs={12} md={12}>
+                      {props.aircrafts.map(aircraft => (
+                        <ActiveAircrafts
+                          aircraft={aircraft}
+                          aircraftModels={props.aircraftModels}
+                          handleEdit={handleEdit}
+                          key={aircraft.aircraft_uuid}
+                        />
+                      ))}
+                    </Grid>
+                  </Paper>
+
+                
                   {/* New Aircraft button */}
-                  <Grid item xs={3} md={12}>
+                  <Grid container item xs={12} md={12}>
                     <Paper className={classes.newAircraftBt}>
                       <Button 
                         startIcon={<Add />}
@@ -230,19 +243,22 @@ function Aircrafts(props) {
           {/* Aircraft Models */}
           {edit ?
             <TabPanel value={value} index={1}>
-              <EditAircraftModel
-                aircraft={editAircraftModel}
-                handleModelEdit={handleModelEdit}
-              />
+              <Grid container spacing={2}>
+                <EditAircraftModel
+                  aircraft={editAircraftModel}
+                  crewPositions={props.crewPositions}
+                  handleModelEdit={handleModelEdit}
+                />
+              </Grid>
             </TabPanel>
             :
             <TabPanel value={value} index={1}>
               <Grid container spacing={2} >
-                {testAircrafts.map(aircraft => (
+                {props.aircraftModels.map(model => (
                   <AircraftModels
-                    aircraft={aircraft}
+                    aircraft={model}
                     handleModelEdit={handleModelEdit}
-                    key={aircraft.craftId}
+                    key={model.model_uuid}
                   />
                 ))}  
                 {/* New Model button */}
@@ -264,22 +280,45 @@ function Aircrafts(props) {
           } 
 
           {/* Aircraft Crew */}
-          <TabPanel value={value} index={2}>
-            
-            <Grid container item direction="row" className={classes.labels}>
-              <Grid item xs={3} align="start">Aircraft</Grid>
-              <Grid item xs={3} align="start"> Crew</Grid>
-            </Grid>
-
-            {testAircrafts.map(aircraft => (
+          {edit ?
+            <TabPanel value={value} index={2}>
+              <Grid container spacing={2}>
+                <EditCrew
+                  position={editCrew}
+                  handleCrewEdit={handleCrewEdit}
+                />
+              </Grid>
+            </TabPanel>
+            :
+            <TabPanel value={value} index={2}>
+              <Grid container spacing={2} >
+                {props.crewPositions.map(pos => (
                   <AircraftCrew
-                    aircrafts={aircraft}
-                    key={aircraft.craftId}
+                    position={pos}
+                    handleCrewEdit={handleCrewEdit}
+                    key={pos.crew_position_uuid}
                   />
-            ))} 
-            
-          </TabPanel>  
+                ))}  
+                {/* New Position button */}
+                <Grid item xs={3} sm={6}>
+                  <Paper className={classes.newModelPaper}>
+                    <Button 
+                      startIcon={<Add />}
+                      fullWidth={true}
+                      size="large"
+                      style={{
+                        color: green[500],
+                        minHeight: '100%',
+                      }}
+                    />
+                  </Paper>
+                </Grid>
+              </Grid>
+            </TabPanel>  
+          }
+
         </Paper>
+
       </Grid>
     </Container>
   );
@@ -288,11 +327,15 @@ function Aircrafts(props) {
 const mapStateToProps = (state) => {
   return {
     aircrafts: state.aircraftReducer,
+    aircraftModels: state.aircraftmodelReducer, 
+    crewPositions: state.crewpositionReducer,
   }
 }
 
 const mapDispatchToProps = {
   aircraftAction: setAircrafts,
+  aircraftModelAction: setAircraftModels,
+  crewPositionAction: setCrewPostions,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Aircrafts)
