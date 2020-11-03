@@ -28,7 +28,7 @@ function Routes(props) {
       <Route exact path="/Signup">
         <Signup />
       </Route>
-      
+
       <PrivateRoute path="/Home/" auth={props.logged} component={Home} />
       <Route>
         <NotFound />

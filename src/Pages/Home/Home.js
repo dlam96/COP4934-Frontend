@@ -9,6 +9,7 @@ import Profile from "../../Components/Profile/Profile.js";
 import Messages from "../../Components/Messages/Messages.js";
 import { connect } from "react-redux";
 import { CssBaseline, Toolbar } from "@material-ui/core";
+import WebSocket from "../../Components/WebSocket/WebSocket.js";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -46,6 +47,7 @@ function Home(props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
+      <WebSocket />
 
       <Sidebar />
       <main className={classes.content}>

@@ -13,6 +13,7 @@ import {
   SETAIRCRAFTSTATUS,
   SETUSERSTATUS,
   GOTINITIALESSENTIALREQUEST,
+  SETWEBSOCKET,
 } from "./actionTypes.js";
 
 export const login = (loginObject) => ({
@@ -105,5 +106,12 @@ export const setUserStatus = (userStatus) => ({
   type: SETUSERSTATUS,
   payload: {
     userstatus: userStatus,
+  },
+});
+
+export const setWebSocket = (ws) => ({
+  type: SETWEBSOCKET,
+  payload: {
+    ws,
   },
 });

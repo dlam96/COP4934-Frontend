@@ -1,9 +1,9 @@
-import { SETUSERSTATUS } from "../actionTypes.js";
+import { SETWEBSOCKET } from "../actionTypes.js";
 
 export default function (state = null, action) {
   switch (action.type) {
-    case SETUSERSTATUS: {
-      return action.payload.userstatus;
+    case SETWEBSOCKET: {
+      return action.payload.ws;
     }
 
     default: {

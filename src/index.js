@@ -12,7 +12,7 @@ axios.defaults.baseURL = "https://airforceofs.com/api";
 (async () => {
   try {
     console.log("Loading Cached states if any");
-    const storeModule = await import('./Redux/store.js');
+    const storeModule = await import("./Redux/store.js");
     const store = await storeModule.default();
 
     // If the access token does not work, we need to save the null state when redux gets done with default values
@@ -22,7 +22,7 @@ axios.defaults.baseURL = "https://airforceofs.com/api";
       //console.log(store.getState());
       saveState(store.getState());
     });
-  
+
     ReactDOM.render(
       <Router>
         <Provider store={store}>
@@ -31,12 +31,10 @@ axios.defaults.baseURL = "https://airforceofs.com/api";
       </Router>,
       document.getElementById("root")
     );
-  
   } catch (error) {
     console.error("Loading application error:", error);
   }
 })();
-
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
-import axios from 'axios';
-import { 
+import axios from "axios";
+import {
   Container,
-  Grid, 
-  Paper, 
-  makeStyles, 
-  AppBar, 
-  Tabs, 
-  Tab, 
+  Grid,
+  Paper,
+  makeStyles,
+  AppBar,
+  Tabs,
+  Tab,
   Button,
   Typography,
   Box,
@@ -37,17 +37,97 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const testUsers = [
-  { firstName: "John", lastName: "Doe", militaryId: "***453", rank: "O1", pStatus: "Training", role: "Flight Engineer", uStatus: "Available" },
-  { firstName: "Jane", lastName: "Doe", militaryId: "***367", rank: "O2", pStatus: "PTO - Vacation", role: "Pilot", uStatus: "Unavailable"},
-  { firstName: "Joe", lastName: "Schmoe", militaryId: "***533", rank: "O3", pStatus: "Training", role: "Pilot", uStatus: "Available" },
-  { firstName: "Jane", lastName: "Bloggs", militaryId: "***432", rank: "O4", pStatus: "Training", role: "Flight Engineer", uStatus: "Available" },
-  { firstName: "Juan", lastName: "Perez", militaryId: "***543", rank: "O5", pStatus: "Training", role: "Flight Engineer", uStatus: "Available" },
-  { firstName: "Sammy", lastName: "Soe", militaryId: "***414", rank: "O6", pStatus: "Training", role: "Flight Engineer", uStatus: "Unavailable" },
-  { firstName: "Marty", lastName: "McFly", militaryId: "***187", rank: "O7", pStatus: "Training", role: "Flight Engineer", uStatus: "Unavailable" },
-  { firstName: "Shoto", lastName: "Todoroki", militaryId: "***191", rank: "O8", pStatus: "Training", role: "Flight Engineer", uStatus: "Available" },
-  { firstName: "Nezuko", lastName: "Kamado", militaryId: "***478", rank: "O9", pStatus: "Training", role: "Flight Engineer", uStatus: "Available" },
-  { firstName: "Mikasa", lastName: "Ackerman", militaryId: "***983", rank: "O10", pStatus: "Training", role: "Flight Engineer", uStatus: "Unavailable" },
-]
+  {
+    firstName: "John",
+    lastName: "Doe",
+    militaryId: "***453",
+    rank: "O1",
+    pStatus: "Training",
+    role: "Flight Engineer",
+    uStatus: "Available",
+  },
+  {
+    firstName: "Jane",
+    lastName: "Doe",
+    militaryId: "***367",
+    rank: "O2",
+    pStatus: "PTO - Vacation",
+    role: "Pilot",
+    uStatus: "Unavailable",
+  },
+  {
+    firstName: "Joe",
+    lastName: "Schmoe",
+    militaryId: "***533",
+    rank: "O3",
+    pStatus: "Training",
+    role: "Pilot",
+    uStatus: "Available",
+  },
+  {
+    firstName: "Jane",
+    lastName: "Bloggs",
+    militaryId: "***432",
+    rank: "O4",
+    pStatus: "Training",
+    role: "Flight Engineer",
+    uStatus: "Available",
+  },
+  {
+    firstName: "Juan",
+    lastName: "Perez",
+    militaryId: "***543",
+    rank: "O5",
+    pStatus: "Training",
+    role: "Flight Engineer",
+    uStatus: "Available",
+  },
+  {
+    firstName: "Sammy",
+    lastName: "Soe",
+    militaryId: "***414",
+    rank: "O6",
+    pStatus: "Training",
+    role: "Flight Engineer",
+    uStatus: "Unavailable",
+  },
+  {
+    firstName: "Marty",
+    lastName: "McFly",
+    militaryId: "***187",
+    rank: "O7",
+    pStatus: "Training",
+    role: "Flight Engineer",
+    uStatus: "Unavailable",
+  },
+  {
+    firstName: "Shoto",
+    lastName: "Todoroki",
+    militaryId: "***191",
+    rank: "O8",
+    pStatus: "Training",
+    role: "Flight Engineer",
+    uStatus: "Available",
+  },
+  {
+    firstName: "Nezuko",
+    lastName: "Kamado",
+    militaryId: "***478",
+    rank: "O9",
+    pStatus: "Training",
+    role: "Flight Engineer",
+    uStatus: "Available",
+  },
+  {
+    firstName: "Mikasa",
+    lastName: "Ackerman",
+    militaryId: "***983",
+    rank: "O10",
+    pStatus: "Training",
+    role: "Flight Engineer",
+    uStatus: "Unavailable",
+  },
+];
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -61,7 +141,9 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography component={'span'} variant={'body2'}>{children}</Typography>
+          <Typography component={"span"} variant={"body2"}>
+            {children}
+          </Typography>
         </Box>
       )}
     </div>
@@ -81,14 +163,15 @@ export default function Users() {
   // const [checkedUsers, setCheckedUsers] = useState(pendingUsers);
 
   useEffect(() => {
-    axios.get('/approval')
+    axios
+      .get("/approval")
       .then((response) => {
         console.log("Users:", response.data);
       })
       .catch((error) => {
         console.log("Error:", error);
-      })
-  }, [])
+      });
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -102,7 +185,9 @@ export default function Users() {
       setEdit(false);
       if (!user) return;
       let newUsers = [...users];
-      let index = newUsers.findIndex((element) => element.militaryId === user.militaryId)
+      let index = newUsers.findIndex(
+        (element) => element.militaryId === user.militaryId
+      );
       newUsers[index] = user;
       setUsers(newUsers);
     }
@@ -124,82 +209,81 @@ export default function Users() {
     <Container maxWidth="lg" className={classes.container}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8} lg={9}>
+          <AppBar position="static">
+            <Tabs value={value} onChange={handleChange}>
+              <Tab label="Users" />
+              <Tab label="New Users Approval" />
+            </Tabs>
+          </AppBar>
 
-        <AppBar position="static">
-          <Tabs value={value} onChange={handleChange}>
-            <Tab label="Users" />
-            <Tab label="New Users Approval" />
-          </Tabs> 
-        </AppBar>
+          <Paper className={fixedHeightPaper} variant="outlined">
+            {/* Active Users */}
+            {edit ? (
+              <TabPanel value={value} index={0}>
+                <EditUser user={editUser} handleEdit={handleEdit} />
+              </TabPanel>
+            ) : (
+              <TabPanel value={value} index={0}>
+                <Grid container item className={classes.labels}>
+                  <Grid item xs={2} align="start">
+                    First Name
+                  </Grid>
+                  <Grid item xs={3} align="start">
+                    Last Name
+                  </Grid>
+                  <Grid item xs={2} align="start">
+                    ID
+                  </Grid>
+                  <Grid item xs={2} align="start">
+                    Rank
+                  </Grid>
+                </Grid>
 
-        <Paper className={fixedHeightPaper} variant="outlined">
+                {users.map((user) => (
+                  <ActiveUsers
+                    user={user}
+                    handleEdit={handleEdit}
+                    key={user.militaryId}
+                  />
+                ))}
+              </TabPanel>
+            )}
 
-          {/* Active Users */}
-          {edit ?
-            <TabPanel value={value} index={0}>
-              <EditUser 
-                user={editUser}
-                handleEdit={handleEdit}
-              /> 
-            </TabPanel>
-            :
-            <TabPanel value={value} index={0}>
-              <Grid container item className={classes.labels}>
-                <Grid item xs={2} align="start">First Name</Grid>
-                <Grid item xs={3} align="start">Last Name</Grid>
-                <Grid item xs={2} align="start">ID</Grid>
-                <Grid item xs={2} align="start">Rank</Grid>
+            {/* Users Waiting for Approval */}
+            <TabPanel value={value} index={1}>
+              <Grid container item direction="row" className={classes.labels}>
+                <Grid item xs={2} align="start">
+                  First Name
+                </Grid>
+                <Grid item xs={3} align="start">
+                  Last Name
+                </Grid>
+                <Grid item xs={2} align="start">
+                  ID
+                </Grid>
+                <Grid item xs={2} align="start">
+                  Rank
+                </Grid>
               </Grid>
-              
-              {users.map(user => (
-                <ActiveUsers
+
+              {approveUsers.map((user) => (
+                <PendingUsers
                   user={user}
-                  handleEdit={handleEdit}
+                  // handleApprove={handleApprove}
                   key={user.militaryId}
                 />
               ))}
+
+              <Grid container direction="row" align="right">
+                <Button
+                  variant="contained"
+                  // onClick={() => handleApproveAll()}
+                >
+                  Submit All
+                </Button>
+              </Grid>
             </TabPanel>
-          }
-
-          {/* Users Waiting for Approval */}
-          <TabPanel value={value} index={1}>
-
-            <Grid container item direction="row" className={classes.labels}>
-              <Grid item xs={2} align="start">
-                First Name
-              </Grid>
-              <Grid item xs={3} align="start">
-                Last Name
-              </Grid>
-              <Grid item xs={2} align="start">
-                ID
-              </Grid>
-              <Grid item xs={2} align="start">
-                Rank
-              </Grid>
-            </Grid>
-
-            {approveUsers.map(user => (
-              <PendingUsers
-                user={user}
-                // handleApprove={handleApprove}
-                key={user.militaryId}
-              />
-            ))}  
-
-            <Grid container direction="row" align="right">
-              <Button
-                variant="contained"
-                // onClick={() => handleApproveAll()}
-              >
-                Submit All
-              </Button>
-            </Grid>
-
-          </TabPanel>  
-          
-        </Paper>
-
+          </Paper>
         </Grid>
       </Grid>
     </Container>
