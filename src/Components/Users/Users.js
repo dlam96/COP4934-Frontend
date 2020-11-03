@@ -250,14 +250,6 @@ export default function Users() {
                 </Grid>
               </Grid>
 
-              {approveUsers.map((user) => (
-                <PendingUsers
-                  user={user}
-                  // handleApprove={handleApprove}
-                  key={user.militaryId}
-                />
-              ))}
-
               <Grid container direction="row" align="right">
                 <Button
                   variant="contained"
