@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { 
-  Paper, 
   makeStyles,
   Grid,
   Button,
-  Divider
+  Divider,
+  IconButton
 } from "@material-ui/core";
+import {
+  Edit,
+} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   details: {
-    margin: theme.spacing(2),
-    marginBottom: '0px',
+    paddingLeft: '10px',
+    marginBottom: '5px',
+    alignItems: 'center',
   },
 }));
 
@@ -31,18 +35,17 @@ export default function ActiveAircrafts(props) {
 
   return( 
     <Grid container item className={classes.details}>
-      <Grid item xs={2}> { aircraftIdSlice(aircraft.aircraft_uuid) } </Grid>
-      <Grid item xs={3}> { getModelName(aircraft) }</Grid>
+      <Grid item xs={2}> { aircraft.tail_code } </Grid>
+      <Grid item xs={4}> { getModelName(aircraft) }</Grid>
       <Grid item xs={2} > { aircraft.status } </Grid>
-      <Grid item xs={5} align='right' style={{paddingRight: '30px', paddingBottom: '10px'}}>
-        <Button 
-          variant="contained"
-          size="small" 
+      <Grid item xs={4} align='right' style={{paddingRight: '30px'}}>
+        <IconButton 
+          color='primary'
           onClick={() => props.handleEdit(aircraft)}
           align="right"
         >
-          Edit
-        </Button>
+          <Edit />
+        </IconButton>
       </Grid>
       <Grid item xs={12} md={12}><Divider variant='middle' /></Grid>
     </Grid>
