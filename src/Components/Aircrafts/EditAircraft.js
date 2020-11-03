@@ -3,32 +3,29 @@ import {
   Grid,
   Paper,
   makeStyles,
-  TextField,
   Button,
+  IconButton,
   Select,
   FormControl,
-  Typography,
 } from "@material-ui/core";
 import {
   Save,
+  Delete,
 } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    paddingTop: theme.spacing(2),
-    width: '100%',
-  },
   fixedInfo: {
-    height: '100%',
-    width: '100%',
+    height: '300px',
+    width: '500px',
     paddingTop: "50px",
     padding: theme.spacing(2),
+    marginLeft: '100px',
   },
   crewPos: {
     width: '100%',
   },
   buttons: {
-    paddingTop: theme.spacing(4),
+    paddingLeft: '20%',
   },
   saveBt: {
     marginRight: "10px",
@@ -90,7 +87,14 @@ export default function EditAircraft(props) {
 
         {/* Save and Cancel buttons */}
         <Grid container item>
-          <Grid item xs={12} align="center" className={classes.buttons}>
+          <Grid item xs={2} align='start'>
+            <IconButton
+              color='secondary'
+            >
+              <Delete />
+            </IconButton>
+          </Grid>
+          <Grid item xs={10} className={classes.buttons}>
             <Button
               variant="contained"
               color="primary"

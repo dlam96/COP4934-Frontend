@@ -4,7 +4,8 @@ import {
   Paper,
   makeStyles,
   Select,
-  Button, 
+  Button,
+  TextField, 
 } from "@material-ui/core";
 import {
   Save,
@@ -33,16 +34,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NewAircraft(props) {
+export default function NewCrew(props) {
   const classes = useStyles();
-  const { aircraftModels } = props;
-  const [aircraft, setAircraft] = useState({model_uuid: ''});
-  const aircraftInfo = ['Aicraft Type', 'Model id', 'Current Status'];
+  const [newCrew, setNewCrew] = useState(false);
+  const aircraftInfo = ['Position Name', 'Required'];
 
   return (
     <Paper className={classes.enterInfo} variant='outlined'>
       <Grid container item>
-        <Grid container item md={6} direction='column' spacing={2} style={{paddingLeft: '50px'}}>
+        <Grid container item md={6} direction='column' spacing={2} style={{paddingLeft: '100px'}}>
           {aircraftInfo.map(label => (
             <Grid item key={label}>
               {label}
@@ -51,42 +51,27 @@ export default function NewAircraft(props) {
         </Grid>
         <Grid container item md={6} direction='column' spacing={2}>
           <Grid item>
-            <Select 
-              native
-              value={aircraft.model_uuid}
-              onChange={(e) =>
-                {
-                  let newAircraft = {...aircraft};
-                  newAircraft['model_uuid'] = e.target.value;
-                  setAircraft(newAircraft);
-                }
-              }
-            >
-              <option value=''>Select</option>
-            {aircraftModels.map((model, index) => (
-              <option value={model.model_uuid} key={index}>{model.model_name}</option>
-            ))}
-            </Select>
-          </Grid>
-          <Grid item>
-            {aircraft.model_uuid}
+            <TextField 
+              variant='outlined' 
+              size='small'
+              onChange={(e) => setNewCrew(e.target.value)}
+            />
           </Grid>
           <Grid item>
             <Select
               native
-              value={aircraft.status}
-              onChange={(e) =>
+              value={newCrew.required}
+              onChange={(e) => 
                 {
-                  let newAircraft = {...aircraft};
-                  newAircraft['status'] = e.target.value;
-                  setAircraft(newAircraft)
+                  let newCrewPos = {...newCrew};
+                  newCrewPos['required'] = e.target.value;
+                  setNewCrew(newCrewPos);
                 }
               }
             >
-              <option value="">Select</option>
-              <option value="Unavailable">Unavailable</option>
-              <option value="Available">Available</option>
-              <option value="Maitenance">Maitenance</option>
+              <option value=''>Select</option>
+              <option value={true}>Yes</option>
+              <option value={false}>No</option>
             </Select>
           </Grid>
         </Grid>
@@ -99,13 +84,13 @@ export default function NewAircraft(props) {
             color="primary"
             startIcon={<Save />}
             className={classes.saveBt}
-            onClick={()=>props.handleNewCraft(aircraft)}
+            onClick={()=>props.handleNewCrew(newCrew)}
           >
             Save
           </Button>
           <Button
             variant="contained"
-            onClick={()=>props.handleNewCraft()}
+            onClick={()=>props.handleNewCrew()}
           >
             Cancel
           </Button>
