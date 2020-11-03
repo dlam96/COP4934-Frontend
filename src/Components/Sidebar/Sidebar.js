@@ -13,10 +13,11 @@ import {
   Create,
   People,
   LocalAirport,
+  Message,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -44,11 +45,24 @@ function Sidebar(props) {
   ];
 
   if (props.role === "Scheduler" || props.role === "Admin") {
-    routes.push({ routeName: "Create Schedule", path: "/Home/CreateSchedule", icon: "Create" });
-  } 
+    routes.push({
+      routeName: "Create Schedule",
+      path: "/Home/CreateSchedule",
+      icon: "Create",
+    });
+  }
   if (props.role === "Admin") {
-    routes.push({ routeName: "Users" ,path: "/Home/Users", icon: "People" });
-    routes.push({ routeName: "Aircrafts", path: "/Home/Aircrafts", icon: "LocalAirport" });
+    routes.push({ routeName: "Users", path: "/Home/Users", icon: "People" });
+    routes.push({
+      routeName: "Aircrafts",
+      path: "/Home/Aircrafts",
+      icon: "LocalAirport",
+    });
+    routes.push({
+      routeName: "Messages",
+      path: "/Home/Messages",
+      icon: "Message",
+    });
   }
 
   const iconNames = {
@@ -56,6 +70,7 @@ function Sidebar(props) {
     Create: <Create />,
     People: <People />,
     LocalAirport: <LocalAirport />,
+    Message: <Message />,
   };
 
   const handleClick = (path) => {
@@ -96,11 +111,8 @@ function Sidebar(props) {
 
 const mapStateToProps = (state) => {
   return {
-    role: state.loggedReducer.role
-  }
-}
+    role: state.loggedReducer.role,
+  };
+};
 
-export default connect(
-  mapStateToProps,
-  null
-)(Sidebar)
+export default connect(mapStateToProps, null)(Sidebar);

@@ -6,6 +6,7 @@ import Users from "../../Components/Users/Users.js";
 import Aircrafts from "../../Components/Aircrafts/Aircrafts.js";
 import Sidebar from "../../Components/Sidebar/Sidebar.js";
 import Profile from "../../Components/Profile/Profile.js";
+import Messages from "../../Components/Messages/Messages.js";
 import { connect } from "react-redux";
 import { CssBaseline, Toolbar } from "@material-ui/core";
 
@@ -66,6 +67,9 @@ function Home(props) {
           </Route>
           <Route exact path="/Home/Profile">
             <Profile />
+          </Route>
+          <Route exact path="/Home/Messages">
+            <Messages />
           </Route>
         </Switch>
         {/* <Container maxWidth="lg" className={classes.container}>
