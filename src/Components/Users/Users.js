@@ -14,7 +14,7 @@ import {
   Box,
 } from "@material-ui/core";
 import ActiveUsers from "./ActiveUsers";
-import PendingUsers from "./PendingUsers";
+// import PendingUsers from "./PendingUsers";
 import EditUser from "./EditUser.js";
 
 const useStyles = makeStyles((theme) => ({
@@ -158,10 +158,6 @@ export default function Users() {
   const [editUser, setEditUser] = useState(null);
   const [users, setUsers] = useState(testUsers);
 
-  const [approveUsers, setApproveUsers] = useState(null);
-  setApproveUsers(testUsers);
-  // const [checkedUsers, setCheckedUsers] = useState(pendingUsers);
-
   useEffect(() => {
     axios
       .get("/approval")
@@ -192,18 +188,6 @@ export default function Users() {
       setUsers(newUsers);
     }
   };
-
-  // TODO Approve Users
-  // const handleApprove = (user = null) => {
-  //   if (!user) return;
-  //   let pendUsers = [...checkedUsers];
-  //   pendUsers.push(user);
-  //   setCheckedUsers(pendUsers);
-  // };
-
-  // const handleApproveAll = () => {
-  //   console.log(checkedUsers);
-  // };
 
   return (
     <Container maxWidth="lg" className={classes.container}>
@@ -273,6 +257,24 @@ export default function Users() {
                   key={user.militaryId}
                 />
               ))}
+
+              <Grid container direction="row" align="right">
+                <Button
+                  variant="contained"
+                  // onClick={() => handleApproveAll()}
+                >
+                  Submit All
+                </Button>
+              </Grid>
+              <Grid item xs={3} align="start">
+                Last Name
+              </Grid>
+              <Grid item xs={2} align="start">
+                ID
+              </Grid>
+              <Grid item xs={2} align="start">
+                Rank
+              </Grid>
 
               <Grid container direction="row" align="right">
                 <Button

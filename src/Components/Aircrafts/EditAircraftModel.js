@@ -1,15 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Container,
   Grid,
   Paper,
   makeStyles,
-  TextField,
   Button,
 } from "@material-ui/core";
-import {
-  Save,
-} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   fixedInfo: {
@@ -28,8 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EditAircraftModel(props) {
   const classes = useStyles();
-  const { crewPositions } = props;
-  const [aircraft, setAircraft] = useState(props.aircraft);
+  const { crewPositions, aircraft } = props;
 
   const getPositionName = ( position = null ) => {
     let index = crewPositions.findIndex((element) => element.crew_position_uuid === position.crew_position_uuid)

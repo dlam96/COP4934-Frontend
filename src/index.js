@@ -8,7 +8,6 @@ import { saveState } from "./LocalCache/localStorage.js";
 import axios from "axios";
 
 axios.defaults.baseURL = "https://airforceofs.com/api";
-//axios.defaults.baseURL = "http://localhost:3000";
 (async () => {
   try {
     console.log("Loading Cached states if any");
