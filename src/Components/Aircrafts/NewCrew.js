@@ -54,7 +54,13 @@ export default function NewCrew(props) {
             <TextField 
               variant='outlined' 
               size='small'
-              onChange={(e) => setNewCrew(e.target.value)}
+              onChange={(e) => 
+                {
+                  let newCrewPos = {...newCrew};
+                  newCrewPos['position'] = e.target.value;
+                  setNewCrew(newCrewPos);
+                }
+              }
             />
           </Grid>
           <Grid item>
