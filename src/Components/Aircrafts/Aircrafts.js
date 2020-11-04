@@ -204,6 +204,17 @@ function Aircrafts(props) {
     } else {
       setEdit(false);
       if (!position) return;
+      axios
+        .patch("/crew_position/" + position.crew_position_uuid,
+        {
+          required: position.required,
+        })
+        .then((response) => {
+          console.log("Response from Post:", response);
+        })
+        .catch((error) => {
+          console.log("Error:", error);
+        })
     }
   }
 
@@ -247,6 +258,21 @@ function Aircrafts(props) {
     } else {
       setAddNew(false);
       if (!crew) return;
+      axios
+        .post(
+          "/crew_position",
+          {
+            position: crew.position,
+            required: crew.required,
+          },
+          { headers: { "Content-Type": "application/json" } }
+        )
+        .then((response) => {
+          console.log("Response from Post:", response);
+        })
+        .catch((error) => {
+          console.log("Error:", error);
+        })
     }
   }
   

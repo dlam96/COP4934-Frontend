@@ -156,18 +156,19 @@ export default function Users() {
   const [value, setValue] = useState(0);
   const [edit, setEdit] = useState(false);
   const [editUser, setEditUser] = useState(null);
-  const [users, setUsers] = useState(testUsers);
+  const [users, setUsers] = useState(null);
 
   useEffect(() => {
     axios
-      .get("/approval")
+      .get("/user/")
       .then((response) => {
-        console.log("Users:", response.data);
+        console.log("Response from Post:", response);
+        setUsers(response.data.airmen)
       })
       .catch((error) => {
         console.log("Error:", error);
-      });
-  }, []);
+      })
+  }, [users]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -222,14 +223,21 @@ export default function Users() {
                     Rank
                   </Grid>
                 </Grid>
+                  
+                {users ? 
+                  <Grid container>
+                    {users.map((user) => (
+                      <ActiveUsers
+                        user={user}
+                        handleEdit={handleEdit}
+                        key={user.militaryId}
+                      />
+                    ))}
+                  </Grid>
+                  :
+                  null
+                }
 
-                {users.map((user) => (
-                  <ActiveUsers
-                    user={user}
-                    handleEdit={handleEdit}
-                    key={user.militaryId}
-                  />
-                ))}
               </TabPanel>
             )}
 
@@ -283,3 +291,4 @@ export default function Users() {
     </Container>
   );
 }
+

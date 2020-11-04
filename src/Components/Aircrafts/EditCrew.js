@@ -60,8 +60,8 @@ export default function EditCrew(props) {
                   }
                 }
               >
-                <option value="True">Yes</option>
-                <option value="False">No</option>
+                <option value={true}>Yes</option>
+                <option value={false}>No</option>
               </Select>
             </FormControl>
           </Grid>
@@ -74,7 +74,9 @@ export default function EditCrew(props) {
               color="primary"
               startIcon={<Save />}
               className={classes.saveBt}
-              onClick={()=>props.handleCrewEdit(position)}
+              onClick={()=>{
+                console.log(position)
+                props.handleCrewEdit(position)}}
             >
               Save
             </Button>
