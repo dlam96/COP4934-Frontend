@@ -81,7 +81,7 @@ function WebSocketComponent(props) {
   useEffect(() => {
     console.log("In Websocket");
     if (!wsObj) return;
-    const socket = new WebSocket("ws://localhost:3002");
+    const socket = new WebSocket("wss://airforceofs.com/websocket/");
 
     console.log("Websocket Object", JSON.stringify(socket));
     let wss = new WebSocketFrame(socket, props);
