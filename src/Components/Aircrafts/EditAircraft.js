@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import {
   Grid,
   Paper,
@@ -42,7 +43,8 @@ export default function EditAircraft(props) {
   const [aircraft, setAircraft] = useState(props.aircraft);
 
   const getModelName = ( aircraft = null ) => {
-    let index = aircraftModels.findIndex((element) => element.model_uuid === aircraft.model_uuid)
+    let index = aircraftModels.findIndex((element) => element.model_uuid === aircraft.model_uuid);
+    if (index < 0) return;
     return aircraftModels[index].model_name;
   }
 
@@ -90,6 +92,7 @@ export default function EditAircraft(props) {
           <Grid item xs={2} align='start'>
             <IconButton
               color='secondary'
+              onClick={()=>props.handleDeleteAircraft(aircraft)}
             >
               <Delete />
             </IconButton>

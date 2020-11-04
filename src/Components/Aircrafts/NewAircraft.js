@@ -5,6 +5,7 @@ import {
   makeStyles,
   Select,
   Button, 
+  TextField,
 } from "@material-ui/core";
 import {
   Save,
@@ -36,12 +37,13 @@ const useStyles = makeStyles((theme) => ({
 export default function NewAircraft(props) {
   const classes = useStyles();
   const { aircraftModels } = props;
-  const [aircraft, setAircraft] = useState({model_uuid: ''});
-  const aircraftInfo = ['Aicraft Type', 'Model id', 'Current Status'];
+  const [aircraft, setAircraft] = useState({model_uuid: '', tail_code: ''});
+  const aircraftInfo = ['Tail Code', 'Aicraft Type', 'Model id', 'Current Status'];
 
   return (
     <Paper className={classes.enterInfo} variant='outlined'>
       <Grid container item>
+
         <Grid container item md={6} direction='column' spacing={2} style={{paddingLeft: '50px'}}>
           {aircraftInfo.map(label => (
             <Grid item key={label}>
@@ -49,7 +51,19 @@ export default function NewAircraft(props) {
             </Grid>
           ))}
         </Grid>
+
         <Grid container item md={6} direction='column' spacing={2}>
+          <Grid item>
+            <TextField 
+              onChange={(e) => 
+                {
+                  let newAircraft = {...aircraft};
+                  newAircraft['tail_code'] = e.target.value;
+                  setAircraft(newAircraft);
+                }  
+              }
+            />
+          </Grid>
           <Grid item>
             <Select 
               native
@@ -90,6 +104,7 @@ export default function NewAircraft(props) {
             </Select>
           </Grid>
         </Grid>
+
       </Grid>
       {/* Save and Cancel buttons */}
       <Grid container item>

@@ -130,21 +130,28 @@ function Aircrafts(props) {
   const [value, setValue] = useState(0);
   const [edit, setEdit] = useState(false);
   const [addNew, setAddNew] = useState(false);
+  const [aircraftList, setAircraftList] = useState(props.aircrafts);
   const [editAircraft, setEditAircraft] = useState(null);
   const [editAircraftModel, setEditAircraftModel] = useState(null);
   const [editCrew, setEditCrew] = useState(null);
+  const { aircraftAction } = props;
 
   // const [editAllCrafts, setEditAllCrafts] = useState(null);
 
+  // useEffect(() => {
+  //   axios.get('/approval')
+  //     .then((response) => {
+  //       console.log("Aircrafts:", response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log("Error:", error);
+  //     })
+  // }, [])
+
   useEffect(() => {
-    axios.get('/approval')
-      .then((response) => {
-        console.log("Aircrafts:", response.data);
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-      })
-  }, [])
+    setAircraftList(props.aircrafts)
+    console.log('in use effect')
+  }, [aircraftList, props.aircrafts])
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -157,8 +164,26 @@ function Aircrafts(props) {
     } else {
       setEdit(false);
       if (!aircraft) return;
-      console.log('Aircraft Update:', aircraft);
-      // TODO: axios
+      
+      const updatedAircrafts = aircraftList.filter(
+        (item) => item.aircraft_uuid !== aircraft.aircraft_uuid
+      );
+
+      const updatedAircraft = {...aircraft};
+      updatedAircrafts.push(updatedAircraft)
+
+      axios
+        .patch("/aircraft/" + aircraft.aircraft_uuid,
+        {
+          status: aircraft.status,
+        })
+        .then((response) => {
+          console.log("Response from Post:", response);
+          setAircraftList(updatedAircrafts);
+        })
+        .catch((error) => {
+          console.log("Error:", error);
+        })
     }
   }
 
@@ -194,6 +219,7 @@ function Aircrafts(props) {
           {
             model_uuid: aircraft.model_uuid,
             status: aircraft.status,
+            tail_code: aircraft.tail_code,
           },
           { headers: { "Content-Type": "application/json" } }
         )
@@ -222,6 +248,19 @@ function Aircrafts(props) {
       setAddNew(false);
       if (!crew) return;
     }
+  }
+  
+  const handleDeleteAircraft = (aircraft = null) => {
+    if (!aircraft) return;
+    axios
+      .delete("/aircraft/" + aircraft.aircraft_uuid)
+      .then((response) => {
+        console.log("Response from Post:", response);
+        console.log("Delete", aircraft)
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      })
   }
 
   return (
@@ -262,6 +301,7 @@ function Aircrafts(props) {
                 <EditAircraft
                   aircraft={editAircraft}
                   aircraftModels={props.aircraftModels}
+                  handleDeleteAircraft={handleDeleteAircraft}
                   handleEdit={handleEdit}
                 />
               </Grid>
@@ -299,7 +339,7 @@ function Aircrafts(props) {
                     </Grid>
                     <Divider variant='fullWidth'/>
                     <Grid container item xs={12} md={12}>
-                      {props.aircrafts.map(aircraft => (
+                      {aircraftList.map(aircraft => (
                         <ActiveAircrafts
                           aircraft={aircraft}
                           aircraftModels={props.aircraftModels}
@@ -354,8 +394,8 @@ function Aircrafts(props) {
                 </Grid>
                 :
                 <Grid container className={classes.modelList}>
-                  {props.aircraftModels.map(model => (
-                    <Grid item md={6} style={{height: '185px'}}>
+                  {props.aircraftModels.map((model, index) => (
+                    <Grid item md={6} key={index} style={{height: '185px'}}>
                       <AircraftModels
                         aircraft={model}
                         handleModelEdit={handleModelEdit}

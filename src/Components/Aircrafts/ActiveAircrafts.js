@@ -2,7 +2,6 @@ import React from "react";
 import { 
   makeStyles,
   Grid,
-  Button,
   Divider,
   IconButton
 } from "@material-ui/core";
@@ -22,14 +21,9 @@ export default function ActiveAircrafts(props) {
   const classes = useStyles();
   const { aircraft, aircraftModels } = props;
 
-  const aircraftIdSlice = ( id = null) => {
-    let str = id;
-    let res = str.slice(0, 8);
-    return res;
-  }
-
   const getModelName = ( aircraft = null ) => {
     let index = aircraftModels.findIndex((element) => element.model_uuid === aircraft.model_uuid)
+    if (index < 0) return;
     return aircraftModels[index].model_name;
   }
 
