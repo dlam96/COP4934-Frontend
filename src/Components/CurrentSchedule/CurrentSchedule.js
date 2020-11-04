@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CurrentSchedule(props) {
   const classes = useStyles();
-  const [events, setEvents] = useState(null);
+  const [events, setEvents] = useState(props.events);
   const {
     aircraftAction,
     locationAction,
@@ -94,41 +94,7 @@ function CurrentSchedule(props) {
     flightAction,
   } = props;
 
-  useEffect(() => {
-    let firstDay = moment().utc().startOf("month").format();
-    let lastDay = moment().utc().endOf("month").format();
-
-    console.log("FirstDay", firstDay);
-    console.log("LastDay", lastDay);
-    axios
-      .get("/essential", { params: { start: firstDay, end: lastDay } })
-      .then((response) => {
-        console.log("Response Data:", response.data);
-        aircraftAction(response.data.aircrafts);
-        locationAction(response.data.locations);
-        airmenAction(response.data.airmen);
-        aircraftModelAction(response.data.aircraft_models);
-        flightAction(response.data.flights);
-        crewPositionAction(response.data.crew_positions);
-
-        // Since backend gives us UTC, we can easily convert UCT to our browser time zone just by converting it to a Date Object
-        response.data.flights.forEach((item) => {
-          item.start = moment(item.start).toDate();
-          item.end = moment(item.end).toDate();
-        });
-        setEvents(response.data.flights);
-      })
-      .catch((error) => {
-        console.log("Get Error:", error);
-      });
-  }, [
-    aircraftAction,
-    locationAction,
-    airmenAction,
-    aircraftModelAction,
-    flightAction,
-    crewPositionAction,
-  ]);
+  
 
   let today = new Date();
   const localizer = momentLocalizer(moment);
