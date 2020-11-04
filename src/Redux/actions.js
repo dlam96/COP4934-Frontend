@@ -14,6 +14,9 @@ import {
   SETUSERSTATUS,
   GOTINITIALESSENTIALREQUEST,
   SETWEBSOCKET,
+  ADDLOCATION,
+  EDITLOCATION,
+  DELETELOCATION
 } from "./actionTypes.js";
 
 export const login = (loginObject) => ({
@@ -57,13 +60,6 @@ export const setAircraftModels = (aircraftModels) => ({
   type: SETAIRCRAFTMODELS,
   payload: {
     aircraftmodel: aircraftModels,
-  },
-});
-
-export const setLocations = (locations) => ({
-  type: SETLOCATIONS,
-  payload: {
-    location: locations,
   },
 });
 
@@ -112,6 +108,41 @@ export const setUserStatus = (userStatus) => ({
 export const setWebSocket = (ws) => ({
   type: SETWEBSOCKET,
   payload: {
-    ws,
+    ws: ws,
   },
 });
+
+
+
+
+// Location Redux Actions
+export const setLocations = (locations) => ({
+  type: SETLOCATIONS,
+  payload: {
+    locations: locations,
+  },
+});
+
+
+export const addLocation = (location) => ({
+  type: ADDLOCATION,
+  payload: {
+    location: location
+  }
+});
+
+
+export const editLocation = (location) => ({
+  type: EDITLOCATION,
+  payload: {
+    location: location
+  }
+});
+
+
+export const deleteLocation = (location) => ({
+  type: DELETELOCATION,
+  payload: {
+    location: location
+  }
+})

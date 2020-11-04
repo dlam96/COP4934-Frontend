@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Grid,
@@ -9,6 +9,8 @@ import {
   Tab,
   Tabs,
   Box,
+  Button,
+  TextField
 } from "@material-ui/core";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -95,187 +97,47 @@ const TOTALCOUNT = 20;
 function Profile(props) {
   const classes = useStyles();
   // call mock data function (returns array)
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const [locationName, setLocationName] = useState("");
+  useEffect(() => {
+    console.log("Locations:", props.locations);
+  }, []);
   const handleIndex = (event, newValue) => {
     setValue(newValue);
   };
-  return (
-    <Container disableGutters={true} className={classes.container}>
-      <Grid container justify="center">
-        <Grid container item direction="row">
-          <Grid
-            item
-            container
-            xs={3}
-            // alignItems="center"
-            justify="center"
-            className={classes.firstCol}
-          >
-            <Avatar className={classes.avatar}>
-              {`${props.first_name.substr(0, 1)} 
-							${props.last_name.substr(0, 1)}`}
-            </Avatar>
-          </Grid>
-          <Grid item container xs={5} className={classes.secondCol}>
-            {/* Name */}
-            <Grid item container xs={12}>
-              <Grid item xs={12}>
-                <Typography variant="h3" className={classes.name}>
-                  {`${props.first_name}  ${props.last_name}`}
-                </Typography>
-                <Typography variant="subtitle1" className={classes.rank}>
-                  Sergent
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        {/* Tabs */}
-        <Grid container item xs={6}>
-          <AppBar position="static">
-            <Tabs
-              value={value}
-              onChange={handleIndex}
-              aria-label="simple tabs example"
-              // variant="fullWidth"
-            >
-              <Tab label="About" {...a11yProps(0)} />
-              {/* <Tab label="Item Two" {...a11yProps(1)} /> */}
-              {/* <Tab label="Item Three" {...a11yProps(2)} /> */}
-            </Tabs>
-          </AppBar>
-          <TabPanel value={value} index={0}>
-            <Container>
-              {/* Personal info */}
-              <Grid item container xs={12}>
-                <Grid item xs={12}>
-                  <Typography variant="h6" className={classes.personalInfo}>
-                    Personal Information
-                  </Typography>
-                </Grid>
-                {/* Role / Rank headings*/}
-                <Grid item xs={6}>
-                  <Typography variant="body2" className={classes.subtitle}>
-                    Role
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" className={classes.subtitle}>
-                    Rank
-                  </Typography>
-                </Grid>
-                {/* Role / Rank values */}
-                <Grid item xs={6}>
-                  <Typography
-                    variant="subtitle1"
-                    className={classes.valueStyling}
-                  >
-                    {props.role}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography
-                    variant="subtitle1"
-                    className={classes.valueStyling}
-                  >
-                    Rank
-                  </Typography>
-                </Grid>
-                {/* Email / ??? headings*/}
-                <Grid item xs={12}>
-                  <Typography variant="body2" className={classes.subtitle}>
-                    ????
-                  </Typography>
-                </Grid>
-                {/* ??? / ??? values */}
-                <Grid item xs={12}>
-                  <Typography
-                    variant="subtitle1"
-                    className={classes.valueStyling}
-                  >
-                    ???
-                  </Typography>
-                </Grid>
-              </Grid>
-              {/* contact info */}
-              <Grid item container xs={12}>
-                <Grid item xs={12}>
-                  <Typography variant="h6" className={classes.contactInfo}>
-                    Contact Information
-                  </Typography>
-                </Grid>
-                {/* phone/email col */}
-                <Grid container item xs={6}>
-                  <Grid item xs={12}>
-                    <Typography variant="body2" className={classes.subtitle}>
-                      Phone
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography
-                      variant="subtitle1"
-                      className={classes.valueStyling}
-                    >
-                      {faker.phone.phoneNumber()}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="body2" className={classes.subtitle}>
-                      Email
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography
-                      variant="subtitle1"
-                      className={classes.valueStyling}
-                    >
-                      {props.email}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                {/* Address col */}
-                <Grid container item xs={6}>
-                  <Grid item xs={12}>
-                    <Typography variant="body2" className={classes.subtitle}>
-                      Address
-                    </Typography>
-                  </Grid>
 
-                  <Grid item xs={12}>
-                    <Typography
-                      variant="subtitle1"
-                      className={classes.valueStyling}
-                    >
-                      {`${faker.address.streetAddress()}`}
-                      <br />
-                      {`${faker.address.city()} ${faker.address.zipCode()}`}
-                      <br />
-                      United States
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Container>
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <Container style={{ height: 100, width: 1000 }}>
-              <Grid item container xs={12}>
-                <Grid item xs={6}>
-                  <Typography variant="body2" className={classes.subtitle}>
-                    Role
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" className={classes.subtitle}>
-                    Rank
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Container>
-          </TabPanel>
-        </Grid>
+  function onButtonClick() {
+    console.log("Clicked button!");
+    props.websocket.addLocation(locationName);
+  }
+
+  function handleTextChange(value) {
+    setLocationName(value);
+  }
+
+  return (
+    <Grid container className={classes.container}>
+      <Grid item sm={6}>
+        { props.locations && props.locations.length > 0 ?
+          props.locations.map((item) => 
+            <p key={item.location_uuid}>{"Name:"+item.location_name+"   ID: "+item.location_uuid}</p>
+          )
+          :
+          null
+        }
       </Grid>
-    </Container>
+      <Grid item sm={6}>
+        <Button onClick={()=> onButtonClick()}>
+          Hello
+        </Button>
+        <TextField
+          id="standard-required"
+          label="Required"
+          value={locationName}
+          onChange={(e)=> handleTextChange(e.target.value)}
+        />
+      </Grid>
+    </Grid>
   );
 }
 
@@ -285,6 +147,8 @@ const mapStateToProps = (state) => {
     email: state.loggedReducer.email,
     first_name: state.loggedReducer.first_name,
     last_name: state.loggedReducer.last_name,
+    locations: state.locationReducer,
+    websocket: state.websocketReducer,
   };
 };
 export default connect(mapStateToProps, null)(Profile);
