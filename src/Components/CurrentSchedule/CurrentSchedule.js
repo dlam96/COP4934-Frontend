@@ -175,21 +175,15 @@ function CurrentSchedule(props) {
     //   });
   };
   // Randomize color for avatar
-
-  function randomColor() {
-    let colors = [
-      "#D50000",
-      "#FF5722",
-      "#FFC107",
-      "#4CAF50",
-      "#3174ad",
-      "#3F51B5",
-      "#9C27B0",
-    ];
-    let pickedColor = colors[Math.floor(Math.random() * colors.length)];
-
-    return pickedColor;
-  }
+  let colors = [
+    "#D50000",
+    "#FF5722",
+    "#FFC107",
+    "#4CAF50",
+    "#3174ad",
+    "#3F51B5",
+    "#9C27B0",
+  ];
 
   return (
     <>
@@ -230,7 +224,7 @@ function CurrentSchedule(props) {
                       >
                         <Avatar
                           key={key}
-                          style={{ backgroundColor: randomColor() }}
+                          style={{ backgroundColor: colors[key] }}
                         >
                           {`${index.firstName.substr(
                             0,
