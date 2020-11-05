@@ -7,7 +7,6 @@ import {
   TextField,
   Button,
   Grid,
-  Link,
   makeStyles,
   withStyles,
 } from "@material-ui/core";
@@ -17,6 +16,7 @@ import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { login } from "../../Redux/actions.js";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -189,13 +189,13 @@ function Login(props) {
           </div>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2" className={classes.hyperlinks}>
+              <Link to={"#"} variant="body2" className={classes.hyperlinks}>
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
               <Link
-                href="/Signup"
+                to={"/Signup"}
                 variant="body2"
                 className={classes.hyperlinks}
               >
