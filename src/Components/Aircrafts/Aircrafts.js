@@ -245,6 +245,7 @@ function Aircrafts(props) {
     } else {
       setAddNew(false);
       if (!model) return;
+      // console.log('Testing model', model.model_name, model.positions)
       axios
         .post(
           "aircraft_model",
@@ -255,7 +256,7 @@ function Aircrafts(props) {
           { headers: { "Content-Type": "application/json" }}
         )
         .then((response) => {
-          console.log("Response from Post:", response);
+          console.log("Response from Post Model:", response.data);
         })
         .catch((error) => {
           console.log("Error:", error)
@@ -306,6 +307,18 @@ function Aircrafts(props) {
       .delete("/aircraft_model/" + model.model_uuid)
       .then((response) => {
         console.log("Response from delete Model:", response);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      })
+  }
+
+  const handleDeleteCrew = (crew = null) => {
+    if (!crew) return;
+    axios
+      .delete("/crew_position/" + crew.crew_position_uuid)
+      .then((response) => {
+        console.log("Response from delete Crew:", response);
       })
       .catch((error) => {
         console.log("Error:", error);
@@ -486,6 +499,7 @@ function Aircrafts(props) {
               <Grid container spacing={2}>
                 <EditCrew
                   position={editCrew}
+                  handleDeleteCrew={handleDeleteCrew}
                   handleCrewEdit={handleCrewEdit}
                 />
               </Grid>

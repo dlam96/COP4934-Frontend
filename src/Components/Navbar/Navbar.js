@@ -134,7 +134,7 @@ function Navbar(props) {
                 <Link to={"/"}>
                   <Button className={classes.button}>Login</Button>
                 </Link>
-                <Link to={"/signup"}>
+                <Link to={"/Signup"}>
                   <Button className={classes.button}>Signup</Button>
                 </Link>
               </div>
