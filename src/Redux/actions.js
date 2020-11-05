@@ -13,10 +13,12 @@ import {
   SETAIRCRAFTSTATUS,
   SETUSERSTATUS,
   GOTINITIALESSENTIALREQUEST,
-  SETWEBSOCKET,
   ADDLOCATION,
   EDITLOCATION,
-  DELETELOCATION
+  DELETELOCATION,
+  ADDFLIGHT,
+  EDITFLIGHT,
+  DELETEFLIGHT,
 } from "./actionTypes.js";
 
 export const login = (loginObject) => ({
@@ -70,13 +72,6 @@ export const setAircrafts = (aircrafts) => ({
   },
 });
 
-export const setFlights = (flights) => ({
-  type: SETFLIGHTS,
-  payload: {
-    flight: flights,
-  },
-});
-
 export const setCrewPostions = (crewPositions) => ({
   type: SETCREWPOSITION,
   payload: {
@@ -104,14 +99,6 @@ export const setUserStatus = (userStatus) => ({
     userstatus: userStatus,
   },
 });
-
-export const setWebSocket = (ws) => ({
-  type: SETWEBSOCKET,
-  payload: {
-    ws: ws,
-  },
-});
-
 
 
 
@@ -144,5 +131,39 @@ export const deleteLocation = (location) => ({
   type: DELETELOCATION,
   payload: {
     location: location
+  }
+})
+
+
+
+// Flight Redux Actions
+export const setFlights = (flights) => ({
+  type: SETFLIGHTS,
+  payload: {
+    flight: flights,
+  },
+});
+
+
+export const addFlight = (flight) => ({
+  type: ADDFLIGHT,
+  payload: {
+    flight: flight
+  }
+});
+
+
+export const editFlight = (flight) => ({
+  type: EDITFLIGHT,
+  payload: {
+    flight: flight
+  }
+});
+
+
+export const deleteFlight = (flight) => ({
+  type: DELETEFLIGHT,
+  payload: {
+    flight: flight
   }
 })
