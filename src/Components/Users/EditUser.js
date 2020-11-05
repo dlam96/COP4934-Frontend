@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
   fixedInfo: {
     paddingTop: theme.spacing(4),
+
     height: 470,
     alignItems: 'center',
   },
@@ -69,141 +70,136 @@ export default function EditUser(props) {
       <Paper className={classes.fixedInfo} variant="outlined">
         <Grid container item direction='column' spacing={2}>
 
-        <Grid container item direction='row' style={{height: '50px'}}>
-          <Grid item md={5} align='right'>
-            <h3>First Name</h3>
-          </Grid>
-          <Grid item md={2} />
-          <Grid item md={3} align='start'>
-            <h3>{ user.first_name }</h3>
-          </Grid>
-        </Grid>
-
-        <Grid container item direction='row' style={{height: '50px'}}>
-          <Grid item md={5} align='right'>
-            <h3>Last Name</h3>
-          </Grid>
-          <Grid item md={2} />
-          <Grid item md={3} align='start'>
-            <h3>{ user.last_name }</h3>
-          </Grid>
-        </Grid>
-
-        <Grid container item direction='row' style={{height: '50px'}}>
-          <Grid item md={5} align='right'>
-            <h3>Pilot Status</h3>
-          </Grid>
-          <Grid item md={2} />
-          <Grid item md={3} align='start'>
-            <h3>{ user.pilot_status }</h3>
-          </Grid>
-        </Grid>
-
-        <Grid container item direction='row' style={{height: '50px'}}>
-          <Grid item md={5} align='right'>
-            <h3>Rank</h3>
-          </Grid>
-          <Grid item md={2} />
-          <Grid item md={3} align='start'>
-            <h3>{ rankIdSlice(user.rank_uuid) }</h3>
-          </Grid>
-        </Grid>
-
-        <Grid container item direction='row' style={{height: '50px'}}>
-          <Grid item md={5} align='right'>
-            <h3>Role</h3>
-          </Grid>
-          <Grid item md={2} />
-          <Grid item md={3} align='start'>
-            <h3>{ user.role }</h3>
-          </Grid>
-        </Grid>
-
-        <Grid container item direction='row' style={{height: '50px'}}>
-          <Grid item md={5} align='right'>
-            <h3>User Status</h3>
-          </Grid>
-          <Grid item md={2} />
-          <Grid item md={3} align='start'>
-            <h3>{ user.user_status }</h3>
-          </Grid>
-        </Grid>
-
-        {/* {fields.map((item, index) => 
-          <Grid container item direction="row">
-            <Grid item xs={3} />
-            <Grid item xs={3} align="start">
-              <h3>{item.label}</h3> 
+          <Grid container item direction='row' style={{height: '50px'}}>
+            <Grid item md={5} align='right'>
+              <h3>First Name</h3>
             </Grid>
-
-            { !(item.label === "Rank" || item.label === "User Status") ?
-              <Grid item xs={6}>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  value={user[item.value]}
-                  onChange={(e) =>
-                    {
-                      let newUser = {...user};
-                      newUser[item.value] = e.target.value;
-                      setUser(newUser);
-                    }
+            <Grid item md={2} />
+            <Grid item md={3} align='start'>
+              <TextField
+                name='first_name'
+                label='First Name'
+                size='small'
+                value={ user.first_name }
+                onChange={(e)=>
+                  {
+                    let newUser = {...user}
+                    newUser['first_name'] = e.target.value
+                    setUser(newUser);
                   }
-                />
-              </Grid>
-              :
-              <Grid item xs={6}>
-                <FormControl size='small'>
-                  {(item.label === "Rank") ? 
-                    <Select 
-                      native
-                      variant="outlined" 
-                      value={user[item.value]}
-                      onChange={(e) =>
-                        {
-                          let newUser = {...user};
-                          newUser[item.value] = e.target.value;
-                          setUser(newUser);    
-                        }
-                      }
-                    >
-                      <option value="">{user[item.value]}</option>
-                      <option value="01">Second Lieutenant</option>
-                      <option value="02">First Lieutenant</option>
-                      <option value="03">Captain</option>
-                      <option value="04">Major</option>
-                      <option value="05">Lieutenant Colonel</option>
-                      <option value="06">Colonel</option>
-                      <option value="07">Brigadier General</option>
-                      <option value="08">Major General</option>
-                      <option value="09">Lieutenant General</option>
-                      <option value="010">General</option>
-                    </Select>
-                    :
-                    <Select 
-                      native
-                      variant ="outlined" 
-                      value={user[item.value]}
-                      onChange={(e)=>
-                        {
-                          let newUser = {...user};
-                          newUser[item.value] = e.target.value;
-                          setUser(newUser);    
-                        }
-                      }
-                    >
-                      <option value="">{user[item.value]}</option>
-                      <option value="0">Unavailable</option>
-                      <option value="1">Available</option>
-                    </Select>
-                  }
-
-                </FormControl>
-              </Grid>
-            }
+                }
+              />
+            </Grid>
           </Grid>
-        )} */}
-        
+
+          <Grid container item direction='row' style={{height: '50px'}}>
+            <Grid item md={5} align='right'>
+              <h3>Last Name</h3>
+            </Grid>
+            <Grid item md={2} />
+            <Grid item md={3} align='start'>
+              <TextField
+                name='last_name'
+                label='Last Name'
+                size='small'
+                value={ user.last_name }
+                onChange={(e)=>
+                  {
+                    let newUser = {...user}
+                    newUser['last_name'] = e.target.value
+                    setUser(newUser);
+                  }
+                }
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container item direction='row' style={{height: '50px'}}>
+            <Grid item md={5} align='right'>
+              <h3>Pilot Status</h3>
+            </Grid>
+            <Grid item md={2} />
+            <Grid item md={3} align='start'>
+              <Select
+                native
+                value={user.pilot_status}
+                onChange={(e)=>
+                  {
+                    let newUser = {...user}
+                    newUser['pilot_status'] = e.target.value
+                    setUser(newUser)
+                  }
+                }
+              >
+                <option value=''>Select</option>
+                <option value='N/A'>N/A</option>
+                <option value='UP'>UP</option>
+                <option value='FP'>FP</option>
+                <option value='MP'>MP</option>
+                <option value='IP'>IP</option>
+                <option value='EP'>EP</option>
+              </Select>
+            </Grid>
+          </Grid>
+
+          <Grid container item direction='row' style={{height: '50px'}}>
+            <Grid item md={5} align='right'>
+              <h3>Rank</h3>
+            </Grid>
+            <Grid item md={2} />
+            <Grid item md={3} align='start'>
+              <h3>{ rankIdSlice(user.rank_uuid) }</h3>
+            </Grid>
+          </Grid>
+
+          <Grid container item direction='row' style={{height: '50px'}}>
+            <Grid item md={5} align='right'>
+              <h3>Role</h3>
+            </Grid>
+            <Grid item md={2} />
+            <Grid item md={3} align='start'>
+              <TextField
+                name='role'
+                label='User Role'
+                size='small'
+                value={ user.role }
+                onChange={(e)=>
+                  {
+                    let newUser = {...user}
+                    newUser['role'] = e.target.value
+                    setUser(newUser);
+                  }
+                }
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container item direction='row' style={{height: '50px'}}>
+            <Grid item md={5} align='right'>
+              <h3>User Status</h3>
+            </Grid>
+            <Grid item md={2} />
+            <Grid item md={3} align='start'>
+              <Select
+                native
+                value={user.user_status}
+                onChange={(e)=>
+                  {
+                    let newUser = {...user}
+                    newUser['user_status'] = e.target.value
+                    setUser(newUser)
+                  }
+                }
+              >
+                <option value=''>Select</option>
+                <option value='Available'>Available</option>
+                <option value='Unavailable'>Unavailable</option>
+                <option value='Active_Duty_Available'>Active Duty Available</option>
+                <option value='Deployed_Unavailable'>Deployed Unavailable</option>
+              </Select>
+            </Grid>
+          </Grid>
+          
           {/* Save and Cancel buttonss */}
           <Grid container item direction="row">
             <Grid item xs={12} align="center" className={classes.buttons}>

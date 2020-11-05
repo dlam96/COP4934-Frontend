@@ -113,8 +113,8 @@ export default function Signup(props) {
 
         <form className={classes.registration} onSubmit={validateSignup}>
           <TextField
-            id="firstName"
-            name="firstName"
+            id="first_name"
+            name="first_name"
             type="text"
             margin="normal"
             label="First Name"
@@ -124,8 +124,8 @@ export default function Signup(props) {
             className={classes.textField}
           />
           <TextField
-            id="lastName"
-            name="lastName"
+            id="last_name"
+            name="last_name"
             type="text"
             margin="normal"
             label="Last Name"
@@ -134,17 +134,17 @@ export default function Signup(props) {
             onChange={(e) => setLastname(e.target.value)}
             className={classes.textField}
           />
-          <TextField
-            id="mil_id"
-            name="mil_id"
+          {/* <TextField
+            id="pilot_status"
+            name="pilot_status"
             type="text"
             margin="normal"
-            label="Military ID"
+            label="Pilot Status"
             fullWidth
             required
-            onChange={(e) => setMilid(e.target.value)}
+      
             className={classes.textField}
-          />
+          /> */}
           <TextField
             id="email"
             name="email"

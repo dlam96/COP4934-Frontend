@@ -6,9 +6,13 @@ import {
   Button,
   TextField, 
   Select,
+  IconButton,
+  FormControl,
 } from "@material-ui/core";
 import {
   Save,
+  AddCircle,
+  RemoveCircle,
 } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,13 +36,54 @@ const useStyles = makeStyles((theme) => ({
   saveBt: {
     marginRight: "10px",
   },
+  crewSelect: {
+    margin: theme.spacing(1),
+  },
 }));
+
+function addNewCrew(crewPositions = null){
+  if (!crewPositions) return;
+  return (
+    <Select
+      native
+    >
+        <option value=''>Select</option>
+      {crewPositions.map((pos, index) => (
+        <option value={pos.crew_position_uuid} key={index}>{pos.position}</option>
+      ))}
+    </Select>
+  )
+}
 
 export default function NewModel(props) {
   const classes = useStyles();
   const { crewPositions } = props;
-  const [model, setModel] = useState({model_name: '', positions: []});
+  const [model, setModel] = useState({model_name: '', positions: [{ crew_position_uuid: '' }]});
   const aircraftInfo = ['Model Name', 'Crew'];
+
+  const [inputSelects, setInputSelects] = useState([
+    { crew_position_uuid: '' },
+  ]);
+
+  const handleChangeInput = (event, index) => {
+    // console.log(crew)
+    const crewList = [...inputSelects];
+    crewList[index]['crew_position_uuid'] = event.target.value;
+    setInputSelects(crewList);
+    let newModel = {...model};
+    newModel['positions'] = inputSelects;
+    setModel(newModel);
+  }
+
+  const handleAddFields = () => {
+    setInputSelects([...inputSelects, { crew_position_uuid: '' }])
+  }
+
+  const handleRemoveFields = (index) => {
+    const values = [...inputSelects];
+    values.splice(index, 1);
+    setInputSelects(values);
+  }
 
   return (
     <Paper className={classes.enterInfo} variant='outlined'>
@@ -64,23 +109,39 @@ export default function NewModel(props) {
               }
             />
           </Grid>
-          <Grid item>
-            <Select
-              native
-              onChange={(e) =>
-                {
-                  let newModel = {...model};
-                  newModel['positions'] = e.target.value
-                  setModel(newModel)
-                }
-              }
-            >
-              <option value=''>Select</option>
-            {crewPositions.map((pos, index) => (
-              <option value={pos.crew_position_uuid} key={index}>{pos.position}</option>
-            ))}
-            </Select>
+
+          <Grid container direction='row'>
+            <FormControl className={classes.crewSelect}>
+              { inputSelects.map((inputSelect, index) => (
+                <Grid item key={index}>
+                  <Select
+                    native
+                    name='crew_position_uuid'
+                    label='Crew Position'
+                    value={inputSelect.crew_position_uuid}
+                    onChange={(event) => handleChangeInput(event, index)}
+                  >
+                    <option value=''>Select</option>
+                    {crewPositions.map((pos, index) => (
+                      <option value={pos.crew_position_uuid} key={index}>{pos.position}</option>
+                    ))}
+                  </Select>
+                  <IconButton
+                    onClick={()=>handleRemoveFields(index)}
+                  >
+                    <RemoveCircle />
+                  </IconButton>
+                  <IconButton
+                    onClick={()=>handleAddFields()}
+                  >
+                    <AddCircle />
+                  </IconButton>
+                </Grid>
+              ))}
+
+            </FormControl>
           </Grid>
+
         </Grid>
       </Grid>
       {/* Save and Cancel buttons */}
@@ -91,6 +152,7 @@ export default function NewModel(props) {
             color="primary"
             startIcon={<Save />}
             className={classes.saveBt}
+            // onClick={()=>props.handleNewModel(model)}
             onClick={()=>props.handleNewModel(model)}
           >
             Save

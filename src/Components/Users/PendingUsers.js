@@ -28,6 +28,7 @@ export default function PendingUsers(props) {
 
   const handleCheck = (e) => {
     setApproveCheck(e.target.checked);
+    props.setApproveUserList([...props.approveUserList, e.target.value]);
   }
 
   return( 
@@ -40,8 +41,13 @@ export default function PendingUsers(props) {
       <Grid item xs={2} align="right" style={{paddingRight: '15px'}}>
         <Checkbox 
           checked={approveCheck}
-          onChange={(e) => handleCheck(e)}
+          value={user.account_uuid}
           color='primary'
+          onChange={(e) => 
+            {
+              handleCheck(e)
+            }
+          }
         />
       </Grid>
       <Grid item xs={12} md={12}><Divider variant='middle' /></Grid>

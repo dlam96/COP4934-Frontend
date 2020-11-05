@@ -127,9 +127,33 @@ function Users(props) {
   const [editUser, setEditUser] = useState(null);
   const [userList, setUserList] = useState(props.airmen);
   const [addNew, setAddNew] = useState(false);
+  const [pendingUsers, setPendingUsers] = useState([]);
+
+  const [approveUserList, setApproveUserList] = useState([]);
+  const [approveCheck, setApproveCheck] = useState(false);
+
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleApproveAll = (users = null) => {
+    if (!users) return;
+    console.log(users)
+    axios
+      .patch(
+        "/user/approval/",
+        {
+          approve: users
+        }
+      )        
+      .then((response) => {
+        console.log("Response from Approve All:", response);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      })
   };
 
   const handleEdit = (user = null) => {
@@ -139,6 +163,23 @@ function Users(props) {
     } else {
       setEdit(false);
       if (!user) return;
+      axios
+        .patch("/user/" + user.account_uuid,
+          {
+            first_name: user.first_name,
+            last_name: user.last_name,
+            pilot_stauts: user.pilot_stauts,
+            rank_uuid: user.rank_uuid,
+            role: user.role,
+            user_status: user.user_status,
+          }
+        )
+        .then((response) => {
+          console.log("Response from Patch User:", response);
+        })
+        .catch((error) => {
+          console.log("Error:", error);
+        })
     }
   };
 
@@ -153,10 +194,10 @@ function Users(props) {
 
   useEffect(() => {
     axios
-      .get("/user/approval")
+      .get("/user/nonapproved")
       .then((response) => {
-        console.log("Response Data Users:", response.data)
-        // unapprovedUsersAction(response.data);
+        console.log("Response Data Users:", response.data.users)
+        setPendingUsers(response.data.users)
       })
       .catch((error) => {
         console.log("Get Error:", error);
@@ -254,21 +295,6 @@ function Users(props) {
                         />
                       ))}
 
-                      {/* New User Button */}
-                      {/* <Grid container item xs={12} md={12}>
-                        <Paper className={classes.newUserBt}>
-                          <Button 
-                            startIcon={<Add />}
-                            fullWidth={true}
-                            size="large"
-                            // onClick={()=>handleNewUser()}
-                            style={{
-                              color: green[500],
-                              minHeight: '100%',
-                            }}
-                          />
-                        </Paper>
-                      </Grid> */}
                     </Grid>
                   </Paper>
                 </Grid>
@@ -307,21 +333,25 @@ function Users(props) {
                     </Typography>
                   </Grid>
                   
-                    {userList.map(user => (
-                      <PendingUsers 
-                        user={user}
-                        handleEdit={handleEdit}
-                        key={user.account_uuid}
-                      />
-                    ))}
+                  {pendingUsers.map(user => (
+                    <PendingUsers 
+                      user={user}
+                      handleEdit={handleEdit}
+                      handleApproveAll={handleApproveAll}
+                      setApproveUserList={setApproveUserList}
+                      approveUserList={approveUserList}
+                      approveCheck={approveCheck}
+                      key={user.account_uuid}
+                    />
+                  ))}
 
-                  {/* New User Button */}
+                  {/* Approve Users Button */}
                   <Grid container item xs={12} md={12}>
                     <Paper className={classes.newUserBt}>
                       <Button 
                         fullWidth={true}
                         size="large"
-                        // onClick={()=>handleNewUser()}
+                        onClick={()=>handleApproveAll(approveUserList)}
                         style={{
                           color: green[500],
                           minHeight: '100%',

@@ -60,13 +60,6 @@ export const setAirmen = (airmen) => ({
   },
 });
 
-export const setUnapprovedUsers = (unapprovedUsers) => ({
-  type: SETUNAPPROVEDUSERS,
-  payload: {
-    unapprovedUsers: unapprovedUsers
-  },
-});
-
 export const setAircraftModels = (aircraftModels) => ({
   type: SETAIRCRAFTMODELS,
   payload: {
