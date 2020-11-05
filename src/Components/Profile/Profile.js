@@ -10,7 +10,7 @@ import {
   Tabs,
   Box,
   Button,
-  TextField
+  TextField,
 } from "@material-ui/core";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -118,23 +118,21 @@ function Profile(props) {
   return (
     <Grid container className={classes.container}>
       <Grid item sm={6}>
-        { props.locations && props.locations.length > 0 ?
-          props.locations.map((item) => 
-            <p key={item.location_uuid}>{"Name:"+item.location_name+"   ID: "+item.location_uuid}</p>
-          )
-          :
-          null
-        }
+        {props.locations && props.locations.length > 0
+          ? props.locations.map((item) => (
+              <p key={item.location_uuid}>
+                {"Name:" + item.location_name + "   ID: " + item.location_uuid}
+              </p>
+            ))
+          : null}
       </Grid>
       <Grid item sm={6}>
-        <Button onClick={()=> onButtonClick()}>
-          Hello
-        </Button>
+        <Button onClick={() => onButtonClick()}>Hello</Button>
         <TextField
           id="standard-required"
           label="Required"
           value={locationName}
-          onChange={(e)=> handleTextChange(e.target.value)}
+          onChange={(e) => handleTextChange(e.target.value)}
         />
       </Grid>
     </Grid>

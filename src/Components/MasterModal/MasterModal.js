@@ -111,11 +111,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 0, 0, 0),
   },
   pilotStyle: {
-    width: "50vw",
+    // width: "50vw",
     padding: theme.spacing(1, 1, 1, 3),
-    "& > * + *": {
-      marginTop: theme.spacing(3),
-    },
+    // "& > * + *": {
+    //   marginTop: theme.spacing(3),
+    // },
   },
   colorPicker: {
     margin: theme.spacing(0.75, 0, 0, 5),
@@ -144,6 +144,34 @@ const useStyles = makeStyles((theme) => ({
     // overflow: "auto",
     // fontSize: 15,
   },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+  clearBtn: {
+    color: "white",
+    backgroundColor: "red",
+    margin: theme.spacing(1, 1, 0, 1),
+    "&:hover": {
+      backgroundColor: "#8B0000",
+    },
+    "&:focus": {
+      outline: "none",
+      backgroundColor: "red",
+    },
+  },
+  closeDeleteBtn: {
+    color: "white",
+    backgroundColor: "grey",
+    margin: theme.spacing(1, 1, 0, 1),
+  },
 }));
 // options for pilots
 // const pilots = [
@@ -171,7 +199,8 @@ function MasterModal(props) {
   const [locations, setLocations] = useState(null);
   const [selectedLocationIndex, setSelectedLocationIndex] = useState(0);
   const [aircrafts, setAircrafts] = useState(null);
-
+  // handles delete confirmation modal logic
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   //
   const [aircraftModels, setAircraftModels] = useState(null);
 
@@ -367,8 +396,18 @@ function MasterModal(props) {
     );
     // reset color to default for next event
     setColor("");
+    closeDeleteConfirmation();
     handleClose();
   };
+
+  const openDeleteConfirmation = (event) => {
+    setDeleteConfirmation(true);
+  };
+  const closeDeleteConfirmation = (event) => {
+    console.log("clicking delete");
+    setDeleteConfirmation(false);
+  };
+
   // adds new event/edit existing event to JSON object
   // TODO: check for empty strings/fields
   const onSubmit = () => {
@@ -526,6 +565,40 @@ function MasterModal(props) {
   };
   return (
     <>
+      {/* Confirmation Delete modal */}
+      <Modal
+        className={classes.modal}
+        open={deleteConfirmation}
+        closeAfterTransition
+        onClose={closeDeleteConfirmation}
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={deleteConfirmation}>
+          <div className={classes.paper}>
+            <h2 id="transition-modal-title">
+              Are you sure you want to delete this event?
+            </h2>
+            <Grid container direction="row">
+              <Chip
+                label="Delete"
+                clickable
+                className={classes.clearBtn}
+                onClick={handleDelete}
+              />
+              <Chip
+                label="Cancel"
+                clickable
+                className={classes.closeDeleteBtn}
+                onClick={closeDeleteConfirmation}
+              />
+            </Grid>
+          </div>
+        </Fade>
+      </Modal>
+
       {props.showAll ? (
         <>
           {maximized ? (
@@ -586,7 +659,7 @@ function MasterModal(props) {
                         {props.showDelete && props.role !== "User" ? (
                           <IconButton
                             aria-label="delete"
-                            onClick={handleDelete}
+                            onClick={openDeleteConfirmation}
                           >
                             <Delete />
                           </IconButton>
@@ -761,7 +834,63 @@ function MasterModal(props) {
                     {/* Pilots & color */}
                     <Grid item container direction="row">
                       {/* pilots WORK */}
-                      <Grid item sm={6} md={6} xl={6}></Grid>
+                      <Grid container item sm={6} md={6} xl={6}>
+                        <Grid
+                          container
+                          item
+                          direction="row"
+                          spacing={3}
+                          className={classes.pilotStyle}
+                        >
+                          {flightPositions &&
+                            flightPositions.map((item) => (
+                              <Grid
+                                container
+                                item
+                                direction="column"
+                                key={"Grid" + item.crew_position_uuid}
+                                // sm
+                                xs={4}
+                              >
+                                <TextField
+                                  id=""
+                                  select
+                                  required={item.required}
+                                  label={item.position}
+                                  value={
+                                    flightCrew &&
+                                    flightCrew[item.crew_position_uuid]
+                                      ? flightCrew[item.crew_position_uuid]
+                                          .airman_uuid
+                                      : ""
+                                  }
+                                  onChange={(event) =>
+                                    handleCrewSelectClick(
+                                      event,
+                                      item.crew_position_uuid
+                                    )
+                                  }
+                                  variant="standard"
+                                  fullWidth
+                                  InputLabelProps={{
+                                    className: classes.positionField,
+                                  }}
+                                >
+                                  {propsAirmen.map((airman) => (
+                                    <MenuItem
+                                      key={airman.account_uuid}
+                                      value={airman.account_uuid}
+                                    >
+                                      {airman.first_name +
+                                        " " +
+                                        airman.last_name}
+                                    </MenuItem>
+                                  ))}
+                                </TextField>
+                              </Grid>
+                            ))}
+                        </Grid>
+                      </Grid>
                       <Grid item sm={4} md={4} xl={4}>
                         {/* Color picker */}
                         <FormControl className={classes.colorPicker}>
@@ -985,7 +1114,7 @@ function MasterModal(props) {
                           {props.showDelete && props.role !== "User" ? (
                             <IconButton
                               aria-label="delete"
-                              onClick={handleDelete}
+                              onClick={openDeleteConfirmation}
                             >
                               <Delete />
                             </IconButton>
