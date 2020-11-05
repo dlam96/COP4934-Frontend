@@ -21,7 +21,7 @@ import {
   setAircraftModels,
   setFlights,
 } from "../../Redux/actions.js";
-import axios from "axios";
+import { WebSocketFrame } from "../WebSocket/WebSocket.js";
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 const useStyles = makeStyles((theme) => ({
@@ -84,17 +84,6 @@ const useStyles = makeStyles((theme) => ({
 
 function CurrentSchedule(props) {
   const classes = useStyles();
-  const [events, setEvents] = useState(props.events);
-  const {
-    aircraftAction,
-    locationAction,
-    crewPositionAction,
-    airmenAction,
-    aircraftModelAction,
-    flightAction,
-  } = props;
-
-  
 
   let today = new Date();
   const localizer = momentLocalizer(moment);
@@ -143,39 +132,45 @@ function CurrentSchedule(props) {
 
   const moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
     console.log("Moving", event);
-    // const idx = events.indexOf(event);
     // removes event from current events
-    const updatedEvents = events.filter(
+    const updatedEvents = props.events.filter(
       (item) => item.flight_uuid !== event.flight_uuid
     );
     // adds the new event w/ updated parameters
     const updatedEvent = { ...event, start, end, allDay: droppedOnAllDaySlot };
     updatedEvents.push(updatedEvent);
-    // Send A Put Request
+    // Send A Patch Request
     console.log("AllDay BS:", droppedOnAllDaySlot);
-    axios
-      .patch(
-        "/flight/" + event.flight_uuid,
-        {
-          start_time: start,
-          end_time: end,
-          all_day: droppedOnAllDaySlot ? droppedOnAllDaySlot : false,
-        },
-        { headers: { "Content-Type": "application/json" } }
-      )
-      .then((response) => {
-        console.log("Response from Put:", response);
-        // Reason we only update until we get a good response back is because the backend will check for conflicts
-        setEvents(updatedEvents);
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-      });
+    WebSocketFrame.flightHandler("edit", {
+      flight_uuid: event.flight_uuid,
+      start_time: start,
+      end_time: end,
+      allDay: droppedOnAllDaySlot ? droppedOnAllDaySlot : false,
+    });
+
+    // axios
+    //   .patch(
+    //     "/flight/" + event.flight_uuid,
+    //     {
+    //       start_time: start,
+    //       end_time: end,
+    //       all_day: droppedOnAllDaySlot ? droppedOnAllDaySlot : false,
+    //     },
+    //     { headers: { "Content-Type": "application/json" } }
+    //   )
+    //   .then((response) => {
+    //     console.log("Response from Put:", response);
+    //     // Reason we only update until we get a good response back is because the backend will check for conflicts
+    //     //setEvents(updatedEvents);
+    //   })
+    //   .catch((error) => {
+    //     console.log("Error:", error);
+    //   });
   };
 
   return (
     <>
-      {events && events.length > 0 ? (
+      {props.events && props.events.length > 0 ? (
         <Container maxWidth="lg" className={classes.container}>
           <CssBaseline />
           <MasterModal
@@ -185,8 +180,8 @@ function CurrentSchedule(props) {
             endDate={endDate}
             setStartDate={setStartDate}
             setEndDate={setEndDate}
-            events={events}
-            setEvents={setEvents}
+            events={props.events}
+            //setEvents={setEvents}
             showAll={showAll}
             setShowAll={setShowAll}
             selectedEvent={selectedEvent}
@@ -199,7 +194,7 @@ function CurrentSchedule(props) {
                 <DragAndDropCalendar
                   selectable
                   localizer={localizer}
-                  events={events}
+                  events={props.events}
                   startAccessor="start"
                   endAccessor="end"
                   style={{ height: "82vh" }}
