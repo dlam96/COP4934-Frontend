@@ -13,11 +13,14 @@ import {
   SETAIRCRAFTSTATUS,
   SETUSERSTATUS,
   GOTINITIALESSENTIALREQUEST,
-  SETWEBSOCKET,
   ADDLOCATION,
   EDITLOCATION,
   DELETELOCATION,
   SETUNAPPROVEDUSERS,
+  ADDFLIGHT,
+  EDITFLIGHT,
+  DELETEFLIGHT,
+  SETONLINE,
 } from "./actionTypes.js";
 
 export const login = (loginObject) => ({
@@ -78,13 +81,6 @@ export const setAircrafts = (aircrafts) => ({
   },
 });
 
-export const setFlights = (flights) => ({
-  type: SETFLIGHTS,
-  payload: {
-    flight: flights,
-  },
-});
-
 export const setCrewPostions = (crewPositions) => ({
   type: SETCREWPOSITION,
   payload: {
@@ -113,16 +109,6 @@ export const setUserStatus = (userStatus) => ({
   },
 });
 
-export const setWebSocket = (ws) => ({
-  type: SETWEBSOCKET,
-  payload: {
-    ws: ws,
-  },
-});
-
-
-
-
 // Location Redux Actions
 export const setLocations = (locations) => ({
   type: SETLOCATIONS,
@@ -131,26 +117,60 @@ export const setLocations = (locations) => ({
   },
 });
 
-
 export const addLocation = (location) => ({
   type: ADDLOCATION,
   payload: {
-    location: location
-  }
+    location: location,
+  },
 });
-
 
 export const editLocation = (location) => ({
   type: EDITLOCATION,
   payload: {
-    location: location
-  }
+    location: location,
+  },
 });
-
 
 export const deleteLocation = (location) => ({
   type: DELETELOCATION,
   payload: {
-    location: location
-  }
-})
+    location: location,
+  },
+});
+
+// Flight Redux Actions
+export const setFlights = (flights) => ({
+  type: SETFLIGHTS,
+  payload: {
+    flight: flights,
+  },
+});
+
+export const addFlight = (flight) => ({
+  type: ADDFLIGHT,
+  payload: {
+    flight: flight,
+  },
+});
+
+export const editFlight = (flight) => ({
+  type: EDITFLIGHT,
+  payload: {
+    flight: flight,
+  },
+});
+
+export const deleteFlight = (flight) => ({
+  type: DELETEFLIGHT,
+  payload: {
+    flight: flight,
+  },
+});
+
+// online action
+export const setOnline = (online) => ({
+  type: SETONLINE,
+  payload: {
+    online: online,
+  },
+});

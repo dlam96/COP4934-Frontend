@@ -5,6 +5,8 @@ import {
   Paper,
   makeStyles,
   CssBaseline,
+  Avatar,
+  Tooltip,
 } from "@material-ui/core";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -21,7 +23,12 @@ import {
   setAircraftModels,
   setFlights,
 } from "../../Redux/actions.js";
-import axios from "axios";
+
+import userData from "./userData.js";
+import { AvatarGroup } from "@material-ui/lab";
+
+import { WebSocketFrame } from "../WebSocket/WebSocket.js";
+
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 const useStyles = makeStyles((theme) => ({
@@ -31,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
   },
   container: {
-    paddingTop: theme.spacing(4),
+    paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(4),
   },
   paper: {
@@ -84,18 +91,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CurrentSchedule(props) {
   const classes = useStyles();
-  const [events, setEvents] = useState(props.events);
-  const {
-    aircraftAction,
-    locationAction,
-    crewPositionAction,
-    airmenAction,
-    aircraftModelAction,
-    flightAction,
-  } = props;
-
-  
-
+  console.log("online users", props.online_users);
   let today = new Date();
   const localizer = momentLocalizer(moment);
   // Event Modal functions
@@ -143,39 +139,55 @@ function CurrentSchedule(props) {
 
   const moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
     console.log("Moving", event);
-    // const idx = events.indexOf(event);
     // removes event from current events
-    const updatedEvents = events.filter(
+    const updatedEvents = props.events.filter(
       (item) => item.flight_uuid !== event.flight_uuid
     );
     // adds the new event w/ updated parameters
     const updatedEvent = { ...event, start, end, allDay: droppedOnAllDaySlot };
     updatedEvents.push(updatedEvent);
-    // Send A Put Request
+    // Send A Patch Request
     console.log("AllDay BS:", droppedOnAllDaySlot);
-    axios
-      .patch(
-        "/flight/" + event.flight_uuid,
-        {
-          start_time: start,
-          end_time: end,
-          all_day: droppedOnAllDaySlot ? droppedOnAllDaySlot : false,
-        },
-        { headers: { "Content-Type": "application/json" } }
-      )
-      .then((response) => {
-        console.log("Response from Put:", response);
-        // Reason we only update until we get a good response back is because the backend will check for conflicts
-        setEvents(updatedEvents);
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-      });
+    WebSocketFrame.flightHandler("edit", {
+      flight_uuid: event.flight_uuid,
+      start_time: start,
+      end_time: end,
+      allDay: droppedOnAllDaySlot ? droppedOnAllDaySlot : false,
+    });
+
+    // axios
+    //   .patch(
+    //     "/flight/" + event.flight_uuid,
+    //     {
+    //       start_time: start,
+    //       end_time: end,
+    //       all_day: droppedOnAllDaySlot ? droppedOnAllDaySlot : false,
+    //     },
+    //     { headers: { "Content-Type": "application/json" } }
+    //   )
+    //   .then((response) => {
+    //     console.log("Response from Put:", response);
+    //     // Reason we only update until we get a good response back is because the backend will check for conflicts
+    //     //setEvents(updatedEvents);
+    //   })
+    //   .catch((error) => {
+    //     console.log("Error:", error);
+    //   });
   };
+  // Randomize color for avatar
+  let colors = [
+    "#D50000",
+    "#FF5722",
+    "#FFC107",
+    "#4CAF50",
+    "#3174ad",
+    "#3F51B5",
+    "#9C27B0",
+  ];
 
   return (
     <>
-      {events && events.length > 0 ? (
+      {props.events && props.events.length > 0 ? (
         <Container maxWidth="lg" className={classes.container}>
           <CssBaseline />
           <MasterModal
@@ -185,24 +197,52 @@ function CurrentSchedule(props) {
             endDate={endDate}
             setStartDate={setStartDate}
             setEndDate={setEndDate}
-            events={events}
-            setEvents={setEvents}
+            events={props.events}
+            //setEvents={setEvents}
             showAll={showAll}
             setShowAll={setShowAll}
             selectedEvent={selectedEvent}
             showDelete={showDelete}
             setDelete={setDelete}
           />
-          <Grid container spacing={3}>
+          <Grid container spacing={1}>
             <Grid item xs={12} md={12} lg={12}>
+              {/* Avatar User count */}
+              <Grid
+                item
+                container
+                xs={12}
+                justify="flex-end"
+                alignItems="baseline"
+              >
+                <AvatarGroup max={5}>
+                  {props.online_users &&
+                    props.online_users.map((item, index) => {
+                      return (
+                        <Tooltip
+                          title={`${item.first_name} ${item.last_name}`}
+                          key={item.first_name + item.last_name}
+                        >
+                          <Avatar style={{ backgroundColor: colors[index] }}>
+                            {`${item.first_name.substr(
+                              0,
+                              1
+                            )}${item.last_name.substr(0, 1)}`}
+                          </Avatar>
+                        </Tooltip>
+                      );
+                    })}
+                </AvatarGroup>
+              </Grid>
+              {/* Calendar App */}
               <Paper>
                 <DragAndDropCalendar
                   selectable
                   localizer={localizer}
-                  events={events}
+                  events={props.events}
                   startAccessor="start"
                   endAccessor="end"
-                  style={{ height: "82vh" }}
+                  style={{ height: "82vh", width: "100%" }}
                   onSelectSlot={handleBigCalendarSelect}
                   onSelectEvent={handleBigCalendarSelect}
                   eventPropGetter={eventStyleGetter}
@@ -228,4 +268,7 @@ const mapDispatchToProps = {
   flightAction: setFlights,
 };
 
-export default connect(null, mapDispatchToProps)(CurrentSchedule);
+const mapStateToProps = (state) => {
+  return { online_users: state.onlineReducer };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(CurrentSchedule);

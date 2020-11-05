@@ -4,17 +4,15 @@ import {
   Grid,
   makeStyles,
   Avatar,
-  Typography,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
   ListSubheader,
   Paper,
-  Box,
 } from "@material-ui/core";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 // mock data
 import { useUserRecords } from "./data";
 
