@@ -42,6 +42,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { connect } from "react-redux";
 import { setFlights } from "../../Redux/actions.js";
 import axios from "axios";
+import { WebSocketFrame } from "../WebSocket/WebSocket.js";
 moment.locale("en");
 
 const useStyles = makeStyles((theme) => ({
@@ -365,7 +366,10 @@ function MasterModal(props) {
     console.log("New Pilot Selected:");
     console.log("Selected Value:", event.target.value);
     console.log("Position_uuid:", position_uuid);
-    let newSelectedPilots = [...selectedPilots];
+    let newSelectedPilots = [];
+    if (selectedPilots) {
+      newSelectedPilots = [...selectedPilots];
+    }
     let changeIndex = newSelectedPilots.findIndex(
       (member) => member.crew_position_uuid === position_uuid
     );
@@ -437,48 +441,60 @@ function MasterModal(props) {
       );
     }
     // if index exist > -1, then modify object else create new object in array
-
+    let flightObj = {
+      flight_uuid: props.selectedEvent.flight_uuid,
+      color: selectedColor,
+      title: title,
+      start_time: props.startDate,
+      end_time: props.endDate,
+      allDay: allDay ? allDay : false,
+      aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
+      location_uuid: locations[selectedLocationIndex].location_uuid,
+      crew_members: selectedPilots ? selectedPilots : [],
+      description: props.selectedEvent.description,
+    }
+    console.log("Websocket: Finished Flight Object:", flightObj);
     // Updating existing Event
     if (objIndex >= 0) {
-      const newEvents = [...props.events];
-      newEvents[objIndex] = {
-        flight_uuid: props.selectedEvent.flight_uuid,
-        color: selectedColor,
-        title: title,
-        start: props.startDate,
-        end: props.endDate,
-        allDay: allDay ? allDay : false,
-        aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
-        location_uuid: locations[selectedLocationIndex].location_uuid,
-        crew_members: selectedPilots,
-        description: props.selectedEvent.description,
-      };
-      props.setEvents(newEvents);
-
-      // Send A Put Request
-      axios
-        .put(
-          "/flight/" + props.selectedEvent.flight_uuid,
-          {
-            flight_uuid: props.selectedEvent.flight_uuid,
-            color: selectedColor,
-            title: title,
-            start_time: props.startDate,
-            end_time: props.endDate,
-            all_day: allDay ? allDay : false,
-            aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
-            location_uuid: locations[selectedLocationIndex].location_uuid,
-            crew_members: selectedPilots,
-            description: props.selectedEvent.description,
-          },
-          { headers: { "Content-Type": "application/json" } }
-        )
-        .then((response) => {
-          console.log("Response from Put:", response);
-        })
-        .catch((error) => {
-          console.log("Error:", error);
-        });
+      // const newEvents = [...props.events];
+      // newEvents[objIndex] = {
+      //   flight_uuid: props.selectedEvent.flight_uuid,
+      //   color: selectedColor,
+      //   title: title,
+      //   start: props.startDate,
+      //   end: props.endDate,
+      //   allDay: allDay ? allDay : false,
+      //   aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
+      //   location_uuid: locations[selectedLocationIndex].location_uuid,
+      //   crew_members: selectedPilots,
+      //   description: props.selectedEvent.description,
+      // };
+      // props.setEvents(newEvents);
+      WebSocketFrame.flightHandler("edit", flightObj);
+      // // Send A Put Request
+      // axios
+      //   .put(
+      //     "/flight/" + props.selectedEvent.flight_uuid,
+      //     {
+      //       flight_uuid: props.selectedEvent.flight_uuid,
+      //       color: selectedColor,
+      //       title: title,
+      //       start_time: props.startDate,
+      //       end_time: props.endDate,
+      //       all_day: allDay ? allDay : false,
+      //       aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
+      //       location_uuid: locations[selectedLocationIndex].location_uuid,
+      //       crew_members: selectedPilots,
+      //       description: props.selectedEvent.description,
+      //     },
+      //     { headers: { "Content-Type": "application/json" } }
+      //   )
+      //   .then((response) => {
+      //     console.log("Response from Put:", response);
+      //   })
+      //   .catch((error) => {
+      //     console.log("Error:", error);
+      //   });
 
       // Creating a new event
       // TODO:
@@ -489,45 +505,47 @@ function MasterModal(props) {
       // TODO:
       // Need to fix description (add state and place to update description)
       // Need to fix crew_members
-      axios
-        .post(
-          "/flight",
-          {
-            color: selectedColor !== "" ? selectedColor : "#3174ad",
-            title: title ? title : "",
-            start_time: props.startDate,
-            end_time: props.endDate,
-            all_day: allDay ? allDay : false,
-            aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
-            location_uuid: locations[selectedLocationIndex].location_uuid,
-            crew_members: [],
-            description: "",
-          },
-          { headers: { "Content-Type": "application/json" } }
-        )
-        .then((response) => {
-          console.log("Response from Post:", response);
 
-          const newEvents = [
-            ...props.events,
-            {
-              flight_uuid: response.data.flight_uuid,
-              color: selectedColor !== "" ? selectedColor : "#3174ad",
-              title: title,
-              start: props.startDate,
-              end: props.endDate,
-              allDay: allDay ? allDay : false,
-              aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
-              location_uuid: locations[selectedLocationIndex].location_uuid,
-              crew_members: [],
-              description: "",
-            },
-          ];
-          props.setEvents(newEvents);
-        })
-        .catch((error) => {
-          console.log("Error:", error);
-        });
+      // axios
+      //   .post(
+      //     "/flight",
+      //     {
+      //       color: selectedColor !== "" ? selectedColor : "#3174ad",
+      //       title: title ? title : "",
+      //       start_time: props.startDate,
+      //       end_time: props.endDate,
+      //       allDay: allDay ? allDay : false,
+      //       aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
+      //       location_uuid: locations[selectedLocationIndex].location_uuid,
+      //       crew_members: [],
+      //       description: "",
+      //     },
+      //     { headers: { "Content-Type": "application/json" } }
+      //   )
+      //   .then((response) => {
+      //     console.log("Response from Post:", response);
+
+      //     const newEvents = [
+      //       ...props.events,
+      //       {
+      //         flight_uuid: response.data.flight_uuid,
+      //         color: selectedColor !== "" ? selectedColor : "#3174ad",
+      //         title: title,
+      //         start: props.startDate,
+      //         end: props.endDate,
+      //         allDay: allDay ? allDay : false,
+      //         aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
+      //         location_uuid: locations[selectedLocationIndex].location_uuid,
+      //         crew_members: [],
+      //         description: "",
+      //       },
+      //     ];
+      //     props.setEvents(newEvents);
+      //   })
+      //   .catch((error) => {
+      //     console.log("Error:", error);
+      //   });
+      WebSocketFrame.flightHandler("add", flightObj);
       // Need to update id we get back
     }
     // reset color to default for next event

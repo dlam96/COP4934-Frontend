@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import faker from "faker";
+import { WebSocketFrame } from "../WebSocket/WebSocket.js";
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -99,6 +99,8 @@ function Profile(props) {
   // call mock data function (returns array)
   const [value, setValue] = useState(0);
   const [locationName, setLocationName] = useState("");
+  const [trackNum, setTrackNum] = useState("");
+  const [editLocationName, setEditLocationName] = useState("");
   useEffect(() => {
     console.log("Locations:", props.locations);
   }, []);
@@ -106,13 +108,31 @@ function Profile(props) {
     setValue(newValue);
   };
 
-  function onButtonClick() {
-    console.log("Clicked button!");
-    props.websocket.addLocation(locationName);
+  function onAddButtonClick() {
+    console.log("Clicked Add button!");
+    WebSocketFrame.locationHandler("add", { location_name: locationName, track_num: trackNum });
   }
 
-  function handleTextChange(value) {
+  function onDeleteButtonClick(location_uuid) {
+    console.log("Clicked Delete button!");
+    WebSocketFrame.locationHandler("delete", { location_uuid:  location_uuid});
+  }
+
+  function onEditButtonClick(location) {
+    console.log("Clicked Edit Button!");
+    WebSocketFrame.locationHandler("edit", {...location, location_name: editLocationName});
+  }
+
+  function handleLocationChange(value) {
     setLocationName(value);
+  }
+
+  function handleTrackNumChange(value) {
+    setTrackNum(value);
+  }
+
+  function handleEditChange(value) {
+    setEditLocationName(value);
   }
 
   return (
@@ -130,7 +150,7 @@ function Profile(props) {
         <Button onClick={() => onButtonClick()}>Hello</Button>
         <TextField
           id="standard-required"
-          label="Required"
+          label="Location Name"
           value={locationName}
           onChange={(e) => handleTextChange(e.target.value)}
         />
@@ -146,7 +166,6 @@ const mapStateToProps = (state) => {
     first_name: state.loggedReducer.first_name,
     last_name: state.loggedReducer.last_name,
     locations: state.locationReducer,
-    websocket: state.websocketReducer,
   };
 };
 export default connect(mapStateToProps, null)(Profile);
