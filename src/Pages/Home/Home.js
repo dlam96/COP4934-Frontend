@@ -53,7 +53,8 @@ const useStyles = makeStyles((theme) => ({
 
 function Home(props) {
   const classes = useStyles();
-  const [events, setEvents] = useState(null);
+  //const [events, setEvents] = useState(null);
+  const [api, setApi] = useState(false);
   const {
     aircraftAction,
     locationAction,
@@ -78,7 +79,6 @@ function Home(props) {
         locationAction(response.data.locations);
         airmenAction(response.data.airmen);
         aircraftModelAction(response.data.aircraft_models);
-        flightAction(response.data.flights);
         crewPositionAction(response.data.crew_positions);
 
         // Since backend gives us UTC, we can easily convert UCT to our browser time zone just by converting it to a Date Object
@@ -86,7 +86,9 @@ function Home(props) {
           item.start = moment(item.start).toDate();
           item.end = moment(item.end).toDate();
         });
-        setEvents(response.data.flights);
+        flightAction(response.data.flights);
+        setApi(true);
+        //setEvents(response.data.flights);
       })
       .catch((error) => {
         console.log("Get Error:", error);
@@ -113,8 +115,8 @@ function Home(props) {
         <Toolbar />
         <Switch>
           <Route exact path="/Home/Schedule">
-            {events ? 
-              <CurrentSchedule events={events} />
+            { api ? 
+              <CurrentSchedule events={props.flights} />
               : 
               null
             }
@@ -163,6 +165,7 @@ const mapDispatchToProps = {
 const mapStateToProps = (state) => {
   return {
     username: state.username,
+    flights: state.flightReducer
   };
 };
 

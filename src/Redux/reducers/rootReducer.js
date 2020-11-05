@@ -11,7 +11,7 @@ import crewpositionReducer from "./crewpositionReducer.js";
 import rankReducer from "./rankReducer.js";
 import aircraftstatusReducer from "./aircraftstatusReducer.js";
 import userstatusReducer from "./userstatusReducer.js";
-import websocketReducer from "./websocketReducer.js";
+import onlineReducer from "./onlineReducer";
 
 
 export default combineReducers({
@@ -26,5 +26,6 @@ export default combineReducers({
   rankReducer,
   aircraftstatusReducer,
   userstatusReducer,
-  websocketReducer,
+  unapprovedUsersReducer,
+  onlineReducer,
 });
