@@ -26,6 +26,5 @@ export default combineReducers({
   rankReducer,
   aircraftstatusReducer,
   userstatusReducer,
-  unapprovedUsersReducer,
   onlineReducer,
 });
