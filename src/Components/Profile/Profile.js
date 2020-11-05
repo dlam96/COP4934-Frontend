@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Container,
   Grid,
@@ -9,12 +9,10 @@ import {
   Tab,
   Tabs,
   Box,
-  Button,
-  TextField,
 } from "@material-ui/core";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { WebSocketFrame } from "../WebSocket/WebSocket.js";
+import faker from "faker";
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -50,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.secondary.main,
   },
   contactInfo: {
-    color: "grey",
+    // color: "grey",
     padding: theme.spacing(3, 0, 0, 0),
     color: theme.palette.secondary.main,
   },
@@ -97,51 +95,188 @@ const TOTALCOUNT = 20;
 function Profile(props) {
   const classes = useStyles();
   // call mock data function (returns array)
-  const [value, setValue] = useState(0);
-  const [locationName, setLocationName] = useState("");
-  const [trackNum, setTrackNum] = useState("");
-  const [editLocationName, setEditLocationName] = useState("");
-  useEffect(() => {
-    console.log("Locations:", props.locations);
-  }, []);
+  const [value, setValue] = React.useState(0);
   const handleIndex = (event, newValue) => {
     setValue(newValue);
   };
+  return (
+    <Container disableGutters={true} className={classes.container}>
+      <Grid container justify="center">
+        <Grid container item direction="row">
+          <Grid
+            item
+            container
+            xs={3}
+            // alignItems="center"
+            justify="center"
+            className={classes.firstCol}
+          >
+            <Avatar className={classes.avatar}>
+              {`${props.first_name.substr(0, 1)} 
+							${props.last_name.substr(0, 1)}`}
+            </Avatar>
+          </Grid>
+          <Grid item container xs={5} className={classes.secondCol}>
+            {/* Name */}
+            <Grid item container xs={12}>
+              <Grid item xs={12}>
+                <Typography variant="h3" className={classes.name}>
+                  {`${props.first_name}  ${props.last_name}`}
+                </Typography>
+                <Typography variant="subtitle1" className={classes.rank}>
+                  Sergent
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        {/* Tabs */}
+        <Grid container item xs={6}>
+          <AppBar position="static">
+            <Tabs
+              value={value}
+              onChange={handleIndex}
+              aria-label="simple tabs example"
+              // variant="fullWidth"
+            >
+              <Tab label="About" {...a11yProps(0)} />
+              {/* <Tab label="Item Two" {...a11yProps(1)} /> */}
+              {/* <Tab label="Item Three" {...a11yProps(2)} /> */}
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={0}>
+            <Container>
+              {/* Personal info */}
+              <Grid item container xs={12}>
+                <Grid item xs={12}>
+                  <Typography variant="h6" className={classes.personalInfo}>
+                    Personal Information
+                  </Typography>
+                </Grid>
+                {/* Role / Rank headings*/}
+                <Grid item xs={6}>
+                  <Typography variant="body2" className={classes.subtitle}>
+                    Role
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body2" className={classes.subtitle}>
+                    Rank
+                  </Typography>
+                </Grid>
+                {/* Role / Rank values */}
+                <Grid item xs={6}>
+                  <Typography
+                    variant="subtitle1"
+                    className={classes.valueStyling}
+                  >
+                    {props.role}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    variant="subtitle1"
+                    className={classes.valueStyling}
+                  >
+                    Rank
+                  </Typography>
+                </Grid>
+                {/* Email / ??? headings*/}
+                {/* <Grid item xs={12}>
+                  <Typography variant="body2" className={classes.subtitle}>
+                    ????
+                  </Typography>
+                </Grid> */}
+                {/* ??? / ??? values */}
+                <Grid item xs={12}>
+                  <Typography
+                    variant="subtitle1"
+                    className={classes.valueStyling}
+                  >
+                    ???
+                  </Typography>
+                </Grid>
+              </Grid>
+              {/* contact info */}
+              <Grid item container xs={12}>
+                <Grid item xs={12}>
+                  <Typography variant="h6" className={classes.contactInfo}>
+                    Contact Information
+                  </Typography>
+                </Grid>
+                {/* phone/email col */}
+                <Grid container item xs={6}>
+                  <Grid item xs={12}>
+                    <Typography variant="body2" className={classes.subtitle}>
+                      Phone
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="subtitle1"
+                      className={classes.valueStyling}
+                    >
+                      {faker.phone.phoneNumber()}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="body2" className={classes.subtitle}>
+                      Email
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="subtitle1"
+                      className={classes.valueStyling}
+                    >
+                      {props.email}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                {/* Address col */}
+                <Grid container item xs={6}>
+                  <Grid item xs={12}>
+                    <Typography variant="body2" className={classes.subtitle}>
+                      Address
+                    </Typography>
+                  </Grid>
 
-  function onAddButtonClick() {
-    console.log("Clicked Add button!");
-    WebSocketFrame.locationHandler("add", {
-      location_name: locationName,
-      track_num: trackNum,
-    });
-  }
-
-  function onDeleteButtonClick(location_uuid) {
-    console.log("Clicked Delete button!");
-    WebSocketFrame.locationHandler("delete", { location_uuid: location_uuid });
-  }
-
-  function onEditButtonClick(location) {
-    console.log("Clicked Edit Button!");
-    WebSocketFrame.locationHandler("edit", {
-      ...location,
-      location_name: editLocationName,
-    });
-  }
-
-  function handleLocationChange(value) {
-    setLocationName(value);
-  }
-
-  function handleTrackNumChange(value) {
-    setTrackNum(value);
-  }
-
-  function handleEditChange(value) {
-    setEditLocationName(value);
-  }
-
-  return <Grid container className={classes.container}></Grid>;
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="subtitle1"
+                      className={classes.valueStyling}
+                    >
+                      {`${faker.address.streetAddress()}`}
+                      <br />
+                      {`${faker.address.city()} ${faker.address.zipCode()}`}
+                      <br />
+                      United States
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Container>
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <Container style={{ height: 100, width: 1000 }}>
+              <Grid item container xs={12}>
+                <Grid item xs={6}>
+                  <Typography variant="body2" className={classes.subtitle}>
+                    Role
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body2" className={classes.subtitle}>
+                    Rank
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Container>
+          </TabPanel>
+        </Grid>
+      </Grid>
+    </Container>
+  );
 }
 
 const mapStateToProps = (state) => {
@@ -150,7 +285,6 @@ const mapStateToProps = (state) => {
     email: state.loggedReducer.email,
     first_name: state.loggedReducer.first_name,
     last_name: state.loggedReducer.last_name,
-    locations: state.locationReducer,
   };
 };
 export default connect(mapStateToProps, null)(Profile);
