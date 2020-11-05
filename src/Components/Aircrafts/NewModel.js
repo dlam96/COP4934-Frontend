@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 export default function NewModel(props) {
   const classes = useStyles();
   const { crewPositions } = props;
-  const [newModel, setNewModel] = useState(null);
+  const [model, setModel] = useState({model_name: '', positions: []});
   const aircraftInfo = ['Model Name', 'Crew'];
 
   return (
@@ -55,7 +55,13 @@ export default function NewModel(props) {
             <TextField 
               variant='outlined' 
               size='small'
-              onChange={(e) => setNewModel(e.target.value)}
+              onChange={(e) => 
+                {
+                  let newModel = {...model};
+                  newModel['model_name'] = e.target.value
+                  setModel(newModel)
+                }
+              }
             />
           </Grid>
           <Grid item>
@@ -63,9 +69,9 @@ export default function NewModel(props) {
               native
               onChange={(e) =>
                 {
-                  // let newAircraft = {...aircraft};
-                  // newAircraft['status'] = e.target.value;
-                  // setAircraft(newAircraft)
+                  let newModel = {...model};
+                  newModel['positions'] = e.target.value
+                  setModel(newModel)
                 }
               }
             >
@@ -85,7 +91,7 @@ export default function NewModel(props) {
             color="primary"
             startIcon={<Save />}
             className={classes.saveBt}
-            onClick={()=>props.handleNewModel(newModel)}
+            onClick={()=>props.handleNewModel(model)}
           >
             Save
           </Button>

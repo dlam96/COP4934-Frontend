@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import axios from "axios";
 import {
-  Container,
   Grid,
   Paper,
   makeStyles,
@@ -12,15 +11,79 @@ import {
   Button,
   Typography,
   Box,
+  Divider,
 } from "@material-ui/core";
+import {
+  Add,
+} from "@material-ui/icons";
+import {
+  green,
+} from "@material-ui/core/colors";
 import ActiveUsers from "./ActiveUsers";
-// import PendingUsers from "./PendingUsers";
+import PendingUsers from "./PendingUsers";
 import EditUser from "./EditUser.js";
+import { 
+  setAirmen,
+  setUnapprovedUsers,
+} from "../../Redux/actions";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
+    margin: theme.spacing(2),
+    background: '#96a1a7',
+    height: '1000px',
+    width: '1200px',
+    borderRadius: '10px',
+  },
+  title: {
+    display: 'flex',
+    alignItems: 'center',
+    paddingLeft: theme.spacing(4),
+    height: '125px',
+  },
+  appBar: {
+    background: '#AAAAAA',
+    opacity: '80%',
+  },
+  infoBoxes: {
+    height: '825px',
+    display: 'flex',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  quickInfo: {
+    height: '300px',
+    width: '200px',
+    background: '#878787',
+    margin: '10px',
+    borderRadius: '5px',
+  },
+  search: {
+    height: '400px',
+    width: '200px',
+    background: '#878787',
+    margin: '10px',
+    borderRadius: '5px',
+  },
+  mainInfo: {
+    height: '825px',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  userList: {
+    padding: theme.spacing(1),
+    height: '715px',
+    width: '700px',
+    maxHeight: '715px',
+    background: '#878787',
+  },
+  newUserBt: {
+    background: '#F1F1F1',
+    height: '50px',
+    width: '100%',
+    opacity: '40%',
+    marginTop: '10px',
   },
   paper: {
     padding: theme.spacing(2),
@@ -35,99 +98,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
 }));
-
-const testUsers = [
-  {
-    firstName: "John",
-    lastName: "Doe",
-    militaryId: "***453",
-    rank: "O1",
-    pStatus: "Training",
-    role: "Flight Engineer",
-    uStatus: "Available",
-  },
-  {
-    firstName: "Jane",
-    lastName: "Doe",
-    militaryId: "***367",
-    rank: "O2",
-    pStatus: "PTO - Vacation",
-    role: "Pilot",
-    uStatus: "Unavailable",
-  },
-  {
-    firstName: "Joe",
-    lastName: "Schmoe",
-    militaryId: "***533",
-    rank: "O3",
-    pStatus: "Training",
-    role: "Pilot",
-    uStatus: "Available",
-  },
-  {
-    firstName: "Jane",
-    lastName: "Bloggs",
-    militaryId: "***432",
-    rank: "O4",
-    pStatus: "Training",
-    role: "Flight Engineer",
-    uStatus: "Available",
-  },
-  {
-    firstName: "Juan",
-    lastName: "Perez",
-    militaryId: "***543",
-    rank: "O5",
-    pStatus: "Training",
-    role: "Flight Engineer",
-    uStatus: "Available",
-  },
-  {
-    firstName: "Sammy",
-    lastName: "Soe",
-    militaryId: "***414",
-    rank: "O6",
-    pStatus: "Training",
-    role: "Flight Engineer",
-    uStatus: "Unavailable",
-  },
-  {
-    firstName: "Marty",
-    lastName: "McFly",
-    militaryId: "***187",
-    rank: "O7",
-    pStatus: "Training",
-    role: "Flight Engineer",
-    uStatus: "Unavailable",
-  },
-  {
-    firstName: "Shoto",
-    lastName: "Todoroki",
-    militaryId: "***191",
-    rank: "O8",
-    pStatus: "Training",
-    role: "Flight Engineer",
-    uStatus: "Available",
-  },
-  {
-    firstName: "Nezuko",
-    lastName: "Kamado",
-    militaryId: "***478",
-    rank: "O9",
-    pStatus: "Training",
-    role: "Flight Engineer",
-    uStatus: "Available",
-  },
-  {
-    firstName: "Mikasa",
-    lastName: "Ackerman",
-    militaryId: "***983",
-    rank: "O10",
-    pStatus: "Training",
-    role: "Flight Engineer",
-    uStatus: "Unavailable",
-  },
-];
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -150,25 +120,13 @@ function TabPanel(props) {
   );
 }
 
-export default function Users() {
+function Users(props) {
   const classes = useStyles();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const [value, setValue] = useState(0);
   const [edit, setEdit] = useState(false);
   const [editUser, setEditUser] = useState(null);
-  const [users, setUsers] = useState(null);
-
-  useEffect(() => {
-    axios
-      .get("/user/")
-      .then((response) => {
-        console.log("Response from Post:", response);
-        setUsers(response.data.airmen)
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-      })
-  }, [users]);
+  const [userList, setUserList] = useState(props.airmen);
+  const [addNew, setAddNew] = useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -181,114 +139,221 @@ export default function Users() {
     } else {
       setEdit(false);
       if (!user) return;
-      let newUsers = [...users];
-      let index = newUsers.findIndex(
-        (element) => element.militaryId === user.militaryId
-      );
-      newUsers[index] = user;
-      setUsers(newUsers);
     }
   };
 
+  const handleNewUser = (user = null) => {
+    if (!addNew) {
+      setAddNew(true);
+    } else {
+      setAddNew(false);
+      if (!user) return;
+    }
+  }
+
+  useEffect(() => {
+    axios
+      .get("/user/approval")
+      .then((response) => {
+        console.log("Response Data Users:", response.data)
+        // unapprovedUsersAction(response.data);
+      })
+      .catch((error) => {
+        console.log("Get Error:", error);
+      });
+  }, [])
+
   return (
-    <Container maxWidth="lg" className={classes.container}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={8} lg={9}>
-          <AppBar position="static">
-            <Tabs value={value} onChange={handleChange}>
-              <Tab label="Users" />
-              <Tab label="New Users Approval" />
-            </Tabs>
-          </AppBar>
+    <Grid container className={classes.container} direction='column'>
+      
+      <Grid item className={classes.title}>
+        <Typography variant='h2'>
+          Users
+        </Typography>
+      </Grid>
 
-          <Paper className={fixedHeightPaper} variant="outlined">
-            {/* Active Users */}
-            {edit ? (
-              <TabPanel value={value} index={0}>
-                <EditUser user={editUser} handleEdit={handleEdit} />
-              </TabPanel>
-            ) : (
-              <TabPanel value={value} index={0}>
-                <Grid container item className={classes.labels}>
-                  <Grid item xs={2} align="start">
-                    First Name
-                  </Grid>
-                  <Grid item xs={3} align="start">
-                    Last Name
-                  </Grid>
-                  <Grid item xs={2} align="start">
-                    ID
-                  </Grid>
-                  <Grid item xs={2} align="start">
-                    Rank
-                  </Grid>
-                </Grid>
-                  
-                {users ? 
-                  <Grid container>
-                    {users.map((user) => (
-                      <ActiveUsers
-                        user={user}
-                        handleEdit={handleEdit}
-                        key={user.militaryId}
-                      />
-                    ))}
-                  </Grid>
-                  :
-                  null
-                }
+      <Grid item style={{height: '45px'}}>
+        <AppBar position="static" className={classes.appBar}>
+          <Tabs value={value}  indicatorColor='primary' onChange={handleChange}>
+            <Tab label="Users" />
+            <Tab label="New Users Approval" />
+          </Tabs>
+        </AppBar>
+      </Grid>
 
-              </TabPanel>
-            )}
+      <Grid container item direction='row'>
 
-            {/* Users Waiting for Approval */}
-            <TabPanel value={value} index={1}>
-              <Grid container item direction="row" className={classes.labels}>
-                <Grid item xs={2} align="start">
-                  First Name
-                </Grid>
-                <Grid item xs={3} align="start">
-                  Last Name
-                </Grid>
-                <Grid item xs={2} align="start">
-                  ID
-                </Grid>
-                <Grid item xs={2} align="start">
-                  Rank
-                </Grid>
-              </Grid>
+        <Grid container item md={3} direction='column' className={classes.infoBoxes}>
+          <Grid container item className={classes.quickInfo}>
 
-              <Grid container direction="row" align="right">
-                <Button
-                  variant="contained"
-                  // onClick={() => handleApproveAll()}
-                >
-                  Submit All
-                </Button>
-              </Grid>
-              <Grid item xs={3} align="start">
-                Last Name
-              </Grid>
-              <Grid item xs={2} align="start">
-                ID
-              </Grid>
-              <Grid item xs={2} align="start">
-                Rank
-              </Grid>
+          </Grid>
+          <Grid container item className={classes.search}>
 
-              <Grid container direction="row" align="right">
-                <Button
-                  variant="contained"
-                  // onClick={() => handleApproveAll()}
-                >
-                  Submit All
-                </Button>
+          </Grid>
+        </Grid>
+
+        <Grid container item md={9} direction='column' className={classes.mainInfo}>
+          {/* Tab 1 Active Users */}
+          {edit ? (
+            <TabPanel value={value} index={0}>
+              <Grid container spacing={2}>
+                <Paper className={classes.userList}>
+                  <EditUser 
+                    user={editUser} 
+                    handleEdit={handleEdit} 
+                  />
+                </Paper>
               </Grid>
             </TabPanel>
-          </Paper>
+          ) : (
+            <TabPanel value={value} index={0}>
+              {addNew ?
+                <Grid container spacing={2}>
+                  {/* Add New User to database */}
+                  {/* <NewUser 
+                    // TODO NewUser.js
+                  /> */}
+                </Grid>
+                :
+                <Grid container spacing={2}>
+                  {/* Active User List */}
+                  <Paper className={classes.userList}>
+                    <Grid container item xs={12} md={12} style={{marginBottom: '10px', paddingLeft: '10px'}}>
+                      <Grid item xs={3}>
+                        <Typography variant='h6'>
+                          First Name
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Typography variant='h6'>
+                          Last Name
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Typography variant='h6'>
+                          Rank
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={1}>
+                        <Typography variant='h6'>
+                          Role  
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={1}>
+                        <Typography variant='h6'>
+                          Status
+                        </Typography>
+                      </Grid>
+                      <Divider variant='fullWidth' />
+
+                      {userList.map(user => (
+                        <ActiveUsers 
+                          user={user}
+                          handleEdit={handleEdit}
+                          key={user.account_uuid}
+                        />
+                      ))}
+
+                      {/* New User Button */}
+                      {/* <Grid container item xs={12} md={12}>
+                        <Paper className={classes.newUserBt}>
+                          <Button 
+                            startIcon={<Add />}
+                            fullWidth={true}
+                            size="large"
+                            // onClick={()=>handleNewUser()}
+                            style={{
+                              color: green[500],
+                              minHeight: '100%',
+                            }}
+                          />
+                        </Paper>
+                      </Grid> */}
+                    </Grid>
+                  </Paper>
+                </Grid>
+              }
+            </TabPanel>
+          )}
+
+          {/* Tab 2 Pending Users */}
+          <TabPanel value={value} index={1}>
+            <Grid container spacing={2}>
+              <Paper className={classes.userList}>
+                <Grid container item xs={12} md={12} style={{marginBottom: '10px', paddingLeft: '10px'}}>
+                  <Grid item xs={3}>
+                    <Typography variant='h6'>
+                      First Name
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant='h6'>
+                      Last Name
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Typography variant='h6'>
+                      Rank
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <Typography variant='h6'>
+                      Role  
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <Typography variant='h6'>
+                      Status
+                    </Typography>
+                  </Grid>
+                  
+                    {userList.map(user => (
+                      <PendingUsers 
+                        user={user}
+                        handleEdit={handleEdit}
+                        key={user.account_uuid}
+                      />
+                    ))}
+
+                  {/* New User Button */}
+                  <Grid container item xs={12} md={12}>
+                    <Paper className={classes.newUserBt}>
+                      <Button 
+                        fullWidth={true}
+                        size="large"
+                        // onClick={()=>handleNewUser()}
+                        style={{
+                          color: green[500],
+                          minHeight: '100%',
+                        }}
+                      >
+                        Submit
+                      </Button>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+
+          </TabPanel>
+
         </Grid>
       </Grid>
-    </Container>
+
+    </Grid>
   );
 }
 
+const mapStateToProps = (state) => {
+  return {
+    airmen: state.airmenReducer,
+    unapprovedUsers: state.unapprovedUsersReducer,
+  }
+}
+
+const mapDispatchToProps = {
+  airmenAction: setAirmen,
+  // unapprovedUsersAction: setUnapprovedUsers,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Users)

@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import darkModeReducer from "./darkModeReducer.js";
 import loggedReducer from "./loggedReducer.js";
 
+import unapprovedUsersReducer from "./unapprovedUsersReducer.js";
 import airmenReducer from "./airmenReducer.js";
 import aircraftmodelReducer from "./aircraftmodelReducer.js";
 import locationReducer from "./locationReducer.js";
@@ -12,6 +13,7 @@ import rankReducer from "./rankReducer.js";
 import aircraftstatusReducer from "./aircraftstatusReducer.js";
 import userstatusReducer from "./userstatusReducer.js";
 import websocketReducer from "./websocketReducer.js";
+
 
 export default combineReducers({
   darkModeReducer,
@@ -26,4 +28,5 @@ export default combineReducers({
   aircraftstatusReducer,
   userstatusReducer,
   websocketReducer,
+  unapprovedUsersReducer,
 });

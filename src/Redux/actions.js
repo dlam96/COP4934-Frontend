@@ -16,7 +16,8 @@ import {
   SETWEBSOCKET,
   ADDLOCATION,
   EDITLOCATION,
-  DELETELOCATION
+  DELETELOCATION,
+  SETUNAPPROVEDUSERS,
 } from "./actionTypes.js";
 
 export const login = (loginObject) => ({
@@ -53,6 +54,13 @@ export const setAirmen = (airmen) => ({
   type: SETAIRMEN,
   payload: {
     airmen: airmen,
+  },
+});
+
+export const setUnapprovedUsers = (unapprovedUsers) => ({
+  type: SETUNAPPROVEDUSERS,
+  payload: {
+    unapprovedUsers: unapprovedUsers
   },
 });
 

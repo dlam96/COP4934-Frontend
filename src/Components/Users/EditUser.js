@@ -8,6 +8,7 @@ import {
   Button,
   Select,
   FormControl,
+  Typography,
 } from "@material-ui/core";
 import {
   Face,
@@ -25,12 +26,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   fixedInfo: {
-    height: 500,
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column",
-    paddingTop: "50px",
-    padding: theme.spacing(2),
+    paddingTop: theme.spacing(4),
+    height: 470,
+    alignItems: 'center',
   },
   fixedPic: {
     height: 200,
@@ -51,28 +49,87 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EditUser(props) {
   const classes = useStyles();
-  const fields = [
-    {label: "First Name", value: "firstName"}, 
-    {label: "Last Name", value: "lastName"}, 
-    {label: "Rank", value: "rank"},
-    {label: "Pilot Status", value: "pStatus"},
-    {label: "Role", value: "role"},
-    {label: "User Status", value: "uStatus"},
-  ];
-
   const [user, setUser] = useState(props.user);
-  
+
+  const rankIdSlice = ( id = null) => {
+    let str = id;
+    let res = str.slice(0, 8);
+    return res;
+  }
+
   return (
     <Container maxWidth="lg" className={classes.container}>
+      
       {/* User pic default for fun */}
       <Paper className={classes.fixedPic} variant="outlined">
         <Face className={classes.picIcon}/>
       </Paper>
 
-      {/* User information */}
+      {/* User Info */}
       <Paper className={classes.fixedInfo} variant="outlined">
+        <Grid container item direction='column' spacing={2}>
 
-        {fields.map((item, index) => 
+        <Grid container item direction='row' style={{height: '50px'}}>
+          <Grid item md={5} align='right'>
+            <h3>First Name</h3>
+          </Grid>
+          <Grid item md={2} />
+          <Grid item md={3} align='start'>
+            <h3>{ user.first_name }</h3>
+          </Grid>
+        </Grid>
+
+        <Grid container item direction='row' style={{height: '50px'}}>
+          <Grid item md={5} align='right'>
+            <h3>Last Name</h3>
+          </Grid>
+          <Grid item md={2} />
+          <Grid item md={3} align='start'>
+            <h3>{ user.last_name }</h3>
+          </Grid>
+        </Grid>
+
+        <Grid container item direction='row' style={{height: '50px'}}>
+          <Grid item md={5} align='right'>
+            <h3>Pilot Status</h3>
+          </Grid>
+          <Grid item md={2} />
+          <Grid item md={3} align='start'>
+            <h3>{ user.pilot_status }</h3>
+          </Grid>
+        </Grid>
+
+        <Grid container item direction='row' style={{height: '50px'}}>
+          <Grid item md={5} align='right'>
+            <h3>Rank</h3>
+          </Grid>
+          <Grid item md={2} />
+          <Grid item md={3} align='start'>
+            <h3>{ rankIdSlice(user.rank_uuid) }</h3>
+          </Grid>
+        </Grid>
+
+        <Grid container item direction='row' style={{height: '50px'}}>
+          <Grid item md={5} align='right'>
+            <h3>Role</h3>
+          </Grid>
+          <Grid item md={2} />
+          <Grid item md={3} align='start'>
+            <h3>{ user.role }</h3>
+          </Grid>
+        </Grid>
+
+        <Grid container item direction='row' style={{height: '50px'}}>
+          <Grid item md={5} align='right'>
+            <h3>User Status</h3>
+          </Grid>
+          <Grid item md={2} />
+          <Grid item md={3} align='start'>
+            <h3>{ user.user_status }</h3>
+          </Grid>
+        </Grid>
+
+        {/* {fields.map((item, index) => 
           <Grid container item direction="row">
             <Grid item xs={3} />
             <Grid item xs={3} align="start">
@@ -145,27 +202,29 @@ export default function EditUser(props) {
               </Grid>
             }
           </Grid>
-        )}
+        )} */}
         
-        {/* Save and Cancel buttonss */}
-        <Grid container item direction="row">
-          <Grid item xs={12} align="center" className={classes.buttons}>
-            <Button 
-              variant="contained" 
-              color="primary"
-              startIcon={<Save />}
-              className={classes.saveBt}
-              onClick={()=>props.handleEdit(user)}
-            >
-              Save
-            </Button>
-            <Button 
-              variant="contained"
-              onClick={()=>props.handleEdit()}
-            >
-              Cancel
-            </Button>
+          {/* Save and Cancel buttonss */}
+          <Grid container item direction="row">
+            <Grid item xs={12} align="center" className={classes.buttons}>
+              <Button 
+                variant="contained" 
+                color="primary"
+                startIcon={<Save />}
+                className={classes.saveBt}
+                onClick={()=>props.handleEdit(user)}
+              >
+                Save
+              </Button>
+              <Button 
+                variant="contained"
+                onClick={()=>props.handleEdit()}
+              >
+                Cancel
+              </Button>
+            </Grid>
           </Grid>
+                  
         </Grid>
       </Paper>
     </Container>

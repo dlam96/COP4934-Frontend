@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AircraftModels(props) {
   const classes = useStyles();
-  const { aircraft } = props;
+  const { model } = props;
 
   const modelIdSlice = ( id = null) => {
     let str = id;
@@ -39,18 +39,18 @@ export default function AircraftModels(props) {
       <div className={classes.modelInfo}>
         <Grid item>
           <Typography gutterBottom variant='h5'>
-            {aircraft.model_name}
+            {model.model_name}
           </Typography>
         </Grid>
         <Grid container item direction='row'>
           <Grid item md={6}>
             <Typography variant='body2'>
-              Model id: {modelIdSlice(aircraft.model_uuid)}
+              Model id: {modelIdSlice(model.model_uuid)}
             </Typography>
           </Grid>
           <Grid item md={6}>
             <Typography variant='body2'>
-              Max crew: {aircraft.positions.length}
+              Max crew: {model.positions.length}
             </Typography>
           </Grid>
         </Grid>
@@ -60,7 +60,7 @@ export default function AircraftModels(props) {
         <Button
           variant="contained"
           size="small"
-          onClick={() => props.handleModelEdit(aircraft)}
+          onClick={() => props.handleModelEdit(model)}
         >
           Details
         </Button>

@@ -13,6 +13,7 @@ import {
   Save,
   Delete,
 } from "@material-ui/icons";
+import ConfirmDelete from './ConfirmDelete.js';
 
 const useStyles = makeStyles((theme) => ({
   fixedInfo: {
@@ -41,6 +42,7 @@ export default function EditAircraft(props) {
   const classes = useStyles();
   const { aircraftModels } = props;
   const [aircraft, setAircraft] = useState(props.aircraft);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const getModelName = ( aircraft = null ) => {
     let index = aircraftModels.findIndex((element) => element.model_uuid === aircraft.model_uuid);
@@ -92,10 +94,21 @@ export default function EditAircraft(props) {
           <Grid item xs={2} align='start'>
             <IconButton
               color='secondary'
-              onClick={()=>props.handleDeleteAircraft(aircraft)}
+              // onClick={()=>props.handleDeleteAircraft(aircraft)}
+              onClick={()=> setConfirmDelete(true)}
             >
               <Delete />
             </IconButton>
+            <ConfirmDelete
+              title='Delete Aircraft?'
+              open={confirmDelete}
+              setOpen={setConfirmDelete}
+              aircraft={aircraft}
+              handleDeleteAircraft={props.handleDeleteAircraft}
+              handleEdit={props.handleEdit}
+            >
+              Are you sure you want to delete this aircraft?
+            </ConfirmDelete>
           </Grid>
           <Grid item xs={10} className={classes.buttons}>
             <Button
