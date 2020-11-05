@@ -10,7 +10,7 @@ import {
   Tabs,
   Box,
   Button,
-  TextField
+  TextField,
 } from "@material-ui/core";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -138,46 +138,21 @@ function Profile(props) {
   return (
     <Grid container className={classes.container}>
       <Grid item sm={6}>
-        { props.locations && props.locations.length > 0 ?
-          props.locations.map((item) => 
-            <React.Fragment key={item.location_uuid}>
-              <p key={"p"+item.location_uuid}>{"Name:"+item.location_name+"   ID: "+item.location_uuid}</p>
-              <Button key={"button"+item.location_uuid} onClick={() => onDeleteButtonClick(item.location_uuid)}>Delete</Button>
-              <br/>
-              <br/>
-              <TextField
-                id="standard-required"
-                label="Edit Location Name"
-                value={editLocationName}
-                onChange={(e)=> handleEditChange(e.target.value)}>
-              </TextField>
-              <Button key={"button2"+item.location_uuid} onClick={() => onEditButtonClick({location_uuid: item.location_uuid})}>Edit</Button>
-              <br/>
-              <br/>
-              <br/>
-              <br/>
-            </React.Fragment>
-          )
-          :
-          null
-        }
+        {props.locations && props.locations.length > 0
+          ? props.locations.map((item) => (
+              <p key={item.location_uuid}>
+                {"Name:" + item.location_name + "   ID: " + item.location_uuid}
+              </p>
+            ))
+          : null}
       </Grid>
       <Grid item sm={6}>
-        <Button onClick={()=> onAddButtonClick()}>
-          Add Location
-        </Button>
+        <Button onClick={() => onButtonClick()}>Hello</Button>
         <TextField
           id="standard-required"
           label="Location Name"
           value={locationName}
-          onChange={(e)=> handleLocationChange(e.target.value)}
-        />
-        <TextField
-          id="standard-required"
-          label="Track_num"
-          value={trackNum}
-          onChange={(e)=> handleTrackNumChange(e.target.value)}
-          inputProps={{ maxLength: 3 }}
+          onChange={(e) => handleTextChange(e.target.value)}
         />
       </Grid>
     </Grid>

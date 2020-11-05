@@ -5,6 +5,8 @@ import {
   Paper,
   makeStyles,
   CssBaseline,
+  Avatar,
+  Tooltip,
 } from "@material-ui/core";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -21,7 +23,12 @@ import {
   setAircraftModels,
   setFlights,
 } from "../../Redux/actions.js";
+
+import userData from "./userData.js";
+import { AvatarGroup } from "@material-ui/lab";
+
 import { WebSocketFrame } from "../WebSocket/WebSocket.js";
+
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 const useStyles = makeStyles((theme) => ({
@@ -31,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
   },
   container: {
-    paddingTop: theme.spacing(4),
+    paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(4),
   },
   paper: {
@@ -167,6 +174,22 @@ function CurrentSchedule(props) {
     //     console.log("Error:", error);
     //   });
   };
+  // Randomize color for avatar
+
+  function randomColor() {
+    let colors = [
+      "#D50000",
+      "#FF5722",
+      "#FFC107",
+      "#4CAF50",
+      "#3174ad",
+      "#3F51B5",
+      "#9C27B0",
+    ];
+    let pickedColor = colors[Math.floor(Math.random() * colors.length)];
+
+    return pickedColor;
+  }
 
   return (
     <>
@@ -188,8 +211,38 @@ function CurrentSchedule(props) {
             showDelete={showDelete}
             setDelete={setDelete}
           />
-          <Grid container spacing={3}>
+          <Grid container spacing={1}>
             <Grid item xs={12} md={12} lg={12}>
+              {/* Avatar User count */}
+              <Grid
+                item
+                container
+                xs={12}
+                justify="flex-end"
+                alignItems="baseline"
+              >
+                <AvatarGroup max={5}>
+                  {userData.map((index, key) => {
+                    return (
+                      <Tooltip
+                        title={`${index.firstName} ${index.lastName}`}
+                        key={key}
+                      >
+                        <Avatar
+                          key={key}
+                          style={{ backgroundColor: randomColor() }}
+                        >
+                          {`${index.firstName.substr(
+                            0,
+                            1
+                          )}${index.lastName.substr(0, 1)}`}
+                        </Avatar>
+                      </Tooltip>
+                    );
+                  })}
+                </AvatarGroup>
+              </Grid>
+              {/* Calendar App */}
               <Paper>
                 <DragAndDropCalendar
                   selectable
@@ -197,7 +250,7 @@ function CurrentSchedule(props) {
                   events={props.events}
                   startAccessor="start"
                   endAccessor="end"
-                  style={{ height: "82vh" }}
+                  style={{ height: "82vh", width: "100%" }}
                   onSelectSlot={handleBigCalendarSelect}
                   onSelectEvent={handleBigCalendarSelect}
                   eventPropGetter={eventStyleGetter}
