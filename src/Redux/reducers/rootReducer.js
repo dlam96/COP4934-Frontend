@@ -11,6 +11,7 @@ import crewpositionReducer from "./crewpositionReducer.js";
 import rankReducer from "./rankReducer.js";
 import aircraftstatusReducer from "./aircraftstatusReducer.js";
 import userstatusReducer from "./userstatusReducer.js";
+import onlineReducer from "./onlineReducer";
 
 export default combineReducers({
   darkModeReducer,
@@ -24,4 +25,5 @@ export default combineReducers({
   rankReducer,
   aircraftstatusReducer,
   userstatusReducer,
+  onlineReducer,
 });

@@ -19,6 +19,7 @@ import {
   ADDFLIGHT,
   EDITFLIGHT,
   DELETEFLIGHT,
+  SETONLINE,
 } from "./actionTypes.js";
 
 export const login = (loginObject) => ({
@@ -100,8 +101,6 @@ export const setUserStatus = (userStatus) => ({
   },
 });
 
-
-
 // Location Redux Actions
 export const setLocations = (locations) => ({
   type: SETLOCATIONS,
@@ -110,31 +109,26 @@ export const setLocations = (locations) => ({
   },
 });
 
-
 export const addLocation = (location) => ({
   type: ADDLOCATION,
   payload: {
-    location: location
-  }
+    location: location,
+  },
 });
-
 
 export const editLocation = (location) => ({
   type: EDITLOCATION,
   payload: {
-    location: location
-  }
+    location: location,
+  },
 });
-
 
 export const deleteLocation = (location) => ({
   type: DELETELOCATION,
   payload: {
-    location: location
-  }
-})
-
-
+    location: location,
+  },
+});
 
 // Flight Redux Actions
 export const setFlights = (flights) => ({
@@ -144,26 +138,31 @@ export const setFlights = (flights) => ({
   },
 });
 
-
 export const addFlight = (flight) => ({
   type: ADDFLIGHT,
   payload: {
-    flight: flight
-  }
+    flight: flight,
+  },
 });
-
 
 export const editFlight = (flight) => ({
   type: EDITFLIGHT,
   payload: {
-    flight: flight
-  }
+    flight: flight,
+  },
 });
-
 
 export const deleteFlight = (flight) => ({
   type: DELETEFLIGHT,
   payload: {
-    flight: flight
-  }
-})
+    flight: flight,
+  },
+});
+
+// online action
+export const setOnline = (online) => ({
+  type: SETONLINE,
+  payload: {
+    online: online,
+  },
+});

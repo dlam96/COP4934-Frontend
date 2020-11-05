@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CurrentSchedule(props) {
   const classes = useStyles();
-
+  console.log("online users", props.online_users);
   let today = new Date();
   const localizer = momentLocalizer(moment);
   // Event Modal functions
@@ -216,24 +216,22 @@ function CurrentSchedule(props) {
                 alignItems="baseline"
               >
                 <AvatarGroup max={5}>
-                  {userData.map((index, key) => {
-                    return (
-                      <Tooltip
-                        title={`${index.firstName} ${index.lastName}`}
-                        key={key}
-                      >
-                        <Avatar
-                          key={key}
-                          style={{ backgroundColor: colors[key] }}
+                  {props.online_users &&
+                    props.online_users.map((item, index) => {
+                      return (
+                        <Tooltip
+                          title={`${item.first_name} ${item.last_name}`}
+                          key={item.first_name + item.last_name}
                         >
-                          {`${index.firstName.substr(
-                            0,
-                            1
-                          )}${index.lastName.substr(0, 1)}`}
-                        </Avatar>
-                      </Tooltip>
-                    );
-                  })}
+                          <Avatar style={{ backgroundColor: colors[index] }}>
+                            {`${item.first_name.substr(
+                              0,
+                              1
+                            )}${item.last_name.substr(0, 1)}`}
+                          </Avatar>
+                        </Tooltip>
+                      );
+                    })}
                 </AvatarGroup>
               </Grid>
               {/* Calendar App */}
@@ -270,4 +268,7 @@ const mapDispatchToProps = {
   flightAction: setFlights,
 };
 
-export default connect(null, mapDispatchToProps)(CurrentSchedule);
+const mapStateToProps = (state) => {
+  return { online_users: state.onlineReducer };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(CurrentSchedule);

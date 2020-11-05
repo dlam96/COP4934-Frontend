@@ -1,7 +1,14 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { addLocation, editLocation, deleteLocation, addFlight, editFlight, deleteFlight } from "../../Redux/actions.js";
-
+import {
+  addLocation,
+  editLocation,
+  deleteLocation,
+  addFlight,
+  editFlight,
+  deleteFlight,
+  setOnline,
+} from "../../Redux/actions.js";
 
 export class WebSocketFrame {
   static ws = null;
@@ -10,11 +17,13 @@ export class WebSocketFrame {
 
   static locationHandler(action, message) {
     console.log("Websocket: Location Handling Send:", action);
-    this.ws.send(JSON.stringify({
-      topic: "location",
-      action: action, 
-      message: message
-    }));
+    this.ws.send(
+      JSON.stringify({
+        topic: "location",
+        action: action,
+        message: message,
+      })
+    );
   }
 
   static flightHandler(action, message) {
@@ -23,11 +32,11 @@ export class WebSocketFrame {
       let wsMessage = JSON.stringify({
         topic: "flight",
         action: action,
-        message: message
+        message: message,
       });
       console.log("Websocket Flight: About to send the message");
       this.ws.send(wsMessage);
-    } catch(error) {
+    } catch (error) {
       console.log("Websocket Flight Handler Error:", error);
     }
   }
@@ -37,8 +46,17 @@ export class WebSocketFrame {
       let date = new Date();
       console.log("Websocket: Opened connection!", date);
       this.ready = true;
-
-      setInterval(() => websocketObj.send(JSON.stringify({topic: "ping"})), 30000);
+      websocketObj.send(
+        JSON.stringify({
+          topic: "online",
+          action: "join",
+          token: props.access_token,
+        })
+      );
+      setInterval(
+        () => websocketObj.send(JSON.stringify({ topic: "ping" })),
+        30000
+      );
     });
     this.props = props;
     websocketObj.addEventListener("message", function (event) {
@@ -75,7 +93,6 @@ export class WebSocketFrame {
               break;
           }
           break;
-        
 
         case "flight":
           switch (action) {
@@ -95,15 +112,25 @@ export class WebSocketFrame {
               console.log("Websocket: Flight action not supported!:", action);
               break;
           }
-          break; 
-        
+          break;
+
+        case "online":
+          switch (action) {
+            case "online":
+              console.log("online Online");
+              props.setOnlineAction(message);
+              break;
+            default:
+              console.log("Websocket: online action not supported", action);
+              break;
+          }
+          break;
 
         default:
           console.log("Websocket: General topic not supported:", topic);
           break;
       }
     });
-
 
     websocketObj.addEventListener("close", function (event) {
       let date = new Date();
@@ -118,10 +145,8 @@ function WebSocketComponent(props) {
   useEffect(() => {
     const socket = new WebSocket("wss://airforceofs.com/websocket/");
     WebSocketFrame.setupWebsocket(socket, props);
-  },[]);
-  return (
-    <span />
-  );
+  }, []);
+  return <span />;
 }
 
 const mapDispatchToProps = {
@@ -130,11 +155,12 @@ const mapDispatchToProps = {
   deleteLocationAction: deleteLocation,
   addFlightAction: addFlight,
   editFlightAction: editFlight,
-  deleteFlightAction: deleteFlight
+  deleteFlightAction: deleteFlight,
+  setOnlineAction: setOnline,
 };
 const mapStateToProps = (state) => {
   return {
-    state: state
+    access_token: state.loggedReducer.accessToken,
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(WebSocketComponent);

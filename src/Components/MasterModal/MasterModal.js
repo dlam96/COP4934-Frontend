@@ -41,7 +41,6 @@ import {
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { connect } from "react-redux";
 import { setFlights } from "../../Redux/actions.js";
-import axios from "axios";
 import { WebSocketFrame } from "../WebSocket/WebSocket.js";
 moment.locale("en");
 
@@ -145,12 +144,12 @@ const useStyles = makeStyles((theme) => ({
     // overflow: "auto",
     // fontSize: 15,
   },
-  modal: {
+  deleteModal: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
-  paper: {
+  deletePaper: {
     backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
@@ -385,19 +384,22 @@ function MasterModal(props) {
   };
 
   const handleDelete = () => {
-    axios
-      .delete("/flight/" + props.selectedEvent.flight_uuid)
-      .then((response) => {
-        console.log("Response from Delete:", response);
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-      });
-    props.setEvents(
-      props.events.filter(
-        (obj) => obj.flight_uuid !== props.selectedEvent.flight_uuid
-      )
-    );
+    // axios
+    //   .delete("/flight/" + props.selectedEvent.flight_uuid)
+    //   .then((response) => {
+    //     console.log("Response from Delete:", response);
+    //   })
+    //   .catch((error) => {
+    //     console.log("Error:", error);
+    //   });
+    // props.setEvents(
+    //   props.events.filter(
+    //     (obj) => obj.flight_uuid !== props.selectedEvent.flight_uuid
+    //   )
+    // );
+    WebSocketFrame.flightHandler("delete", {
+      flight_uuid: props.selectedEvent.flight_uuid,
+    });
     // reset color to default for next event
     setColor("");
     closeDeleteConfirmation();
@@ -452,7 +454,7 @@ function MasterModal(props) {
       location_uuid: locations[selectedLocationIndex].location_uuid,
       crew_members: selectedPilots ? selectedPilots : [],
       description: props.selectedEvent.description,
-    }
+    };
     console.log("Websocket: Finished Flight Object:", flightObj);
     // Updating existing Event
     if (objIndex >= 0) {
@@ -585,7 +587,7 @@ function MasterModal(props) {
     <>
       {/* Confirmation Delete modal */}
       <Modal
-        className={classes.modal}
+        className={classes.deleteModal}
         open={deleteConfirmation}
         closeAfterTransition
         onClose={closeDeleteConfirmation}
@@ -595,7 +597,7 @@ function MasterModal(props) {
         }}
       >
         <Fade in={deleteConfirmation}>
-          <div className={classes.paper}>
+          <div className={classes.deletePaper}>
             <h2 id="transition-modal-title">
               Are you sure you want to delete this event?
             </h2>
