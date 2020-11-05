@@ -110,17 +110,23 @@ function Profile(props) {
 
   function onAddButtonClick() {
     console.log("Clicked Add button!");
-    WebSocketFrame.locationHandler("add", { location_name: locationName, track_num: trackNum });
+    WebSocketFrame.locationHandler("add", {
+      location_name: locationName,
+      track_num: trackNum,
+    });
   }
 
   function onDeleteButtonClick(location_uuid) {
     console.log("Clicked Delete button!");
-    WebSocketFrame.locationHandler("delete", { location_uuid:  location_uuid});
+    WebSocketFrame.locationHandler("delete", { location_uuid: location_uuid });
   }
 
   function onEditButtonClick(location) {
     console.log("Clicked Edit Button!");
-    WebSocketFrame.locationHandler("edit", {...location, location_name: editLocationName});
+    WebSocketFrame.locationHandler("edit", {
+      ...location,
+      location_name: editLocationName,
+    });
   }
 
   function handleLocationChange(value) {
@@ -135,28 +141,7 @@ function Profile(props) {
     setEditLocationName(value);
   }
 
-  return (
-    <Grid container className={classes.container}>
-      <Grid item sm={6}>
-        {props.locations && props.locations.length > 0
-          ? props.locations.map((item) => (
-              <p key={item.location_uuid}>
-                {"Name:" + item.location_name + "   ID: " + item.location_uuid}
-              </p>
-            ))
-          : null}
-      </Grid>
-      <Grid item sm={6}>
-        <Button onClick={() => onButtonClick()}>Hello</Button>
-        <TextField
-          id="standard-required"
-          label="Location Name"
-          value={locationName}
-          onChange={(e) => handleTextChange(e.target.value)}
-        />
-      </Grid>
-    </Grid>
-  );
+  return <Grid container className={classes.container}></Grid>;
 }
 
 const mapStateToProps = (state) => {
