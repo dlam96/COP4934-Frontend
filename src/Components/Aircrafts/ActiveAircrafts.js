@@ -28,7 +28,7 @@ export default function ActiveAircrafts(props) {
   }
 
   return( 
-    <Grid container item className={classes.details}>
+    <Grid container item  xs={12} md={12} className={classes.details}>
       <Grid item xs={2}> { aircraft.tail_code } </Grid>
       <Grid item xs={4}> { getModelName(aircraft) }</Grid>
       <Grid item xs={2} > { aircraft.status } </Grid>

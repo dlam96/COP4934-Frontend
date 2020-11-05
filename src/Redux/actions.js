@@ -16,6 +16,7 @@ import {
   ADDLOCATION,
   EDITLOCATION,
   DELETELOCATION,
+  SETUNAPPROVEDUSERS,
   ADDFLIGHT,
   EDITFLIGHT,
   DELETEFLIGHT,
@@ -56,6 +57,13 @@ export const setAirmen = (airmen) => ({
   type: SETAIRMEN,
   payload: {
     airmen: airmen,
+  },
+});
+
+export const setUnapprovedUsers = (unapprovedUsers) => ({
+  type: SETUNAPPROVEDUSERS,
+  payload: {
+    unapprovedUsers: unapprovedUsers
   },
 });
 

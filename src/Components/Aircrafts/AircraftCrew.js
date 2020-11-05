@@ -11,9 +11,10 @@ import {
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
+    margin: '5px',
     background: '#7E7A79',
     height: '175px',
-    width: '100%',
+    width: '97%',
   },
   editBt: {
     margin: theme.spacing(2),
@@ -29,43 +30,41 @@ export default function AircraftCrew(props) {
 
   const positionIdSlice = ( id = null) => {
     let str = id;
-    let res = str.slice(0, 8);
+    let res = str.slice(0, 5);
     return res;
   }
 
   return( 
-    <Grid item xs={3} sm={6}>
-      <Paper className={classes.paper}>
-        <div className={classes.modelInfo}>
-          <Grid item>
-            <Typography gutterBottom variant='h5'>
-              {position.position}
+    <Paper className={classes.paper}>
+      <div className={classes.modelInfo}>
+        <Grid item>
+          <Typography gutterBottom variant='h5'>
+            {position.position}
+          </Typography>
+        </Grid>
+        <Grid container item direction='row'>
+          <Grid item md={6}>
+            <Typography variant='body2'>
+              Position id: {positionIdSlice(position.crew_position_uuid)}
             </Typography>
           </Grid>
-          <Grid container item direction='row'>
-            <Grid item md={6}>
-              <Typography variant='body2'>
-                Position id: {positionIdSlice(position.crew_position_uuid)}
-              </Typography>
-            </Grid>
-            <Grid item md={6}>
-              <Typography variant='body2'>
-                Required: {position.required ? 'Yes' : 'No'}
-              </Typography>
-            </Grid>
+          <Grid item md={6}>
+            <Typography variant='body2'>
+              Required: {position.required ? 'Yes' : 'No'}
+            </Typography>
           </Grid>
-        </div>
-        <Divider variant='middle' />
-        <div className={classes.editBt}>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => props.handleCrewEdit(position)}
-          >
-            Edit
-          </Button>
-        </div>
-      </Paper>
-    </Grid>
+        </Grid>
+      </div>
+      <Divider variant='middle' />
+      <div className={classes.editBt}>
+        <Button
+          variant="contained"
+          size="small"
+          onClick={() => props.handleCrewEdit(position)}
+        >
+          Edit
+        </Button>
+      </div>
+    </Paper>
   )
 }
