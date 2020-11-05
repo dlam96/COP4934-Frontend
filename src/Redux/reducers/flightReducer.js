@@ -9,7 +9,10 @@ export default function (state = null, action) {
     }
 
     case ADDFLIGHT: {
-      return [...state, action.payload.flight];
+      return [...state, {...action.payload.flight, 
+        start: moment(action.payload.flight.start).toDate(),
+        end: moment(action.payload.flight.end).toDate() }
+      ];
     }
 
     case EDITFLIGHT: {
