@@ -124,7 +124,7 @@ function Profile(props) {
                   {`${props.first_name}  ${props.last_name}`}
                 </Typography>
                 <Typography variant="subtitle1" className={classes.rank}>
-                  Sergent
+                  Sergeant
                 </Typography>
               </Grid>
             </Grid>
@@ -178,7 +178,7 @@ function Profile(props) {
                     variant="subtitle1"
                     className={classes.valueStyling}
                   >
-                    Rank
+                    Sergeant
                   </Typography>
                 </Grid>
                 {/* Email / ??? headings*/}
@@ -188,14 +188,14 @@ function Profile(props) {
                   </Typography>
                 </Grid> */}
                 {/* ??? / ??? values */}
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                   <Typography
                     variant="subtitle1"
                     className={classes.valueStyling}
                   >
                     ???
                   </Typography>
-                </Grid>
+                </Grid> */}
               </Grid>
               {/* contact info */}
               <Grid item container xs={12}>
