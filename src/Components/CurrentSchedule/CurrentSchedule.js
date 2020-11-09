@@ -138,7 +138,7 @@ function CurrentSchedule(props) {
   };
 
   const moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
-    console.log("Moving", event);
+    // console.log("Moving", event);
     // removes event from current events
     const updatedEvents = props.events.filter(
       (item) => item.flight_uuid !== event.flight_uuid
@@ -147,7 +147,7 @@ function CurrentSchedule(props) {
     const updatedEvent = { ...event, start, end, allDay: droppedOnAllDaySlot };
     updatedEvents.push(updatedEvent);
     // Send A Patch Request
-    console.log("AllDay BS:", droppedOnAllDaySlot);
+    // console.log("AllDay BS:", droppedOnAllDaySlot);
     WebSocketFrame.flightHandler("edit", {
       flight_uuid: event.flight_uuid,
       start_time: start,

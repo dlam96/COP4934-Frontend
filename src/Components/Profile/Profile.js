@@ -90,7 +90,6 @@ function a11yProps(index) {
 /*=================================================================
 End of Tab functions
 =================================================================*/
-const TOTALCOUNT = 20;
 
 function Profile(props) {
   const classes = useStyles();
