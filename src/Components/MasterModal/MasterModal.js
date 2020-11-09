@@ -193,7 +193,7 @@ function MasterModal(props) {
   const [title, setTitle] = useState("");
   const [maximized, setMaximized] = useState(false);
   const [allDay, setAllDay] = useState(false);
-  const [selectedPilots, setSelectedPilots] = useState(null);
+  const [selectedPilots, setSelectedPilots] = useState("");
   const [selectedColor, setColor] = useState("");
   const [description, setDesc] = useState("");
   const [locations, setLocations] = useState(null);
@@ -365,6 +365,14 @@ function MasterModal(props) {
     console.log("New Pilot Selected:");
     console.log("Selected Value:", event.target.value);
     console.log("Position_uuid:", position_uuid);
+    // check if pilot already selected
+    let isSelected = selectedPilots.findIndex(
+      (member) => member.airman_uuid === event.target.value
+    );
+    if (isSelected !== -1) {
+      console.log("member is not unique");
+      return;
+    }
     let newSelectedPilots = [];
     if (selectedPilots) {
       newSelectedPilots = [...selectedPilots];
@@ -453,7 +461,8 @@ function MasterModal(props) {
       aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
       location_uuid: locations[selectedLocationIndex].location_uuid,
       crew_members: selectedPilots ? selectedPilots : [],
-      description: props.selectedEvent.description,
+      description: description,
+      // description: props.selectedEvent.description
     };
     console.log("Websocket: Finished Flight Object:", flightObj);
     // Updating existing Event
@@ -746,6 +755,17 @@ function MasterModal(props) {
                               disabled={props.role === "User" ? true : false}
                             />
                           )}
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={allDay}
+                                onChange={handleCheckbox}
+                                color="primary"
+                                disabled={props.role === "User" ? true : false}
+                              />
+                            }
+                            label="All day"
+                          />
                         </MuiPickersUtilsProvider>
                       </Grid>
                     </Grid>
@@ -773,10 +793,11 @@ function MasterModal(props) {
                             <ListItemText
                               primary="Aircraft"
                               secondary={
-                                aircrafts
+                                aircrafts &&
+                                aircrafts[selectedAircraftIndex].aircraft_name
                                   ? aircrafts[selectedAircraftIndex]
                                       .aircraft_name
-                                  : null
+                                  : ""
                               }
                             />
                           </ListItem>
@@ -820,10 +841,11 @@ function MasterModal(props) {
                             <ListItemText
                               primary="Location"
                               secondary={
-                                locations
+                                locations &&
+                                locations[selectedLocationIndex].location_name
                                   ? locations[selectedLocationIndex]
                                       .location_name
-                                  : null
+                                  : ""
                               }
                             />
                           </ListItem>
@@ -879,7 +901,9 @@ function MasterModal(props) {
                                   label={item.position}
                                   value={
                                     flightCrew &&
+                                    flightCrew[item.crew_position_uuid] &&
                                     flightCrew[item.crew_position_uuid]
+                                      .airman_uuid
                                       ? flightCrew[item.crew_position_uuid]
                                           .airman_uuid
                                       : ""
@@ -893,8 +917,12 @@ function MasterModal(props) {
                                   variant="standard"
                                   fullWidth
                                   InputLabelProps={{
+                                    shrink: true,
                                     className: classes.positionField,
                                   }}
+                                  disabled={
+                                    props.role === "User" ? true : false
+                                  }
                                 >
                                   {propsAirmen.map((airman) => (
                                     <MenuItem
@@ -1238,10 +1266,11 @@ function MasterModal(props) {
                               <ListItemText
                                 primary="Aircraft"
                                 secondary={
-                                  aircrafts
+                                  aircrafts &&
+                                  aircrafts[selectedAircraftIndex].aircraft_name
                                     ? aircrafts[selectedAircraftIndex]
                                         .aircraft_name
-                                    : null
+                                    : ""
                                 }
                               />
                             </ListItem>
@@ -1285,10 +1314,11 @@ function MasterModal(props) {
                               <ListItemText
                                 primary="Location"
                                 secondary={
-                                  locations
+                                  locations &&
+                                  locations[selectedLocationIndex].location_name
                                     ? locations[selectedLocationIndex]
                                         .location_name
-                                    : null
+                                    : ""
                                 }
                               />
                             </ListItem>
@@ -1335,7 +1365,9 @@ function MasterModal(props) {
                                 label={item.position}
                                 value={
                                   flightCrew &&
+                                  flightCrew[item.crew_position_uuid] &&
                                   flightCrew[item.crew_position_uuid]
+                                    .airman_uuid
                                     ? flightCrew[item.crew_position_uuid]
                                         .airman_uuid
                                     : ""
@@ -1349,8 +1381,10 @@ function MasterModal(props) {
                                 variant="standard"
                                 fullWidth
                                 InputLabelProps={{
+                                  shrink: true,
                                   className: classes.positionField,
                                 }}
+                                disabled={props.role === "User" ? true : false}
                               >
                                 {propsAirmen.map((airman) => (
                                   <MenuItem
