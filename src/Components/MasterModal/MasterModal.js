@@ -461,7 +461,8 @@ function MasterModal(props) {
       aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
       location_uuid: locations[selectedLocationIndex].location_uuid,
       crew_members: selectedPilots ? selectedPilots : [],
-      description: props.selectedEvent.description,
+      description: description,
+      // description: props.selectedEvent.description
     };
     console.log("Websocket: Finished Flight Object:", flightObj);
     // Updating existing Event
@@ -792,10 +793,10 @@ function MasterModal(props) {
                             <ListItemText
                               primary="Aircraft"
                               secondary={
-                                aircrafts
-                                  ? aircrafts[
-                                      selectedAircraftIndex
-                                    ].aircraft_name.toString()
+                                aircrafts &&
+                                aircrafts[selectedAircraftIndex].aircraft_name
+                                  ? aircrafts[selectedAircraftIndex]
+                                      .aircraft_name
                                   : ""
                               }
                             />
@@ -840,10 +841,10 @@ function MasterModal(props) {
                             <ListItemText
                               primary="Location"
                               secondary={
-                                locations
-                                  ? locations[
-                                      selectedLocationIndex
-                                    ].location_name.toString()
+                                locations &&
+                                locations[selectedLocationIndex].location_name
+                                  ? locations[selectedLocationIndex]
+                                      .location_name
                                   : ""
                               }
                             />
@@ -900,10 +901,11 @@ function MasterModal(props) {
                                   label={item.position}
                                   value={
                                     flightCrew &&
+                                    flightCrew[item.crew_position_uuid] &&
                                     flightCrew[item.crew_position_uuid]
-                                      ? flightCrew[
-                                          item.crew_position_uuid
-                                        ].airman_uuid.toString()
+                                      .airman_uuid
+                                      ? flightCrew[item.crew_position_uuid]
+                                          .airman_uuid
                                       : ""
                                   }
                                   onChange={(event) =>
@@ -1264,7 +1266,8 @@ function MasterModal(props) {
                               <ListItemText
                                 primary="Aircraft"
                                 secondary={
-                                  aircrafts
+                                  aircrafts &&
+                                  aircrafts[selectedAircraftIndex].aircraft_name
                                     ? aircrafts[selectedAircraftIndex]
                                         .aircraft_name
                                     : ""
@@ -1311,10 +1314,10 @@ function MasterModal(props) {
                               <ListItemText
                                 primary="Location"
                                 secondary={
-                                  locations
-                                    ? locations[
-                                        selectedLocationIndex
-                                      ].location_name.toString()
+                                  locations &&
+                                  locations[selectedLocationIndex].location_name
+                                    ? locations[selectedLocationIndex]
+                                        .location_name
                                     : ""
                                 }
                               />
@@ -1362,6 +1365,7 @@ function MasterModal(props) {
                                 label={item.position}
                                 value={
                                   flightCrew &&
+                                  flightCrew[item.crew_position_uuid] &&
                                   flightCrew[item.crew_position_uuid]
                                     .airman_uuid
                                     ? flightCrew[item.crew_position_uuid]
