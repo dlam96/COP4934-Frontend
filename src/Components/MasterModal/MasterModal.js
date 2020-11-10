@@ -140,7 +140,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1, 1, 1, 0),
   },
   positionField: {
-    color: "black !important",
+    // color: "black !important",
     // overflow: "auto",
     // fontSize: 15,
   },
@@ -669,11 +669,11 @@ function MasterModal(props) {
                             classes: {
                               input: classes.titleResize,
                             },
+                            readOnly: props.role === "User" ? true : false,
                           }}
                           onChange={(e) => {
                             setTitle(e.target.value);
                           }}
-                          disabled={props.role === "User" ? true : false}
                         />
                       </Grid>
                       {/* Close button */}
@@ -715,7 +715,7 @@ function MasterModal(props) {
                             value={props.startDate}
                             onChange={(date) => handleStartDateSelect(date)}
                             className={classes.largeDateStyle}
-                            disabled={props.role === "User" ? true : false}
+                            readOnly={props.role === "User" ? true : false}
                           />
                           {/* Use Format for visual formatting */}
                           {allDay ? null : (
@@ -727,7 +727,7 @@ function MasterModal(props) {
                               value={props.startDate}
                               onChange={(date) => handleStartDateSelect(date)}
                               className={classes.largeTimeStyle}
-                              disabled={props.role === "User" ? true : false}
+                              readOnly={props.role === "User" ? true : false}
                             />
                           )}
                           {/* End Date/Time picker */}
@@ -740,7 +740,7 @@ function MasterModal(props) {
                             value={props.endDate}
                             onChange={(date) => handleEndDateSelect(date)}
                             className={classes.largeDateStyle}
-                            disabled={props.role === "User" ? true : false}
+                            readOnly={props.role === "User" ? true : false}
                           />
                           {/* Use Format for visual formatting */}
                           {allDay ? null : (
@@ -752,7 +752,7 @@ function MasterModal(props) {
                               value={props.endDate}
                               onChange={(date) => handleEndDateSelect(date)}
                               className={classes.largeTimeStyle}
-                              disabled={props.role === "User" ? true : false}
+                              readOnly={props.role === "User" ? true : false}
                             />
                           )}
                           <FormControlLabel
@@ -784,8 +784,9 @@ function MasterModal(props) {
                             aria-haspopup="true"
                             aria-controls="lock-menu"
                             aria-label="Aircraft"
-                            onClick={handleClickListItem}
-                            disabled={props.role === "User" ? true : false}
+                            onClick={
+                              props.role === "User" ? null : handleClickListItem
+                            }
                           >
                             <ListItemIcon>
                               <LocalAirport />
@@ -832,8 +833,11 @@ function MasterModal(props) {
                             aria-haspopup="true"
                             aria-controls="lock-menu"
                             aria-label="Location"
-                            onClick={handleClickListItem2}
-                            disabled={props.role === "User" ? true : false}
+                            onClick={
+                              props.role === "User"
+                                ? null
+                                : handleClickListItem2
+                            }
                           >
                             <ListItemIcon>
                               <Room />
@@ -920,9 +924,10 @@ function MasterModal(props) {
                                     shrink: true,
                                     className: classes.positionField,
                                   }}
-                                  disabled={
-                                    props.role === "User" ? true : false
-                                  }
+                                  InputProps={{
+                                    readOnly:
+                                      props.role === "User" ? true : false,
+                                  }}
                                 >
                                   {propsAirmen.map((airman) => (
                                     <MenuItem
@@ -1084,15 +1089,17 @@ function MasterModal(props) {
                         />
                       </Grid>
                     </Grid>
-                    <div id="submit-btn" className={classes.submitBtn}>
-                      <Chip
-                        type="submit"
-                        label="Save"
-                        color="primary"
-                        clickable
-                        onClick={onSubmit}
-                      />
-                    </div>
+                    {props.role === "User" ? null : (
+                      <div id="submit-btn" className={classes.submitBtn}>
+                        <Chip
+                          type="submit"
+                          label="Save"
+                          color="primary"
+                          clickable
+                          onClick={onSubmit}
+                        />
+                      </div>
+                    )}
                   </Grid>
                 </form>
               </Fade>
@@ -1143,11 +1150,11 @@ function MasterModal(props) {
                               classes: {
                                 input: classes.smallTitleResize,
                               },
+                              readOnly: props.role === "User" ? true : false,
                             }}
                             onChange={(e) => {
                               setTitle(e.target.value);
                             }}
-                            disabled={props.role === "User" ? true : false}
                           />
                         </Grid>
                         {/* Close button */}
@@ -1189,7 +1196,7 @@ function MasterModal(props) {
                               value={props.startDate}
                               onChange={(date) => handleStartDateSelect(date)}
                               className={classes.dateStyle}
-                              disabled={props.role === "User" ? true : false}
+                              readOnly={props.role === "User" ? true : false}
                             />
                             {/* Use Format for visual formatting */}
                             {allDay ? null : (
@@ -1201,7 +1208,7 @@ function MasterModal(props) {
                                 value={props.startDate}
                                 onChange={(date) => handleStartDateSelect(date)}
                                 className={classes.timeStyle}
-                                disabled={props.role === "User" ? true : false}
+                                readOnly={props.role === "User" ? true : false}
                               />
                             )}
                             <FormControlLabel
@@ -1229,7 +1236,7 @@ function MasterModal(props) {
                               value={props.endDate}
                               onChange={(date) => handleEndDateSelect(date)}
                               className={classes.dateStyle}
-                              disabled={props.role === "User" ? true : false}
+                              readOnly={props.role === "User" ? true : false}
                             />
                             {/* Use Format for visual formatting */}
                             {allDay ? null : (
@@ -1241,7 +1248,7 @@ function MasterModal(props) {
                                 value={props.endDate}
                                 onChange={(date) => handleEndDateSelect(date)}
                                 className={classes.timeStyle}
-                                disabled={props.role === "User" ? true : false}
+                                readOnly={props.role === "User" ? true : false}
                               />
                             )}
                           </Grid>
@@ -1257,8 +1264,11 @@ function MasterModal(props) {
                               aria-haspopup="true"
                               aria-controls="lock-menu"
                               aria-label="Aircraft"
-                              onClick={handleClickListItem}
-                              disabled={props.role === "User" ? true : false}
+                              onClick={
+                                props.role === "User"
+                                  ? null
+                                  : handleClickListItem
+                              }
                             >
                               <ListItemIcon>
                                 <LocalAirport />
@@ -1305,8 +1315,11 @@ function MasterModal(props) {
                               aria-haspopup="true"
                               aria-controls="lock-menu"
                               aria-label="Airspace"
-                              onClick={handleClickListItem2}
-                              disabled={props.role === "User" ? true : false}
+                              onClick={
+                                props.role === "User"
+                                  ? null
+                                  : handleClickListItem2
+                              }
                             >
                               <ListItemIcon>
                                 <Room />
@@ -1384,7 +1397,10 @@ function MasterModal(props) {
                                   shrink: true,
                                   className: classes.positionField,
                                 }}
-                                disabled={props.role === "User" ? true : false}
+                                InputProps={{
+                                  readOnly:
+                                    props.role === "User" ? true : false,
+                                }}
                               >
                                 {propsAirmen.map((airman) => (
                                   <MenuItem
@@ -1408,14 +1424,16 @@ function MasterModal(props) {
                           onClick={toggleOptions}
                           className={classes.smallSubmitBtn}
                         />
-                        <Chip
-                          type="submit"
-                          label="Save"
-                          color="primary"
-                          clickable
-                          onClick={onSubmit}
-                          className={classes.smallSubmitBtn}
-                        />
+                        {props.role === "User" ? null : (
+                          <Chip
+                            type="submit"
+                            label="Save"
+                            color="primary"
+                            clickable
+                            onClick={onSubmit}
+                            className={classes.smallSubmitBtn}
+                          />
+                        )}
                       </Grid>
                     </Grid>
                   </form>
