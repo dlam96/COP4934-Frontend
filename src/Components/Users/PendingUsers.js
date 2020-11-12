@@ -20,6 +20,7 @@ export default function PendingUsers(props) {
   const { user } = props
   const [approveCheck, setApproveCheck] = useState(false);
 
+
   const rankIdSlice = ( id = null) => {
     let str = id;
     let res = str.slice(0, 8);

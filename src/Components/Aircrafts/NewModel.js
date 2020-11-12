@@ -7,7 +7,6 @@ import {
   TextField, 
   Select,
   IconButton,
-  FormControl,
 } from "@material-ui/core";
 import {
   Save,
@@ -41,20 +40,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function addNewCrew(crewPositions = null){
-  if (!crewPositions) return;
-  return (
-    <Select
-      native
-    >
-        <option value=''>Select</option>
-      {crewPositions.map((pos, index) => (
-        <option value={pos.crew_position_uuid} key={index}>{pos.position}</option>
-      ))}
-    </Select>
-  )
-}
-
 export default function NewModel(props) {
   const classes = useStyles();
   const { crewPositions } = props;
@@ -66,7 +51,6 @@ export default function NewModel(props) {
   ]);
 
   const handleChangeInput = (event, index) => {
-    // console.log(crew)
     const crewList = [...inputSelects];
     crewList[index]['crew_position_uuid'] = event.target.value;
     setInputSelects(crewList);
@@ -87,7 +71,9 @@ export default function NewModel(props) {
 
   return (
     <Paper className={classes.enterInfo} variant='outlined'>
+      
       <Grid container item>
+
         <Grid container item md={6} direction='column' spacing={2} style={{paddingLeft: '100px'}}>
           {aircraftInfo.map(label => (
             <Grid item key={label}>
@@ -95,6 +81,7 @@ export default function NewModel(props) {
             </Grid>
           ))}
         </Grid>
+
         <Grid container item md={6} direction='column' spacing={2}>
           <Grid item>
             <TextField 
@@ -110,40 +97,43 @@ export default function NewModel(props) {
             />
           </Grid>
 
-          <Grid container direction='row'>
-            <FormControl className={classes.crewSelect}>
-              { inputSelects.map((inputSelect, index) => (
-                <Grid item key={index}>
-                  <Select
-                    native
-                    name='crew_position_uuid'
-                    label='Crew Position'
-                    value={inputSelect.crew_position_uuid}
-                    onChange={(event) => handleChangeInput(event, index)}
-                  >
-                    <option value=''>Select</option>
-                    {crewPositions.map((pos, index) => (
-                      <option value={pos.crew_position_uuid} key={index}>{pos.position}</option>
-                    ))}
-                  </Select>
-                  <IconButton
-                    onClick={()=>handleRemoveFields(index)}
-                  >
-                    <RemoveCircle />
-                  </IconButton>
-                  <IconButton
-                    onClick={()=>handleAddFields()}
-                  >
-                    <AddCircle />
-                  </IconButton>
-                </Grid>
-              ))}
-
-            </FormControl>
-          </Grid>
-
+          { inputSelects.map((inputSelect, index) => (
+            <Grid container key={index} className={classes.crewSelect}>
+              <Grid item md={8}>
+                <Select
+                  native
+                  name='crew_position_uuid'
+                  label='Crew Position'
+                  value={inputSelect.crew_position_uuid}
+                  onChange={(event) => handleChangeInput(event, index)}
+                >
+                  <option value=''>Select</option>
+                  {crewPositions.map((pos, index) => (
+                    <option value={pos.crew_position_uuid} key={index}>{pos.position}</option>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item md={2}>
+                <IconButton
+                  onClick={()=>handleRemoveFields(index)}
+                >
+                  <RemoveCircle />
+                </IconButton>
+              </Grid>
+              <Grid item md={2}>
+                <IconButton
+                  onClick={()=>handleAddFields()}
+                >
+                  <AddCircle />
+                </IconButton>
+              </Grid>
+            </Grid>
+          ))}
+          
         </Grid>
+
       </Grid>
+
       {/* Save and Cancel buttons */}
       <Grid container item>
         <Grid item xs={12} align="center" className={classes.buttons}>
@@ -165,6 +155,7 @@ export default function NewModel(props) {
           </Button>
         </Grid>
       </Grid>
+
     </Paper>
   )
 }
