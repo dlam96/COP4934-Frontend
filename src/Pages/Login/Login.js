@@ -102,16 +102,17 @@ function Login(props) {
         history.push("/Home/Schedule");
       })
       .catch((error) => {
-        // console.log("Login Error:", error);
-        // console.log("Error Detail:", error.response);
+        // console.log("Login Error:", error.response);
+        // console.log("Error Detail:", error.response.data.error);
         if (error.response) {
           if (
             error.response.data &&
-            error.response.data.error &&
-            error.response.data.error.message.includes("accepted")
+            error.response.data.error.includes("not approved")
           ) {
             setAcceptFail(true);
+            console.log("Account not yet accepted");
           } else {
+            console.log("Login info incorrect");
             setAuthFail(true);
           }
         } else {
@@ -145,7 +146,7 @@ function Login(props) {
             <Alert
               severity="error"
               variant="filled"
-              onClose={() => setAuthFail(false)}
+              onClose={() => setAcceptFail(false)}
             >
               You have not been accepted yet
             </Alert>
