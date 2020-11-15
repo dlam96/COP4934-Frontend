@@ -5,11 +5,8 @@ import {
   makeStyles,
   Button,
   IconButton,
-  Select,
-  FormControl,
 } from "@material-ui/core";
 import {
-  Save,
   Delete,
 } from "@material-ui/icons";
 import ConfirmDeleteModel from './ConfirmDeleteModel';
@@ -31,8 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EditAircraftModel(props) {
   const classes = useStyles();
-  const { crewPositions } = props;
-  const [model, setModel] = useState(props.model);
+  const { crewPositions, model } = props;
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const getPositionName = ( position = null ) => {
