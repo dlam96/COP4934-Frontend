@@ -22,15 +22,16 @@ import {
 
 import { setAircraftModels, setAircrafts, setCrewPostions } from '../../Redux/actions.js';
 
+import EditAircraftModel from './EditAircraftModel.js';
 import ActiveAircrafts from './ActiveAircrafts.js';
 import AircraftModels from './AircraftModels.js';
 import AircraftCrew from './AircraftCrew.js';
 import EditAircraft from './EditAircraft.js';
-import EditAircraftModel from './EditAircraftModel.js';
-import EditCrew from './EditCrew.js';
 import NewAircraft from './NewAircraft.js';
+import EditCrew from './EditCrew.js';
 import NewModel from './NewModel.js';
 import NewCrew from './NewCrew.js';
+import TabControlAircraft from './TabControlAircraft.js';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -319,11 +320,18 @@ function Aircrafts(props) {
 
       <Grid item style={{height: '45px'}}>
         <AppBar position="static" className={classes.appBar}>
-          <Tabs value={value} indicatorColor="primary" onChange={handleChange}>
-            <Tab label="Aircrafts" />
-            <Tab label="Models" />
-            <Tab label="Crew" />
-          </Tabs> 
+          {(edit || addNew) ? 
+            <TabControlAircraft
+              handleChange={handleChange}
+              value={value}
+            />
+            :
+            <Tabs value={value} indicatorColor="primary" onChange={handleChange}>
+              <Tab label="Aircrafts" />
+              <Tab label="Models" />
+              <Tab label="Crew" />
+            </Tabs> 
+          }
         </AppBar>
       </Grid>
 

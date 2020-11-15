@@ -18,6 +18,7 @@ import {
 import ActiveUsers from "./ActiveUsers";
 import PendingUsers from "./PendingUsers";
 import EditUser from "./EditUser.js";
+import TabControlUser from './TabControlUser.js';
 import { 
   setAirmen,
 } from "../../Redux/actions";
@@ -208,10 +209,17 @@ function Users(props) {
 
       <Grid item style={{height: '45px'}}>
         <AppBar position="static" className={classes.appBar}>
-          <Tabs value={value}  indicatorColor='primary' onChange={handleChange}>
-            <Tab label="Users" />
-            <Tab label="New Users Approval" />
-          </Tabs>
+          {edit ?
+            <TabControlUser 
+              handleChange={handleChange}
+              value={value}
+            />
+            :
+            <Tabs value={value}  indicatorColor='primary' onChange={handleChange}>
+              <Tab label="Users" />
+              <Tab label="New Users Approval" />
+            </Tabs>
+          }
         </AppBar>
       </Grid>
 
