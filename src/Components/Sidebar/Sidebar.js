@@ -58,11 +58,11 @@ function Sidebar(props) {
       path: "/Home/Aircrafts",
       icon: "LocalAirport",
     });
-    routes.push({
-      routeName: "Messages",
-      path: "/Home/Messages",
-      icon: "Message",
-    });
+    // routes.push({
+    //   routeName: "Messages",
+    //   path: "/Home/Messages",
+    //   icon: "Message",
+    // });
   }
 
   const iconNames = {

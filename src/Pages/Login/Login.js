@@ -102,11 +102,12 @@ function Login(props) {
         history.push("/Home/Schedule");
       })
       .catch((error) => {
-        // console.log("Login Error:", error.response);
-        // console.log("Error Detail:", error.response.data.error);
+        console.log("Login Error:", error.response);
+        console.log("Error Detail:", error.response.data.error);
         if (error.response) {
           if (
             error.response.data &&
+            error.response.data.error &&
             error.response.data.error.includes("not approved")
           ) {
             setAcceptFail(true);

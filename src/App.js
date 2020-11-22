@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Routes from "./Routes/Routes.js";
 import Navbar from "./Components/Navbar/Navbar.js";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { Container } from "@material-ui/core";
 
 function App(props) {
   const palletType = props.darkState ? "dark" : "light";

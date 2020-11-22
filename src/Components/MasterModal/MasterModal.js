@@ -380,6 +380,7 @@ function MasterModal(props) {
     let changeIndex = newSelectedPilots.findIndex(
       (member) => member.crew_position_uuid === position_uuid
     );
+    console.log("changeIndex", changeIndex);
     if (changeIndex === -1) {
       newSelectedPilots.push({
         airman_uuid: event.target.value,
