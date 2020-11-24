@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Container,
   Grid,
@@ -24,7 +24,7 @@ import {
   setFlights,
 } from "../../Redux/actions.js";
 
-import userData from "./userData.js";
+// import userData from "./userData.js";
 import { AvatarGroup } from "@material-ui/lab";
 
 import { WebSocketFrame } from "../WebSocket/WebSocket.js";

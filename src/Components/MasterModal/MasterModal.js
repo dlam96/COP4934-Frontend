@@ -282,7 +282,7 @@ function MasterModal(props) {
     if (propsAircrafts && aircraftModels) {
       setAircrafts(
         propsAircrafts.map((item) => {
-          if (typeof item.diabled === "undefined" || item.disabled === null) {
+          if (typeof item.disabled === "undefined" || item.disabled === null) {
             item.disabled = item.status !== "Available";
             item.aircraft_name = aircraftModels[item.model_uuid].model_name;
           }
@@ -380,6 +380,7 @@ function MasterModal(props) {
     let changeIndex = newSelectedPilots.findIndex(
       (member) => member.crew_position_uuid === position_uuid
     );
+    console.log("changeIndex", changeIndex);
     if (changeIndex === -1) {
       newSelectedPilots.push({
         airman_uuid: event.target.value,

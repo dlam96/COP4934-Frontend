@@ -9,10 +9,14 @@ function App(props) {
   console.log("DarkMode:", props.darkState);
 
   const darkTheme = createMuiTheme({
+    typography: {
+      fontFamily: ["Quantico", "sans-serif"].join(","),
+    },
     palette: {
       type: palletType,
       primary: {
-        main: "#00338F",
+        // main: "#00338F",
+        main: "#0F192C",
       },
       // background: {
       //   default: "#222222",
