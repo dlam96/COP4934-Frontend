@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Grid,
@@ -6,9 +6,17 @@ import {
   makeStyles,
   Typography,
   Divider,
-  Toolbar,
   Tooltip,
-  Box,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Chip,
+  List,
+  ListItem,
+  ListItemText,
+  Checkbox,
+  ListItemSecondaryAction,
 } from "@material-ui/core";
 import { Help } from "@material-ui/icons";
 import clsx from "clsx";
@@ -20,6 +28,9 @@ import MomentUtils from "@date-io/moment";
 
 import PreviewToolbar from "./PreviewToolbar.js";
 import { TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+
+// Redux
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -54,9 +65,22 @@ const useStyles = makeStyles((theme) => ({
   timeStyle: {
     margin: theme.spacing(1, 0, 1, 1),
   },
+  durationStyle: {
+    margin: theme.spacing(1, 0, 1, 1),
+  },
+  durationLabel: {
+    width: "30vw",
+  },
+  chip: {
+    margin: theme.spacing(1),
+  },
+  listStyle: {
+    maxHeight: 250,
+    overflow: "auto",
+  },
 }));
 
-export default function CreateSchedule() {
+function CreateSchedule(props) {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const localizer = momentLocalizer(moment);
@@ -64,6 +88,14 @@ export default function CreateSchedule() {
   let today = new Date();
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
+  const [flightDuration, setFlightDuration] = useState(4);
+  const durationOptions = [1, 2, 3, 4, 5, 6, 7, 8];
+  let propsAircraftModels = props.aircraft_models;
+  const [aircraftModels, setAircraftModels] = useState(propsAircraftModels);
+  let propsAirmen = props.airmen;
+  const [flightCrew, setFlightCrew] = useState(propsAirmen);
+  const [checked, setChecked] = React.useState([1]);
+
   // Calender functions
   const handleStartDateSelect = (date) => {
     if (date._d > endDate) {
@@ -78,6 +110,69 @@ export default function CreateSchedule() {
     }
     setEndDate(moment(date).toDate());
   };
+
+  const handleFlightDurationSelect = (event) => {
+    setFlightDuration(event);
+  };
+
+  const handleAircraftChange = (data) => {
+    // console.log("TEST");
+    console.log("aircraft delete", data);
+    let newAirCraftModel = [...aircraftModels];
+
+    const index = aircraftModels.findIndex(
+      (obj) => obj.model_name === data.model_name
+    );
+    console.log("index", index);
+    // // // does exit then remove from array
+    if (!newAirCraftModel[index].blacklist) {
+      console.log("adding aircraft to blacklist");
+
+      newAirCraftModel[index].blacklist = true;
+    } else {
+      console.log("removing aircraft from blacklist");
+      newAirCraftModel[index].blacklist = false;
+    }
+    setAircraftModels(newAirCraftModel);
+  };
+
+  const handleAirCrewToggle = (value) => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+  // add blacklist object to aircraftmodels array
+  useEffect(() => {
+    console.log("initializing blacklist");
+    for (const aircraft in aircraftModels) {
+      aircraftModels[aircraft].blacklist = false;
+    }
+  }, []);
+  // useEffect(() => {
+  // console.log("forcing rerender");
+  // }, [aircraftModels]);
+
+  useEffect(() => {
+    // console.log("Airmen", ...propsAirmen);
+  }, [propsAirmen]);
+
+  // useEffect(() => {
+  //   if (propsAircraftModels) {
+  //     let modelsObj = {};
+  //     for (const model of propsAircraftModels) {
+  //       modelsObj[model.model_uuid] = model;
+  //     }
+  //     // setAircraftModels(modelsObj);
+  //     setAircraftModels(propsAircraftModels);
+  //     // console.log("aircraft models", aircraftModels);
+  //   }
+  // }, [propsAircraftModels]);
 
   return (
     <Container
@@ -132,6 +227,128 @@ export default function CreateSchedule() {
             {/* =========================================
             End of Time Window 
             =========================================*/}
+            {/* =========================================
+            Flight Duration Window 
+            =========================================*/}
+            <Grid container item direction="row">
+              <Grid item xs={5}>
+                <Tooltip
+                  title="Duration of a flight event"
+                  placement="bottom-start"
+                >
+                  <Typography variant="subtitle1" style={{ paddingTop: "5px" }}>
+                    Flight Duration
+                    <Help fontSize="small" style={{ paddingTop: "5px" }} />
+                  </Typography>
+                </Tooltip>
+                <Divider />
+
+                <FormControl className={classes.durationStyle}>
+                  <InputLabel
+                    id="duration-select-label"
+                    className={classes.durationLabel}
+                  >
+                    Duration (Hours)
+                  </InputLabel>
+                  <Select
+                    labelId="flight-duration-select-label"
+                    id="flight-duration"
+                    value={flightDuration}
+                    onChange={handleFlightDurationSelect}
+                  >
+                    {durationOptions.map((value, index) => (
+                      <MenuItem key={index} value={value}>
+                        {value}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              {/* =========================================
+            End of Flight Duration Window 
+            =========================================*/}
+              {/* =========================================
+            Blacklist Aircraft Window 
+            =========================================*/}
+              <Grid item xs={7}>
+                <Tooltip
+                  title="Aircraft models to be included in schedule"
+                  placement="bottom-start"
+                >
+                  <Typography variant="subtitle1" style={{ paddingTop: "5px" }}>
+                    Aircraft Model
+                    <Help fontSize="small" style={{ paddingTop: "5px" }} />
+                  </Typography>
+                </Tooltip>
+                <Divider />
+                <Grid container direction="row">
+                  {aircraftModels.map((data, index) => {
+                    return (
+                      <Chip
+                        size="small"
+                        clickable
+                        onClick={() => handleAircraftChange(data)}
+                        variant={
+                          !aircraftModels[index].blacklist
+                            ? "default"
+                            : "outlined"
+                        }
+                        color={
+                          !aircraftModels[index].blacklist
+                            ? "primary"
+                            : "default"
+                        }
+                        key={data.model_name}
+                        label={data.model_name}
+                        className={classes.chip}
+                      />
+                    );
+                  })}
+                </Grid>
+              </Grid>
+              {/* =========================================
+            End of Blacklist Aircraft Window 
+            =========================================*/}
+            </Grid>
+            {/* =========================================
+            Blacklist AirCrew Window 
+            =========================================*/}
+            <Tooltip
+              title="Aircrew members to blacklist"
+              placement="bottom-start"
+            >
+              <Typography variant="subtitle1" style={{ paddingTop: "5px" }}>
+                Blacklist Aircrew Members
+                <Help fontSize="small" style={{ paddingTop: "5px" }} />
+              </Typography>
+            </Tooltip>
+            <Divider />
+            <Grid container>
+              <Grid item xs={12}>
+                <List className={classes.listStyle} dense>
+                  {flightCrew.map((value, index) => {
+                    return (
+                      <ListItem>
+                        <ListItemText
+                          id={index}
+                          primary={`${value.first_name} ${value.last_name}`}
+                        />
+                        <ListItemSecondaryAction>
+                          <Checkbox
+                            edge="end"
+                            onChange={handleAirCrewToggle(value)}
+                            checked={checked.indexOf(value) !== -1}
+                          />
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                    );
+                  })}
+                </List>
+              </Grid>
+            </Grid>
+            {/* =========================================
+            End of Blacklist AirCrew Window 
+            =========================================*/}
           </Paper>
         </Grid>
         {/* Preview window */}
@@ -153,3 +370,12 @@ export default function CreateSchedule() {
     </Container>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    aircraft_models: state.aircraftmodelReducer,
+    airmen: state.airmenReducer,
+  };
+};
+
+export default connect(mapStateToProps, null)(CreateSchedule);

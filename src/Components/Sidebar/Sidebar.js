@@ -34,11 +34,16 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  active: {
+    backgroundColor: "#D2AF39 !important",
+    // color: "red",
+  },
 }));
 
 function Sidebar(props) {
   const classes = useStyles();
   const history = useHistory();
+  const [selectedIndex, setSelectedIndex] = React.useState(1);
 
   const routes = [
     { routeName: "Schedule", path: "/Home/Schedule", icon: "CalendarToday" },
@@ -73,7 +78,8 @@ function Sidebar(props) {
     Message: <Message />,
   };
 
-  const handleClick = (path) => {
+  const handleClick = (path, index) => {
+    setSelectedIndex(index);
     history.push(path);
   };
 
@@ -95,7 +101,9 @@ function Sidebar(props) {
               <ListItem
                 button
                 component="a"
-                onClick={() => handleClick(key.path)}
+                selected={index === selectedIndex}
+                onClick={() => handleClick(key.path, index)}
+                classes={{ selected: classes.active }}
               >
                 <ListItemIcon>{iconNames[key.icon]}</ListItemIcon>
                 <ListItemText primary={key.routeName} />

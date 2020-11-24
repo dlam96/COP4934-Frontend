@@ -282,7 +282,7 @@ function MasterModal(props) {
     if (propsAircrafts && aircraftModels) {
       setAircrafts(
         propsAircrafts.map((item) => {
-          if (typeof item.diabled === "undefined" || item.disabled === null) {
+          if (typeof item.disabled === "undefined" || item.disabled === null) {
             item.disabled = item.status !== "Available";
             item.aircraft_name = aircraftModels[item.model_uuid].model_name;
           }
