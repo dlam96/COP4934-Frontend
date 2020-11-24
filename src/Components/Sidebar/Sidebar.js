@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 function Sidebar(props) {
   const classes = useStyles();
   const history = useHistory();
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   const routes = [
     { routeName: "Schedule", path: "/Home/Schedule", icon: "CalendarToday" },

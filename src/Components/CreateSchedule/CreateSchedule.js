@@ -17,6 +17,7 @@ import {
   ListItemText,
   Checkbox,
   ListItemSecondaryAction,
+  CircularProgress,
 } from "@material-ui/core";
 import { Help } from "@material-ui/icons";
 import clsx from "clsx";
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   fixedHeight: {
-    minHeight: "90vh",
+    minHeight: "92vh",
     maxHeight: "100%",
     height: "100%",
     // height: "calc(100% - 15px)", //height of toolbar if you know it beforehand
@@ -78,10 +79,18 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 250,
     overflow: "auto",
   },
+  buttonWrapper: {
+    padding: theme.spacing(2),
+  },
 }));
 
 function CreateSchedule(props) {
   const classes = useStyles();
+  // Loading variables
+  const [loading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const timer = React.useRef();
+
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const localizer = momentLocalizer(moment);
 
@@ -147,6 +156,24 @@ function CreateSchedule(props) {
 
     setChecked(newChecked);
   };
+
+  const handleGenerateSchedule = (event) => {
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+      timer.current = window.setTimeout(() => {
+        setSuccess(true);
+        setLoading(false);
+      }, 2500);
+    }
+  };
+
+  React.useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
+
   // add blacklist object to aircraftmodels array
   useEffect(() => {
     console.log("initializing blacklist");
@@ -348,6 +375,24 @@ function CreateSchedule(props) {
             </Grid>
             {/* =========================================
             End of Blacklist AirCrew Window 
+            =========================================*/}
+            {/* =========================================
+            Buttons 
+            =========================================*/}
+            <Divider />
+            <Grid container direction="row" className={classes.buttonWrapper}>
+              <Chip
+                label="Generate Schedule"
+                avatar={loading && <CircularProgress size={20} />}
+                clickable
+                style={{ marginRight: 5 }}
+                onClick={handleGenerateSchedule}
+                color="primary"
+              />
+              <Chip label="Commit Schedule" clickable />
+            </Grid>
+            {/* =========================================
+            End of Buttons 
             =========================================*/}
           </Paper>
         </Grid>
