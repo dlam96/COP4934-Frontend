@@ -389,7 +389,11 @@ function CreateSchedule(props) {
                 onClick={handleGenerateSchedule}
                 color="primary"
               />
-              <Chip label="Commit Schedule" clickable />
+              <Chip
+                label="Commit Schedule"
+                clickable
+                color={success ? "secondary" : "default"}
+              />
             </Grid>
             {/* =========================================
             End of Buttons 
