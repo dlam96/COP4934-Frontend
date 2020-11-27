@@ -24,6 +24,10 @@ function App(props) {
       secondary: {
         main: "#D2AF39",
       },
+      info: {
+        main: "#878787",
+        light: "#FFFFFF",
+      },
     },
   });
 

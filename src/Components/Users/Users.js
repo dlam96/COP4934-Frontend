@@ -11,6 +11,7 @@ import {
   Typography,
   Box,
   Divider,
+  Container,
 } from "@material-ui/core";
 import {
   green,
@@ -26,11 +27,10 @@ import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    margin: theme.spacing(2),
-    background: '#96a1a7',
-    height: '1000px',
-    width: '1200px',
-    borderRadius: '10px',
+    // padding: theme.spacing(2),
+    minHeight: '92vh',
+    maxHeight: '100%',
+    height: '100%',
   },
   title: {
     display: 'flex',
@@ -39,8 +39,7 @@ const useStyles = makeStyles((theme) => ({
     height: '125px',
   },
   appBar: {
-    background: '#AAAAAA',
-    opacity: '80%',
+    backgroundColor: theme.palette.primary.main,
   },
   infoBoxes: {
     height: '825px',
@@ -51,14 +50,12 @@ const useStyles = makeStyles((theme) => ({
   quickInfo: {
     height: '300px',
     width: '200px',
-    background: '#878787',
     margin: '10px',
     borderRadius: '5px',
   },
   search: {
     height: '400px',
     width: '200px',
-    background: '#878787',
     margin: '10px',
     borderRadius: '5px',
   },
@@ -72,8 +69,14 @@ const useStyles = makeStyles((theme) => ({
     height: '715px',
     width: '700px',
     maxHeight: '715px',
-    background: '#878787',
     overflowY: 'scroll',
+  },
+  labelBar: {
+    backgroundColor: theme.palette.primary.main,
+    marginBottom: '10px', 
+    paddingLeft: '10px',
+    borderRadius: '5px',
+    color: 'white',
   },
   newUserBt: {
     background: '#F1F1F1',
@@ -199,57 +202,90 @@ function Users(props) {
   }, [])
 
   return (
-    <Grid container className={classes.container} direction='column'>
-      
-      <Grid item className={classes.title}>
-        <Typography variant='h2'>
-          Users
-        </Typography>
-      </Grid>
-
-      <Grid item style={{height: '45px'}}>
-        <AppBar position="static" className={classes.appBar}>
-          {edit ?
-            <TabControlUser 
-              handleChange={handleChange}
-              value={value}
-            />
-            :
-            <Tabs value={value}  indicatorColor='primary' onChange={handleChange}>
-              <Tab label="Users" />
-              <Tab label="New Users Approval" />
-            </Tabs>
-          }
-        </AppBar>
-      </Grid>
-
-      <Grid container item direction='row'>
-        <Grid container item md={3} direction='column' className={classes.infoBoxes}>
-          <Grid container item className={classes.quickInfo}>
-
-          </Grid>
-          <Grid container item className={classes.search}>
-
-          </Grid>
+    <Container maxWidth='lg'>
+      <Paper container className={classes.container} direction='column'>
+        
+        <Grid item className={classes.title}>
+          <Typography variant='h2'>
+            Users
+          </Typography>
         </Grid>
 
-        <Grid container item md={9} direction='column' className={classes.mainInfo}>
-          {/* Tab 1 Active Users */}
-          {edit ? 
-            <TabPanel value={value} index={0}>
-              <Paper className={classes.userList}>
-                <EditUser 
-                  user={editUser} 
-                  handleEdit={handleEdit} 
-                />
-              </Paper>
-            </TabPanel>
-            : 
-            <TabPanel value={value} index={0}>
-              {/* Active User List */}
+        <Grid item style={{height: '45px'}}>
+          <AppBar position="static" className={classes.appBar}>
+            {edit ?
+              <TabControlUser 
+                handleChange={handleChange}
+                value={value}
+              />
+              :
+              <Tabs value={value}  indicatorColor='primary' onChange={handleChange}>
+                <Tab label="Users" />
+                <Tab label="New Users Approval" />
+              </Tabs>
+            }
+          </AppBar>
+        </Grid>
+
+        <Grid container item direction='row'>
+          <Grid container item md={3} direction='column' className={classes.infoBoxes}>
+            <Paper container item className={classes.quickInfo}>
+
+            </Paper>
+            <Paper container item className={classes.search}>
+
+            </Paper>
+          </Grid>
+
+          <Grid container item md={9} direction='column' className={classes.mainInfo}>
+            {/* Tab 1 Active Users */}
+            {edit ? 
+              <TabPanel value={value} index={0}>
+                <Paper className={classes.userList}>
+                  <EditUser 
+                    user={editUser} 
+                    handleEdit={handleEdit} 
+                  />
+                </Paper>
+              </TabPanel>
+              : 
+              <TabPanel value={value} index={0}>
+                {/* Active User List */}
+                <Paper className={classes.userList}>
+                  <Grid container item xs={12} md={12} className={classes.labelBar}>
+                    <Grid item xs={3}>
+                      <Typography variant='subtitle1'>First Name</Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <Typography variant='subtitle1'>Last Name</Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Typography variant='subtitle1'>Rank</Typography>
+                    </Grid>
+                    <Grid item xs={1}>
+                      <Typography variant='subtitle1'>Role</Typography>
+                    </Grid>
+                    <Grid item xs={1}>
+                      <Typography variant='subtitle1'>Status</Typography>
+                    </Grid>
+                  </Grid>
+                  <Divider variant='fullWidth' />
+                  {userList.map(user => (
+                    <ActiveUsers 
+                      user={user}
+                      handleEdit={handleEdit}
+                      key={user.account_uuid}
+                    />
+                  ))}
+
+                </Paper>
+              </TabPanel>
+            }
+
+            {/* Tab 2 Pending Users */}
+            <TabPanel value={value} index={1}>
               <Paper className={classes.userList}>
                 <Grid container item xs={12} md={12} style={{marginBottom: '10px', paddingLeft: '10px'}}>
-
                   <Grid item xs={3}>
                     <Typography variant='h6'>First Name</Typography>
                   </Grid>
@@ -265,85 +301,41 @@ function Users(props) {
                   <Grid item xs={1}>
                     <Typography variant='h6'>Status</Typography>
                   </Grid>
-
-                  <Divider variant='fullWidth' />
-
-                  {userList.map(user => (
-                    <ActiveUsers 
+                  
+                  {pendingUsers.map(user => (
+                    <PendingUsers 
                       user={user}
                       handleEdit={handleEdit}
+                      setApproveUserList={setApproveUserList}
+                      approveUserList={approveUserList}
                       key={user.account_uuid}
                     />
                   ))}
-                  
+
+                  {/* Approve Users Button */}
+                  <Grid container item xs={12} md={12}>
+                    <Paper className={classes.newUserBt}>
+                      <Button 
+                        fullWidth={true}
+                        size="large"
+                        onClick={()=>handleApproveAll(approveUserList)}
+                        style={{
+                          color: green[500],
+                          minHeight: '100%',
+                        }}
+                      >
+                        Submit
+                      </Button>
+                    </Paper>
+                  </Grid>
                 </Grid>
               </Paper>
             </TabPanel>
-          }
-
-          {/* Tab 2 Pending Users */}
-          <TabPanel value={value} index={1}>
-            <Paper className={classes.userList}>
-              <Grid container item xs={12} md={12} style={{marginBottom: '10px', paddingLeft: '10px'}}>
-                <Grid item xs={3}>
-                  <Typography variant='h6'>
-                    First Name
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant='h6'>
-                    Last Name
-                  </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <Typography variant='h6'>
-                    Rank
-                  </Typography>
-                </Grid>
-                <Grid item xs={1}>
-                  <Typography variant='h6'>
-                    Role  
-                  </Typography>
-                </Grid>
-                <Grid item xs={1}>
-                  <Typography variant='h6'>
-                    Status
-                  </Typography>
-                </Grid>
-                
-                {pendingUsers.map(user => (
-                  <PendingUsers 
-                    user={user}
-                    handleEdit={handleEdit}
-                    setApproveUserList={setApproveUserList}
-                    approveUserList={approveUserList}
-                    key={user.account_uuid}
-                  />
-                ))}
-
-                {/* Approve Users Button */}
-                <Grid container item xs={12} md={12}>
-                  <Paper className={classes.newUserBt}>
-                    <Button 
-                      fullWidth={true}
-                      size="large"
-                      onClick={()=>handleApproveAll(approveUserList)}
-                      style={{
-                        color: green[500],
-                        minHeight: '100%',
-                      }}
-                    >
-                      Submit
-                    </Button>
-                  </Paper>
-                </Grid>
-              </Grid>
-            </Paper>
-          </TabPanel>
+          </Grid>
         </Grid>
-      </Grid>
 
-    </Grid>
+      </Paper>
+    </Container>
   );
 }
 

@@ -14,7 +14,10 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: '10px',
     marginBottom: '5px',
     alignItems: 'center',
-  }
+  },
+  editButton: {
+    color: theme.palette.secondary.main,
+  },
 }));
 
 export default function ActiveUsers(props) {
@@ -42,7 +45,7 @@ export default function ActiveUsers(props) {
       <Grid item xs={1} align="start">{ user.user_status }</Grid>
       <Grid item xs={2} align="right" style={{paddingRight: '15px'}}>
         <IconButton 
-          color='primary'
+          className={classes.editButton}
           onClick={() => props.handleEdit(user)}
           align='right'
         >
