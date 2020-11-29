@@ -22,6 +22,7 @@ import {
   EDITFLIGHT,
   DELETEFLIGHT,
   SETONLINE,
+  SETPENDING,
 } from "./actionTypes.js";
 
 export const login = (loginObject) => ({
@@ -61,6 +62,13 @@ export const setAirmen = (airmen) => ({
     airmen: airmen,
   },
 });
+
+export const setPending = (pending) => ({
+  type: SETPENDING,
+  payload: {
+    pending: pending
+  }
+})
 
 export const approveAirman = (airman) => ({
   type: APPROVEAIRMAN,

@@ -1455,7 +1455,7 @@ const mapStateToProps = (state) => {
     aircrafts: state.aircraftReducer,
     airacraft_models: state.aircraftmodelReducer,
     crew_positions: state.crewpositionReducer,
-    airmen: state.airmenReducer,
+    airmen: state.airmenReducer.users,
   };
 };
 const mapDispatchToProps = (state) => {

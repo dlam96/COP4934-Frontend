@@ -19,7 +19,7 @@ import ActiveUsers from "./ActiveUsers";
 import PendingUsers from "./PendingUsers";
 import EditUser from "./EditUser.js";
 import TabControlUser from "./TabControlUser.js";
-import { setAirmen } from "../../Redux/actions";
+import { setAirmen, setPending } from "../../Redux/actions";
 import { connect } from "react-redux";
 import { WebSocketFrame } from "../WebSocket/WebSocket.js";
 
@@ -159,7 +159,6 @@ function Users(props) {
   const [edit, setEdit] = useState(false);
   const [editUser, setEditUser] = useState(null);
   // const [addNew, setAddNew] = useState(false);
-  const [pendingUsers, setPendingUsers] = useState([]);
   const [approveUserList, setApproveUserList] = useState([]);
   console.log("Props airmen", props.airmen);
   const handleChange = (event, newValue) => {
@@ -226,7 +225,8 @@ function Users(props) {
       .get("/user/nonapproved")
       .then((response) => {
         console.log("Response Data Users:", response.data.users);
-        setPendingUsers(response.data.users);
+        // setPendingUsers(response.data.users);
+        props.pendingAction(response.data.users);
       })
       .catch((error) => {
         console.log("Get Error:", error);
@@ -505,7 +505,7 @@ function Users(props) {
                   </Grid>
                 </Grid>
                 <Divider variant="fullWidth" />
-                {pendingUsers.map((user) => (
+                {props.pendingUsers && props.pendingUsers.map((user) => (
                   <PendingUsers
                     user={user}
                     handleEdit={handleEdit}
@@ -542,13 +542,15 @@ function Users(props) {
 
 const mapStateToProps = (state) => {
   return {
-    airmen: state.airmenReducer,
+    airmen: state.airmenReducer.users,
+    pendingUsers: state.airmenReducer.pending,
     unapprovedUsers: state.unapprovedUsersReducer,
   };
 };
 
 const mapDispatchToProps = {
   airmenAction: setAirmen,
+  pendingAction: setPending,
   // unapprovedUsersAction: setUnapprovedUsers,
 };
 

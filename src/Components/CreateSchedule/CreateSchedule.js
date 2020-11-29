@@ -426,7 +426,7 @@ function CreateSchedule(props) {
 const mapStateToProps = (state) => {
   return {
     aircraft_models: state.aircraftmodelReducer,
-    airmen: state.airmenReducer,
+    airmen: state.airmenReducer.users,
   };
 };
 
