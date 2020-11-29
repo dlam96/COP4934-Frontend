@@ -13,9 +13,8 @@ import {
   Divider,
   Container,
 } from "@material-ui/core";
-import {
-  green,
-} from "@material-ui/core/colors";
+import { green, grey, blueGrey } from '@material-ui/core/colors';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 import ActiveUsers from "./ActiveUsers";
 import PendingUsers from "./PendingUsers";
 import EditUser from "./EditUser.js";
@@ -27,10 +26,9 @@ import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    // padding: theme.spacing(2),
     minHeight: '92vh',
     maxHeight: '100%',
-    height: '100%',
+    height: '75%',
   },
   title: {
     display: 'flex',
@@ -42,34 +40,52 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   infoBoxes: {
-    height: '825px',
+    height: '775px',
     display: 'flex',
     alignItems: 'flex-end',
     justifyContent: 'center',
+  },
+  infoLabels: {
+    textAlign: 'center',
+    margin: '15px',
+    borderRadius: '3px',
+    color: 'white',
+    backgroundColor: theme.palette.primary.main,
   },
   quickInfo: {
     height: '300px',
     width: '200px',
     margin: '10px',
     borderRadius: '5px',
+    backgroundColor: fade(grey[300], 0.25),
+  },
+  countBackground: {
+    backgroundColor: fade(grey[900], 0.1),
+    borderRadius: '25%',
+    margin: '1px',
+    marginRight: '5px',
+    marginLeft: '20px', 
+    textAlign: 'center',
   },
   search: {
     height: '400px',
     width: '200px',
     margin: '10px',
     borderRadius: '5px',
+    backgroundColor: fade(grey[300], 0.25),
   },
   mainInfo: {
-    height: '825px',
+    height: '775px',
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
   userList: {
     padding: theme.spacing(1),
     height: '715px',
-    width: '700px',
+    width: '800px',
     maxHeight: '715px',
     overflowY: 'scroll',
+    backgroundColor: fade(grey[300], 0.25),
   },
   labelBar: {
     backgroundColor: theme.palette.primary.main,
@@ -97,6 +113,24 @@ const useStyles = makeStyles((theme) => ({
   labels: {
     padding: theme.spacing(2),
   },
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: '10px'
+    },
+    '*::-webkit-scrollbar-track': {
+      borderRadius: '10px',
+      background: fade(blueGrey[100], 0.50),
+      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.5)'
+    },
+    '*::-webkit-scrollbar-thumb': {
+      backgroundColor: fade(blueGrey[600], 0.3),
+      borderRadius: '5px',
+      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.05)',
+    },
+    '*::-webkit-scrollbar-thumb:window-inactive': {
+      backgroundColor: fade(blueGrey[300], 0.3),
+    },
+  } 
 }));
 
 function TabPanel(props) {
@@ -201,8 +235,20 @@ function Users(props) {
       });
   }, [])
 
+  const userInventory = (user = null) => {
+    if (!user) return;
+    let searchList = [...userList]
+    return searchList.filter((item) => item.role === user.role).length
+  }
+
+  const statusInventory = (user = null) => {
+    if (!user) return;
+    let searchList = [...userList]
+    return searchList.filter((item) => item.user_status === user.user_status).length
+  }
+
   return (
-    <Container maxWidth='lg'>
+    <Container maxWidth='lg' style={{ paddingLeft: '50px' }}>
       <Paper container className={classes.container} direction='column'>
         
         <Grid item className={classes.title}>
@@ -219,7 +265,7 @@ function Users(props) {
                 value={value}
               />
               :
-              <Tabs value={value}  indicatorColor='primary' onChange={handleChange}>
+              <Tabs value={value}  indicatorColor='secondary' onChange={handleChange}>
                 <Tab label="Users" />
                 <Tab label="New Users Approval" />
               </Tabs>
@@ -227,13 +273,80 @@ function Users(props) {
           </AppBar>
         </Grid>
 
-        <Grid container item direction='row'>
+        <Grid container item direction='row' style={{ marginTop: '30px' }}>
+          {/* Quick info and Search boxes */}
           <Grid container item md={3} direction='column' className={classes.infoBoxes}>
+            {/* Database info */}
             <Paper container item className={classes.quickInfo}>
+              <div className={classes.infoLabels}>
+                <Typography variant='subtitle2'>Summary</Typography>
+              </div>
+              <Grid container direction='row' style={{ alignItems: 'center', paddingBottom: '15px', paddingLeft: '15px' }}>
+                <Grid container item xs={7} direction='column' >
+                  <Typography variant='h6' style={{ paddingLeft: '10px', color: blueGrey[900] }}>
+                    Airmen
+                  </Typography>
+                  <Typography variant='caption' style={{ paddingLeft: '15px', fontStyle: 'italic' }}>
+                    User
+                  </Typography>
+                  <Typography variant='caption' style={{ paddingLeft: '15px', fontStyle: 'italic' }}>
+                    Scheduler
+                  </Typography>
+                  <Typography variant='caption' style={{ paddingLeft: '15px', fontStyle: 'italic' }}>
+                    Admin
+                  </Typography>
+                </Grid>
 
+                <Grid container item xs={3} direction='column' style={{ paddingTop: '10px' }}>
+                  <Typography variant='caption' className={classes.countBackground}>
+                    {userList.length}
+                  </Typography>
+                  <Typography variant='caption' className={classes.countBackground}>
+                    {userInventory({ role: 'User' })}
+                  </Typography>
+                  <Typography variant='caption' className={classes.countBackground}>
+                    {userInventory({ role: 'Scheduler' })}
+                  </Typography>
+                  <Typography variant='caption' className={classes.countBackground}>
+                    {userInventory({ role: 'Admin' })}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Divider variant='middle' />
+              <Grid container direction='row' style={{ alignItems: 'center', paddingTop: '10px', paddingLeft: '15px' }}>
+                <Grid container item xs={7} direction='column'>
+                  <Typography variant='h6' style={{ paddingLeft: '10px', color: blueGrey[900] }}>
+                    Availability
+                  </Typography>
+                  <Typography variant='caption' style={{ paddingLeft: '15px', fontStyle: 'italic' }}>
+                    Available
+                  </Typography>
+                  <Typography variant='caption' style={{ paddingLeft: '15px', fontStyle: 'italic' }}>
+                    Unavailable
+                  </Typography>
+                  <Typography variant='caption' style={{ paddingLeft: '15px', fontStyle: 'italic' }}>
+                    Maintenance
+                  </Typography>
+                </Grid>
+                <Grid container item xs={3} direction='column' style={{ paddingTop: '30px' }}>
+                  <Typography variant='caption' className={classes.countBackground}>
+                    {statusInventory({ user_status: 'Available' })}
+                  </Typography>
+                  <Typography variant='caption' className={classes.countBackground}>
+                    {statusInventory({ user_status: 'Unavailable' })}
+                  </Typography>
+                  <Typography variant='caption' className={classes.countBackground}>
+                    {statusInventory({ user_status: 'Vacation' })}
+                  </Typography>
+                </Grid>
+
+              </Grid>
             </Paper>
+            {/* Search system */}
             <Paper container item className={classes.search}>
-
+              <div className={classes.infoLabels}>
+                <Typography variant='subtitle2'>Search</Typography>
+              </div>
             </Paper>
           </Grid>
 
@@ -285,23 +398,24 @@ function Users(props) {
             {/* Tab 2 Pending Users */}
             <TabPanel value={value} index={1}>
               <Paper className={classes.userList}>
-                <Grid container item xs={12} md={12} style={{marginBottom: '10px', paddingLeft: '10px'}}>
+                <Grid container item xs={12} md={12} className={classes.labelBar}>
                   <Grid item xs={3}>
-                    <Typography variant='h6'>First Name</Typography>
+                    <Typography variant='subtitle1'>First Name</Typography>
                   </Grid>
                   <Grid item xs={3}>
-                    <Typography variant='h6'>Last Name</Typography>
+                    <Typography variant='subtitle1'>Last Name</Typography>
                   </Grid>
                   <Grid item xs={2}>
-                    <Typography variant='h6'>Rank</Typography>
+                    <Typography variant='subtitle1'>Rank</Typography>
                   </Grid>
                   <Grid item xs={1}>
-                    <Typography variant='h6'>Role</Typography>
+                    <Typography variant='subtitle1'>Role</Typography>
                   </Grid>
                   <Grid item xs={1}>
-                    <Typography variant='h6'>Status</Typography>
+                    <Typography variant='subtitle1'>Status</Typography>
                   </Grid>
-                  
+                </Grid>
+                <Divider variant='fullWidth' />
                   {pendingUsers.map(user => (
                     <PendingUsers 
                       user={user}
@@ -328,7 +442,6 @@ function Users(props) {
                       </Button>
                     </Paper>
                   </Grid>
-                </Grid>
               </Paper>
             </TabPanel>
           </Grid>

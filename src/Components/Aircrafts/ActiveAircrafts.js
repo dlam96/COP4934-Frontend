@@ -3,7 +3,8 @@ import {
   makeStyles,
   Grid,
   Divider,
-  IconButton
+  IconButton,
+  fade
 } from "@material-ui/core";
 import {
   Edit,
@@ -11,9 +12,18 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   details: {
-    paddingLeft: '10px',
-    marginBottom: '5px',
+    height: '40px',
+    margin: '10px',
+    marginLeft: '10px',
     alignItems: 'center',
+    alignContent: 'center',
+  },
+  divBar: {
+    width: '5px',
+    height: '100%',
+    marginRight: '15%',
+    backgroundColor: 'white',
+    borderRadius: '5px',
   },
   editButton: {
     color: theme.palette.secondary.main,
@@ -31,20 +41,20 @@ export default function ActiveAircrafts(props) {
   }
 
   return( 
-    <Grid container item  xs={12} md={12} className={classes.details}>
-      <Grid item xs={2}> { aircraft.tail_code } </Grid>
-      <Grid item xs={4}> { getModelName(aircraft) }</Grid>
-      <Grid item xs={2} > { aircraft.status } </Grid>
-      <Grid item xs={4} align='right' style={{paddingRight: '30px'}}>
+    <Grid container item direction='row' className={classes.details}>
+      <Grid item className={classes.divBar} />
+      <Grid item style={{ background: 'red' }}> { aircraft.tail_code } </Grid>
+      <Grid item xs={3} style={{ background: 'green', marginLeft: '40px' }}>{ getModelName(aircraft) }</Grid>
+      <Grid item xs={3} style={{ background: 'blue', marginLeft: '25px' }}>{ aircraft.status } </Grid>
+      <Grid item style={{background: 'red'}}>
         <IconButton 
           className={classes.editButton}
           onClick={() => props.handleEdit(aircraft)}
-          align="right"
         >
           <Edit />
         </IconButton>
       </Grid>
-      <Grid item xs={12} md={12}><Divider variant='middle' /></Grid>
+
     </Grid>
   )
 }
