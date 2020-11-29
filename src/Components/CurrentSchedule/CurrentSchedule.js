@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CurrentSchedule(props) {
   const classes = useStyles();
-  console.log("online users", props.online_users);
+  // console.log("online users", props.online_users);
   let today = new Date();
   const localizer = momentLocalizer(moment);
   // Event Modal functions
@@ -283,7 +283,7 @@ function CurrentSchedule(props) {
                         return (
                           <Tooltip
                             title={`${item.first_name} ${item.last_name}`}
-                            key={item.first_name + item.last_name}
+                            key={index}
                           >
                             <Avatar style={{ backgroundColor: colors[index] }}>
                               {`${item.first_name.substr(

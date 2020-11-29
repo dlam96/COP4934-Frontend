@@ -4,6 +4,8 @@ import {
   ONDARKMODE,
   OFFDARKMODE,
   SETAIRMEN,
+  APPROVEAIRMAN,
+  EDITAIRMAN,
   SETAIRCRAFTMODELS,
   SETLOCATIONS,
   SETAIRCRAFTS,
@@ -52,10 +54,25 @@ export const offDarkMode = () => ({
   type: OFFDARKMODE,
 });
 
+// Airmen actions
 export const setAirmen = (airmen) => ({
   type: SETAIRMEN,
   payload: {
     airmen: airmen,
+  },
+});
+
+export const approveAirman = (airman) => ({
+  type: APPROVEAIRMAN,
+  payload: {
+    airman: airman,
+  },
+});
+
+export const editAirman = (airman) => ({
+  tpye: EDITAIRMAN,
+  payload: {
+    airman: airman,
   },
 });
 

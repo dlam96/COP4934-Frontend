@@ -33,6 +33,8 @@ import { TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 // Redux
 import { connect } from "react-redux";
 
+import { WebSocketFrame } from "../WebSocket/WebSocket.js";
+
 const useStyles = makeStyles((theme) => ({
   content: {
     // flexGrow: 1,
@@ -161,6 +163,7 @@ function CreateSchedule(props) {
     if (!loading) {
       setSuccess(false);
       setLoading(true);
+      WebSocketFrame.generationHandler("generate", {});
       timer.current = window.setTimeout(() => {
         setSuccess(true);
         setLoading(false);

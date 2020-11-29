@@ -8,6 +8,8 @@ import {
   editFlight,
   deleteFlight,
   setOnline,
+  editAirman,
+  approveAirman,
 } from "../../Redux/actions.js";
 
 export class WebSocketFrame {
@@ -41,6 +43,43 @@ export class WebSocketFrame {
     }
   }
 
+  static generationHandler(action, message) {
+    console.log("Websocket: Generation Send:", action);
+    try {
+      let wsMessage = JSON.stringify({
+        topic: "generation",
+        action: action,
+        message: message,
+      });
+      console.log("Websocket Generation: About to send the message");
+      this.ws.send(wsMessage);
+    } catch (error) {
+      console.log("Websocket Generation Handler Error:", error);
+    }
+  }
+
+  static airmanHandler(action, message) {
+    console.log("Websocket: Airman Send:", action);
+    try {
+      let wsMessage = JSON.stringify({
+        topic: "airman",
+        action: action,
+        message: message,
+      });
+      console.log("Websocket Airman: About to send the message");
+      this.ws.send(wsMessage);
+    } catch (error) {
+      console.log("Websocket Airman Handler Error:", error);
+    }
+  }
+
+  static closeWebsocket() {
+    console.log("Closing websocket");
+    if (this.ws.readyState <= 1) {
+      this.ws.close();
+    }
+  }
+
   static setupWebsocket(websocketObj, props) {
     websocketObj.addEventListener("open", function (event) {
       let date = new Date();
@@ -59,6 +98,7 @@ export class WebSocketFrame {
       );
     });
     this.props = props;
+
     websocketObj.addEventListener("message", function (event) {
       console.log("Websocket: Message from server ", event);
       let payload = JSON.parse(event.data);
@@ -126,6 +166,32 @@ export class WebSocketFrame {
           }
           break;
 
+        case "generation":
+          switch (action) {
+            case "generate":
+              console.log("generating", message);
+              break;
+            default:
+              console.log("Websocket: generation action not supported", action);
+              break;
+          }
+          break;
+
+        case "airman":
+          switch (action) {
+            case "approve":
+              console.log("approving airman", message);
+              props.approveAirmanAction(message);
+              break;
+            case "edit":
+              console.log("editing airman", message);
+              props.editAirmanAction(message);
+              break;
+            default:
+              console.log("Websocket: airmen action not supported", action);
+              break;
+          }
+          break;
         default:
           console.log("Websocket: General topic not supported:", topic);
           break;
@@ -156,6 +222,8 @@ const mapDispatchToProps = {
   addFlightAction: addFlight,
   editFlightAction: editFlight,
   deleteFlightAction: deleteFlight,
+  editAirmanAction: editAirman,
+  approveAirmanAction: approveAirman,
   setOnlineAction: setOnline,
 };
 const mapStateToProps = (state) => {

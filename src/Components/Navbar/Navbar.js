@@ -21,6 +21,8 @@ import {
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
+import { WebSocketFrame } from "../WebSocket/WebSocket.js";
+
 const useStyles = makeStyles((theme) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -68,6 +70,7 @@ function Navbar(props) {
   };
 
   const handleLogout = () => {
+    WebSocketFrame.closeWebsocket();
     props.logoutAction();
     handleClose();
   };
