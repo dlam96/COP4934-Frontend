@@ -84,15 +84,16 @@ const useStyles = makeStyles((theme) => ({
     height: '715px',
     width: '800px',
     maxHeight: '715px',
-    overflowY: 'scroll',
     backgroundColor: fade(grey[300], 0.25),
   },
   labelBar: {
     backgroundColor: theme.palette.primary.main,
-    marginBottom: '10px', 
-    paddingLeft: '10px',
+    padding: '1px',
+    marginBottom: '5px', 
     borderRadius: '5px',
     color: 'white',
+    justifyContent: 'space-around',
+    justifyContent: 'center',
   },
   newUserBt: {
     background: '#F1F1F1',
@@ -100,12 +101,6 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     opacity: '40%',
     marginTop: '10px',
-  },
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column",
   },
   fixedHeight: {
     height: 800,
@@ -163,6 +158,44 @@ function Users(props) {
   const [pendingUsers, setPendingUsers] = useState([]);
   const [approveUserList, setApproveUserList] = useState([]);
   const [userList, setUserList ] = useState(props.airmen);
+
+  // const testUsers = [
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  //   { first_name: 'John', last_name: 'Doe', role: 'User', user_status: 'Available' },
+  // ]
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -373,24 +406,22 @@ function Users(props) {
                       <Typography variant='subtitle1'>Last Name</Typography>
                     </Grid>
                     <Grid item xs={2}>
-                      <Typography variant='subtitle1'>Rank</Typography>
-                    </Grid>
-                    <Grid item xs={1}>
                       <Typography variant='subtitle1'>Role</Typography>
                     </Grid>
                     <Grid item xs={1}>
                       <Typography variant='subtitle1'>Status</Typography>
                     </Grid>
                   </Grid>
-                  <Divider variant='fullWidth' />
-                  {userList.map(user => (
-                    <ActiveUsers 
-                      user={user}
-                      handleEdit={handleEdit}
-                      key={user.account_uuid}
-                    />
-                  ))}
-
+                  <Divider variant='fullWidth' style={{ marginBottom: '5px' }} />
+                  <Grid container item style={{ display: 'flex', overflowY: 'auto', maxHeight: '650px' }}>
+                    {userList.map(user => (
+                      <ActiveUsers 
+                        user={user}
+                        handleEdit={handleEdit}
+                        key={user.account_uuid}
+                      />
+                    ))}
+                  </Grid>
                 </Paper>
               </TabPanel>
             }
@@ -405,13 +436,13 @@ function Users(props) {
                   <Grid item xs={3}>
                     <Typography variant='subtitle1'>Last Name</Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  {/* <Grid item xs={2}>
                     <Typography variant='subtitle1'>Rank</Typography>
-                  </Grid>
-                  <Grid item xs={1}>
+                  </Grid> */}
+                  <Grid item>
                     <Typography variant='subtitle1'>Role</Typography>
                   </Grid>
-                  <Grid item xs={1}>
+                  <Grid item>
                     <Typography variant='subtitle1'>Status</Typography>
                   </Grid>
                 </Grid>

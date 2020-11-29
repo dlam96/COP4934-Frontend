@@ -4,24 +4,31 @@ import {
   Grid,
   Divider,
   IconButton,
-  fade
+  Typography,
 } from "@material-ui/core";
-import {
-  Edit,
-} from "@material-ui/icons";
+import { Edit } from "@material-ui/icons";
+import { blueGrey } from '@material-ui/core/colors';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const useStyles = makeStyles((theme) => ({
   details: {
     height: '40px',
     margin: '10px',
-    marginLeft: '10px',
     alignItems: 'center',
     alignContent: 'center',
+    justifyContent: 'space-between',
+    borderRadius: '5px',
+    '&:hover': {
+      backgroundColor: fade(blueGrey[700], 0.25),
+      '& $divBar': {
+        backgroundColor: theme.palette.secondary.main,
+      }
+    }
   },
   divBar: {
     width: '5px',
     height: '100%',
-    marginRight: '15%',
+    marginRight: '7%',
     backgroundColor: 'white',
     borderRadius: '5px',
   },
@@ -43,10 +50,23 @@ export default function ActiveAircrafts(props) {
   return( 
     <Grid container item direction='row' className={classes.details}>
       <Grid item className={classes.divBar} />
-      <Grid item style={{ background: 'red' }}> { aircraft.tail_code } </Grid>
-      <Grid item xs={3} style={{ background: 'green', marginLeft: '40px' }}>{ getModelName(aircraft) }</Grid>
-      <Grid item xs={3} style={{ background: 'blue', marginLeft: '25px' }}>{ aircraft.status } </Grid>
-      <Grid item style={{background: 'red'}}>
+      <Grid item xs={3}>
+        <Typography>
+          { getModelName(aircraft) }
+        </Typography>
+      </Grid>
+      <Grid item style={{ marginLeft: '10px' }}> 
+        <Typography>
+          { aircraft.tail_code } 
+        </Typography>
+      </Grid>
+      <Grid item />
+      <Grid item>
+        <Typography>
+          { aircraft.status } 
+        </Typography>
+      </Grid>
+      <Grid item>
         <IconButton 
           className={classes.editButton}
           onClick={() => props.handleEdit(aircraft)}

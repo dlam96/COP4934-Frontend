@@ -4,16 +4,32 @@ import {
   Grid,
   Divider,
   IconButton,
+  Typography,
 } from "@material-ui/core";
-import {
-  Edit,
-} from "@material-ui/icons";
+import { Edit } from "@material-ui/icons";
+import { blueGrey } from '@material-ui/core/colors';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const useStyles = makeStyles((theme) => ({
   details: {
-    paddingLeft: '10px',
-    marginBottom: '5px',
+    height: '40px',
+    margin: '10px',
     alignItems: 'center',
+    alignContent: 'center',
+    borderRadius: '5px',
+    '&:hover': {
+      backgroundColor: fade(blueGrey[700], 0.25),
+      '& $divBar': {
+        backgroundColor: theme.palette.secondary.main,
+      }
+    }
+  },
+  divBar: {
+    width: '5px',
+    height: '100%',
+    marginRight: '90px',
+    backgroundColor: 'white',
+    borderRadius: '5px',
   },
   editButton: {
     color: theme.palette.secondary.main,
@@ -38,12 +54,29 @@ export default function ActiveUsers(props) {
 
   return( 
     <Grid container item xs={12} md={12} className={classes.details}>
-      <Grid item xs={3} align="start">{ user.first_name }</Grid>
-      <Grid item xs={3} align="start">{ user.last_name }</Grid>
-      <Grid item xs={2} align="start">{ rankIdSlice(user.rank_uuid) }</Grid>
-      <Grid item xs={1} align="start">{ user.role }</Grid>
-      <Grid item xs={1} align="start">{ user.user_status }</Grid>
-      <Grid item xs={2} align="right" style={{paddingRight: '15px'}}>
+      <Grid item className={classes.divBar} />
+      <Grid item xs={3}>
+        <Typography>
+          { user.first_name }
+        </Typography>
+      </Grid>
+      <Grid item xs={3} style={{ marginLeft: '5px' }}>
+        <Typography>
+          { user.last_name }
+        </Typography>
+      </Grid>
+      {/* <Grid item xs={2} align="start">{ rankIdSlice(user.rank_uuid) }</Grid> */}
+      <Grid item xs={2} style={{ marginLeft: '5px' }}>
+        <Typography>
+          { user.role }
+        </Typography>
+      </Grid>
+      <Grid item style={{ marginLeft: '2px' }}>
+        <Typography>
+          { user.user_status }
+        </Typography>
+      </Grid>
+      <Grid item style={{ marginLeft: '30px' }}>
         <IconButton 
           className={classes.editButton}
           onClick={() => props.handleEdit(user)}
@@ -52,7 +85,6 @@ export default function ActiveUsers(props) {
           <Edit />
         </IconButton>
       </Grid>
-      <Grid item xs={12} md={12}><Divider variant='middle' /></Grid>
     </Grid>
   )
 
