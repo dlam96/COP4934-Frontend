@@ -366,13 +366,13 @@ function MasterModal(props) {
     console.log("Selected Value:", event.target.value);
     console.log("Position_uuid:", position_uuid);
     // check if pilot already selected
-    let isSelected = selectedPilots.findIndex(
-      (member) => member.airman_uuid === event.target.value
-    );
-    if (isSelected !== -1) {
-      console.log("member is not unique");
-      return;
-    }
+    // let isSelected = selectedPilots.findIndex(
+    //   (member) => member.airman_uuid === event.target.value
+    // );
+    // if (isSelected !== -1) {
+    //   console.log("member is not unique");
+    //   return;
+    // }
     let newSelectedPilots = [];
     if (selectedPilots) {
       newSelectedPilots = [...selectedPilots];

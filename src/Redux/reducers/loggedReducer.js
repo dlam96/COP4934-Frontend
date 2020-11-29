@@ -5,6 +5,8 @@ export default function loggedReducer(
     logged: false,
     username: null,
     role: null,
+    first_name: null,
+    last_name: null,
     accessToken: null,
     accessTokenCreated: null,
     accessTokenExpiresIn: null,
@@ -31,8 +33,11 @@ export default function loggedReducer(
     case LOGOUT: {
       return {
         logged: false,
+        accountUUID: null,
         username: null,
         role: null,
+        first_name: null,
+        last_name: null,
         accessToken: null,
         accessTokenCreated: null,
         accessTokenExpiresIn: null,

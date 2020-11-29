@@ -7,6 +7,8 @@ import {
   CssBaseline,
   Avatar,
   Tooltip,
+  Button,
+  Typography,
 } from "@material-ui/core";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -88,6 +90,18 @@ const useStyles = makeStyles((theme) => ({
   submitBtn: {
     paddingLeft: theme.spacing(3),
   },
+  filterFlightBtn: {
+    margin: theme.spacing(1),
+    textTransform: "none",
+    letterSpacing: 0.5,
+    fontSize: "15px",
+  },
+  filterStyle: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    // letterSpacing:
+  },
 }));
 
 function CurrentSchedule(props) {
@@ -103,6 +117,10 @@ function CurrentSchedule(props) {
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
   const [showDelete, setDelete] = useState(true);
+  const [isFiltered, setFilterFlightBool] = useState(false);
+  let eventList = props.events;
+  const [filteredEvents, setFilteredEvents] = useState(null);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -128,8 +146,8 @@ function CurrentSchedule(props) {
     var style = {
       backgroundColor: event.color,
       borderRadius: "7px",
-      opacity: 0.8,
-      color: "white",
+      opacity: 1,
+      // color: "white",
       border: "0px",
       display: "block",
     };
@@ -175,6 +193,33 @@ function CurrentSchedule(props) {
     //     console.log("Error:", error);
     //   });
   };
+
+  const handleFilterFlightSelect = () => {
+    // set filter to true and generate filtered flight object
+    if (!isFiltered) {
+      setFilterFlightBool(true);
+      // console.log("account UUID", props.accountUUID);
+      // console.log("event", eventList);
+      let filteredList = eventList.filter((obj) => {
+        for (var key in obj.crew_members) {
+          // var item = obj.crew_members[key];
+          // console.log("item", item);
+          if (obj.crew_members[key].airman_uuid === props.accountUUID) {
+            return obj.crew_members[key].airman_uuid;
+          }
+        }
+      });
+
+      console.log("filtered", filteredList);
+      setFilteredEvents(filteredList);
+
+      // console.log("filtered", filteredEvents);
+    } else {
+      setFilterFlightBool(false);
+      setFilteredEvents(null);
+    }
+  };
+
   // Randomize color for avatar
   let colors = [
     "#D50000",
@@ -208,39 +253,56 @@ function CurrentSchedule(props) {
           />
           <Grid container spacing={1}>
             <Grid item xs={12} md={12} lg={12}>
-              {/* Avatar User count */}
-              <Grid
-                item
-                container
-                xs={12}
-                justify="flex-end"
-                alignItems="baseline"
-              >
-                <AvatarGroup max={5}>
-                  {props.online_users &&
-                    props.online_users.map((item, index) => {
-                      return (
-                        <Tooltip
-                          title={`${item.first_name} ${item.last_name}`}
-                          key={item.first_name + item.last_name}
-                        >
-                          <Avatar style={{ backgroundColor: colors[index] }}>
-                            {`${item.first_name.substr(
-                              0,
-                              1
-                            )}${item.last_name.substr(0, 1)}`}
-                          </Avatar>
-                        </Tooltip>
-                      );
-                    })}
-                </AvatarGroup>
+              {/* Filter flights /Avatar User count row */}
+              <Grid item container xs={12} direction="row">
+                {/* Flight flight */}
+                <Grid item container xs={6}>
+                  <Typography className={classes.filterStyle} variant="body2">
+                    QUICK FILTERS:
+                  </Typography>
+                  <Button
+                    className={classes.filterFlightBtn}
+                    color={isFiltered ? "primary" : "default"}
+                    variant={isFiltered ? "contained" : "text"}
+                    onClick={handleFilterFlightSelect}
+                  >
+                    Only My Flights
+                  </Button>
+                </Grid>
+                {/* Avatar User Count */}
+                <Grid
+                  item
+                  container
+                  xs={6}
+                  justify="flex-end"
+                  alignItems="baseline"
+                >
+                  <AvatarGroup max={5}>
+                    {props.online_users &&
+                      props.online_users.map((item, index) => {
+                        return (
+                          <Tooltip
+                            title={`${item.first_name} ${item.last_name}`}
+                            key={item.first_name + item.last_name}
+                          >
+                            <Avatar style={{ backgroundColor: colors[index] }}>
+                              {`${item.first_name.substr(
+                                0,
+                                1
+                              )}${item.last_name.substr(0, 1)}`}
+                            </Avatar>
+                          </Tooltip>
+                        );
+                      })}
+                  </AvatarGroup>
+                </Grid>
               </Grid>
               {/* Calendar App */}
               <Paper>
                 <DragAndDropCalendar
                   selectable
                   localizer={localizer}
-                  events={props.events}
+                  events={isFiltered ? filteredEvents : props.events}
                   startAccessor="start"
                   endAccessor="end"
                   style={{ height: "82vh", width: "100%" }}
@@ -270,6 +332,9 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
-  return { online_users: state.onlineReducer };
+  return {
+    online_users: state.onlineReducer,
+    accountUUID: state.loggedReducer.accountUUID,
+  };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(CurrentSchedule);
