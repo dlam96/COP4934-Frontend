@@ -14,12 +14,9 @@ import {
   Divider,
   Container,
 } from "@material-ui/core";
-import {
-  Add,
-} from "@material-ui/icons";
-import {
-  green,
-} from '@material-ui/core/colors';
+import { Add } from "@material-ui/icons";
+import { green, grey, blueGrey } from '@material-ui/core/colors';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import { setAircraftModels, setAircrafts, setCrewPostions } from '../../Redux/actions.js';
 
@@ -36,10 +33,9 @@ import TabControlAircraft from './TabControlAircraft.js';
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    // padding: theme.spacing(2),
     minHeight: '92vh',
     maxHeight: '100%',
-    height: '100%',
+    height: '75%',
   },
   title: {
     display: 'flex',
@@ -51,47 +47,65 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   infoBoxes: {
-    height: '825px',
+    height: '775px',
     display: 'flex',
     alignItems: 'flex-end',
     justifyContent: 'center',
+  },
+  infoLabels: {
+    textAlign: 'center',
+    margin: '15px',
+    borderRadius: '3px',
+    color: 'white',
+    backgroundColor: theme.palette.primary.main,
   },
   quickInfo: {
     height: '300px',
     width: '200px',
     margin: '10px',
     borderRadius: '5px',
+    backgroundColor: fade(grey[300], 0.25),
+  },
+  countBackground: {
+    backgroundColor: fade(grey[900], 0.1),
+    borderRadius: '25%',
+    margin: '1px',
+    marginRight: '5px',
+    marginLeft: '20px', 
+    textAlign: 'center',
   },
   search: {
     height: '400px',
     width: '200px',
     margin: '10px',
     borderRadius: '5px',
+    backgroundColor: fade(grey[300], 0.25),
   },
   mainInfo: {
-    height: '825px',
+    height: '775px',
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
   mainList: {
     padding: theme.spacing(1),
     height: '715px',
-    width: '710px',
+    width: '800px',
     maxHeight: '715px',
     overflowY: 'scroll',
+    backgroundColor: fade(grey[300], 0.25),
   },
   labelBar: {
     backgroundColor: theme.palette.primary.main,
-    marginBottom: '10px', 
-    paddingLeft: '10px',
+    paddingLeft: '75px',
+    marginBottom: '5px', 
     borderRadius: '5px',
     color: 'white',
+    justifyContent: 'center',
   },
   newAircraftBt: {
     background: '#F1F1F1',
     height: '50px',
     width: '100%',
-    opacity: '40%',
     marginTop: '10px',
     opacity: '75%',
   },
@@ -105,6 +119,24 @@ const useStyles = makeStyles((theme) => ({
     width: '97%',
     opacity: '75%',
   },
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: '10px'
+    },
+    '*::-webkit-scrollbar-track': {
+      borderRadius: '10px',
+      background: fade(blueGrey[100], 0.50),
+      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.5)'
+    },
+    '*::-webkit-scrollbar-thumb': {
+      backgroundColor: fade(blueGrey[600], 0.3),
+      borderRadius: '5px',
+      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.05)',
+    },
+    '*::-webkit-scrollbar-thumb:window-inactive': {
+      backgroundColor: fade(blueGrey[300], 0.3),
+    },
+  } 
 }));
 
 function TabPanel(props) {
@@ -314,8 +346,20 @@ function Aircrafts(props) {
       })
   }
 
+  const aircraftInventory = (craft = null) => {
+    if (!craft) return;
+    let searchList = [...aircraftList]
+    return searchList.filter((item) => item.model_uuid === craft.model_uuid).length
+  }
+
+  const statusInventory = (craft = null) => {
+    if (!craft) return;
+    let searchList = [...aircraftList]
+    return searchList.filter((item) => item.status === craft.status).length
+  }
+
   return (
-    <Container maxWidth='lg'>
+    <Container maxWidth='lg' style={{ paddingLeft: '50px' }}>
       <Paper container className={classes.container} direction='column'>
 
         <Grid item className={classes.title}>
@@ -332,7 +376,7 @@ function Aircrafts(props) {
                 value={value}
               />
               :
-              <Tabs value={value} indicatorColor="primary" onChange={handleChange}>
+              <Tabs value={value} indicatorColor="secondary" onChange={handleChange}>
                 <Tab label="Aircrafts" />
                 <Tab label="Models" />
                 <Tab label="Crew" />
@@ -341,20 +385,87 @@ function Aircrafts(props) {
           </AppBar>
         </Grid>
 
-        <Grid container item direction='row'>
-
+        <Grid container item direction='row' style={{ marginTop: '30px' }}>
+          {/* Quick info and Search boxes */}
           <Grid container item md={3} direction='column' className={classes.infoBoxes}>
+            {/* Database info */}
             <Paper container item className={classes.quickInfo}>
+              <div className={classes.infoLabels}>
+                <Typography variant='subtitle2'>Summary</Typography>
+              </div>
+              <Grid container direction='row' style={{ alignItems: 'center', paddingBottom: '15px', paddingLeft: '10px' }}>
+                <Grid container item xs={8} direction='column' >
+                  <Typography variant='h6' style={{ paddingLeft: '10px', color: blueGrey[900] }}>
+                    Aircrafts
+                  </Typography>
+                  <Typography variant='caption' style={{ paddingLeft: '15px', fontStyle: 'italic' }}>
+                    HC-130J C.K. II
+                  </Typography>
+                  <Typography variant='caption' style={{ paddingLeft: '15px', fontStyle: 'italic' }}>
+                    HH-60 Pave Hawk
+                  </Typography>
+                  <Typography variant='caption' style={{ paddingLeft: '15px', fontStyle: 'italic' }}>
+                    A-10C Thunderbolt II
+                  </Typography>
+                </Grid>
 
+                <Grid container item xs={3} direction='column' style={{ paddingTop: '10px' }}>
+                  <Typography variant='caption' className={classes.countBackground}>
+                    {aircraftList.length}
+                  </Typography>
+                  <Typography variant='caption' className={classes.countBackground}>
+                    {aircraftInventory(props.aircraftModels[0])}
+                  </Typography>
+                  <Typography variant='caption' className={classes.countBackground}>
+                    {aircraftInventory(props.aircraftModels[1])}
+                  </Typography>
+                  <Typography variant='caption' className={classes.countBackground}>
+                    {aircraftInventory(props.aircraftModels[2])}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Divider variant='middle' />
+              <Grid container direction='row' style={{ alignItems: 'center', paddingTop: '10px', paddingLeft: '10px' }}>
+                <Grid container item xs={8} direction='column'>
+                  <Typography variant='h6' style={{ paddingLeft: '10px', color: blueGrey[900] }}>
+                    Availability
+                  </Typography>
+                  <Typography variant='caption' style={{ paddingLeft: '15px', fontStyle: 'italic' }}>
+                    Available
+                  </Typography>
+                  <Typography variant='caption' style={{ paddingLeft: '15px', fontStyle: 'italic' }}>
+                    Unavailable
+                  </Typography>
+                  <Typography variant='caption' style={{ paddingLeft: '15px', fontStyle: 'italic' }}>
+                    Maintenance
+                  </Typography>
+                </Grid>
+                <Grid container item xs={3} direction='column' style={{ paddingTop: '30px' }}>
+                  <Typography variant='caption' className={classes.countBackground}>
+                    {statusInventory({ status: 'Available' })}
+                  </Typography>
+                  <Typography variant='caption' className={classes.countBackground}>
+                    {statusInventory({ status: 'Unavailable' })}
+                  </Typography>
+                  <Typography variant='caption' className={classes.countBackground}>
+                    {statusInventory({ status: 'Maintenance' })}
+                  </Typography>
+                </Grid>
+
+              </Grid>
             </Paper>
+            {/* Search system */}
             <Paper container item className={classes.search}>
-
+              <div className={classes.infoLabels}>
+                <Typography variant='subtitle2'>Search</Typography>
+              </div>
             </Paper>
           </Grid>
 
           <Grid container item md={9} direction='column' className={classes.mainInfo}>
-
-            {/* Tab 1 Active Aircrafts */}
+            {/* ----------------------
+            Tab 1 Active Aircrafts
+            ---------------------- */}
             {edit ? 
               <TabPanel value={value} index={0}>
                 <EditAircraft
@@ -375,15 +486,15 @@ function Aircrafts(props) {
                   </>
                   :     
                   <> {/* Active Aircraft List*/}
-                    <Paper className={classes.mainList}>
-                      <Grid container item xs={12} md={12} className={classes.labelBar}>
-                        <Grid item xs={2}>
+                    <Paper container direction='column' className={classes.mainList}>
+                      <Grid container item className={classes.labelBar}>
+                        <Grid item xs={3}>
                           <Typography variant='subtitle1'>Aircraft ID</Typography>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
                           <Typography variant='subtitle1'>Aircraft Model</Typography>
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid item xs={3} style={{ marginLeft: '60px' }}>
                           <Typography variant='subtitle1'>Status</Typography>
                         </Grid>
                       </Grid>
@@ -398,7 +509,7 @@ function Aircrafts(props) {
                       ))}
 
                       {/* New Aircraft button */}
-                      <Grid container item xs={12} md={12}>
+                      <Grid container item>
                         <Paper className={classes.newAircraftBt}>
                           <Button 
                             startIcon={<Add />}
@@ -417,8 +528,9 @@ function Aircrafts(props) {
                 }
               </TabPanel>  
             }
-            
-            {/* Tab 2 Aircraft Models */}
+            {/* ---------------------
+            Tab 2 Aircraft Models
+            --------------------- */}
             {edit ?
               <TabPanel value={value} index={1}>
                 <EditAircraftModel
@@ -474,8 +586,9 @@ function Aircrafts(props) {
                 }
               </TabPanel>  
             } 
-
-            {/* Tab 3 Aircraft Crew */}
+            {/* -------------------
+            Tab 3 Aircraft Crew
+            ------------------- */}
             {edit ?
               <TabPanel value={value} index={2}>
                 <EditCrew
@@ -527,7 +640,6 @@ function Aircrafts(props) {
               </TabPanel>  
             }
           </Grid>
-
         </Grid>
         
       </Paper>

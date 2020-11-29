@@ -100,7 +100,7 @@ export default function NewAircraft(props) {
               <option value="">Select</option>
               <option value="Unavailable">Unavailable</option>
               <option value="Available">Available</option>
-              <option value="Maitenance">Maitenance</option>
+              <option value="Maintenance">Maintenance</option>
             </Select>
           </Grid>
         </Grid>
