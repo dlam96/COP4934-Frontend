@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: '5px',
     alignItems: 'center',
   },
+  editButton: {
+    color: theme.palette.secondary.main,
+  },
 }));
 
 export default function ActiveAircrafts(props) {
@@ -34,7 +37,7 @@ export default function ActiveAircrafts(props) {
       <Grid item xs={2} > { aircraft.status } </Grid>
       <Grid item xs={4} align='right' style={{paddingRight: '30px'}}>
         <IconButton 
-          color='primary'
+          className={classes.editButton}
           onClick={() => props.handleEdit(aircraft)}
           align="right"
         >
