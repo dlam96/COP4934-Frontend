@@ -70,7 +70,7 @@ export const approveAirman = (airman) => ({
 });
 
 export const editAirman = (airman) => ({
-  tpye: EDITAIRMAN,
+  type: EDITAIRMAN,
   payload: {
     airman: airman,
   },

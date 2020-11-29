@@ -10,8 +10,10 @@ export default function (state = null, action) {
       console.log("editting got obj:", action.payload);
       let newState = [...state];
       for (let i = 0; i < newState.length; i++) {
-        if (newState[i].account_uuid === action.payload.account_uuid) {
+        if (newState[i].account_uuid === action.payload.airman.account_uuid) {
+          console.log("found user to edit");
           newState[i] = { ...newState[i], ...action.payload.airman };
+          break;
         }
       }
       return newState;
@@ -19,7 +21,11 @@ export default function (state = null, action) {
 
     case APPROVEAIRMAN: {
       console.log("approving got obj:", action.payload);
-      return [...state, action.payload.airman];
+      if (!action.payload.airman.airmen.length) {
+        return [...state, action.payload.airman.airmen];
+      } else {
+        return state.concat(action.payload.airman.airmen);
+      }
     }
 
     default: {
