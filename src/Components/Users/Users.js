@@ -19,7 +19,7 @@ import ActiveUsers from "./ActiveUsers";
 import PendingUsers from "./PendingUsers";
 import EditUser from "./EditUser.js";
 import TabControlUser from "./TabControlUser.js";
-import { setAirmen, setPending } from "../../Redux/actions";
+import { setPending } from "../../Redux/actions";
 import { connect } from "react-redux";
 import { WebSocketFrame } from "../WebSocket/WebSocket.js";
 
@@ -169,17 +169,6 @@ function Users(props) {
     if (!users) return;
     console.log("Approve users", users);
     WebSocketFrame.airmanHandler("approve", { users });
-    // axios
-    //   .patch("/user/approval/", {
-    //     approve: users,
-    //   })
-    //   .then((response) => {
-    //     console.log("Response from Approve All:", response);
-    //     setUserList(users);
-    //   })
-    //   .catch((error) => {
-    //     console.log("Error:", error);
-    //   });
   };
 
   const handleEdit = (user) => {
@@ -549,7 +538,6 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-  airmenAction: setAirmen,
   pendingAction: setPending,
   // unapprovedUsersAction: setUnapprovedUsers,
 };

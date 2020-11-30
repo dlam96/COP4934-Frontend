@@ -7,6 +7,7 @@ export default function (state = null, action) {
         users: [...action.payload.airmen],
         pending: state ? state.pending ? Array.from(state.pending) : [] : [],
       }
+      break;
     }
 
     case SETPENDING: {
@@ -14,6 +15,7 @@ export default function (state = null, action) {
         users: state ? state.pending ? Array.from(state.users) : [] : [],
         pending: [...action.payload.pending]
       }
+      break;
     }
 
     case EDITAIRMAN: {
@@ -29,33 +31,30 @@ export default function (state = null, action) {
         }
       }
       return newState;
+      break;
     }
 
     case APPROVEAIRMAN: {
       console.log("approving got obj:", action.payload);
       let newState = {};
-      newState.users = Array.from(state.users);
+      console.log("State fucking now:", state.users);
       newState.pending = Array.from(state.pending);
-      console.log("Got here wtf!!!");
-      if (!action.payload.airman.airmen.length) {
-        console.log("Should not reach this spot");
-        newState.users.push(action.payload.airman.airmen);
-      } else {
-        console.log("newState.users", newState.users);
-        newState.users.concat(action.payload.airman.airmen);
-        console.log("newState.users after change", newState.users);
-        let removePendingUsers = [];
-        for (const airman of action.payload.airman.airmen) {
-          removePendingUsers.push(airman.account_uuid);
-        }
-        newState.pending = newState.pending.filter((item) => !removePendingUsers.includes(item.account_uuid));
+      newState.users = Array.from(state.users);
+      //newState.users = [...newState.users, ...action.payload.airman.airmen];
+      console.log("newState.users after change", newState.users);
+      let removePendingUsers = [];
+      for (const airman of action.payload.airman.airmen) {
+        removePendingUsers.push(airman.account_uuid);
       }
+      newState.pending = newState.pending.filter((item) => !removePendingUsers.includes(item.account_uuid));
       console.log("Got here wtf22222222!!!");
       return newState;
+      break;
     }
 
     default: {
       return state;
+      break;
     }
   }
 }

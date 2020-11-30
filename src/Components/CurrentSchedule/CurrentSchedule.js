@@ -18,14 +18,6 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import CustomToolbar from "../CustomToolbar/CustomToolbar.js";
 import MasterModal from "../MasterModal/MasterModal.js";
-import {
-  setAircrafts,
-  setLocations,
-  setCrewPostions,
-  setAirmen,
-  setAircraftModels,
-  setFlights,
-} from "../../Redux/actions.js";
 
 // import userData from "./userData.js";
 import { AvatarGroup } from "@material-ui/lab";
@@ -322,19 +314,10 @@ function CurrentSchedule(props) {
   );
 }
 
-const mapDispatchToProps = {
-  aircraftAction: setAircrafts,
-  locationAction: setLocations,
-  crewPositionAction: setCrewPostions,
-  airmenAction: setAirmen,
-  aircraftModelAction: setAircraftModels,
-  flightAction: setFlights,
-};
-
 const mapStateToProps = (state) => {
   return {
     online_users: state.onlineReducer,
     accountUUID: state.loggedReducer.accountUUID,
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(CurrentSchedule);
+export default connect(mapStateToProps, null)(CurrentSchedule);
