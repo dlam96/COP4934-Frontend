@@ -70,7 +70,7 @@ function Navbar(props) {
   };
 
   const handleLogout = () => {
-    WebSocketFrame.closeWebsocket();
+    // WebSocketFrame.closeWebsocket();
     props.logoutAction();
     handleClose();
   };
