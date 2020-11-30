@@ -90,16 +90,41 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     height: '715px',
     width: '800px',
+    minWidth: '600px',
+    maxWidth: '800px',
     maxHeight: '715px',
-    overflowY: 'scroll',
     backgroundColor: fade(grey[300], 0.25),
+    flexGrow: '1',
+  },
+  modelList: {
+    padding: theme.spacing(1),
+    height: '715px',
+    width: '800px',
+    minWidth: '600px',
+    maxWidth: '800px',
+    maxHeight: '715px',
+    overflowY: 'auto',
+    backgroundColor: fade(grey[300], 0.25),
+    flexGrow: '1',
+  },
+  crewList: {
+    padding: theme.spacing(1),
+    height: '715px',
+    width: '800px',
+    minWidth: '600px',
+    maxWidth: '800px',
+    maxHeight: '715px',
+    overflowY: 'auto',
+    backgroundColor: fade(grey[300], 0.25),
+    flexGrow: '1',
   },
   labelBar: {
     backgroundColor: theme.palette.primary.main,
-    paddingLeft: '75px',
+    padding: '1px',
     marginBottom: '5px', 
     borderRadius: '5px',
     color: 'white',
+    justifyContent: 'space-around',
     justifyContent: 'center',
   },
   newAircraftBt: {
@@ -408,7 +433,6 @@ function Aircrafts(props) {
                     A-10C Thunderbolt II
                   </Typography>
                 </Grid>
-
                 <Grid container item xs={3} direction='column' style={{ paddingTop: '10px' }}>
                   <Typography variant='caption' className={classes.countBackground}>
                     {aircraftList.length}
@@ -451,7 +475,6 @@ function Aircrafts(props) {
                     {statusInventory({ status: 'Maintenance' })}
                   </Typography>
                 </Grid>
-
               </Grid>
             </Paper>
             {/* Search system */}
@@ -488,26 +511,28 @@ function Aircrafts(props) {
                   <> {/* Active Aircraft List*/}
                     <Paper container direction='column' className={classes.mainList}>
                       <Grid container item className={classes.labelBar}>
-                        <Grid item xs={3}>
-                          <Typography variant='subtitle1'>Aircraft ID</Typography>
+                        <Grid item xs={1} />
+                        <Grid item xs={4}>
+                          <Typography variant='subtitle1'>Model</Typography>
                         </Grid>
                         <Grid item xs={3}>
-                          <Typography variant='subtitle1'>Aircraft Model</Typography>
+                          <Typography variant='subtitle1'>Tail Code</Typography>
                         </Grid>
-                        <Grid item xs={3} style={{ marginLeft: '60px' }}>
+                        <Grid item xs={2}>
                           <Typography variant='subtitle1'>Status</Typography>
                         </Grid>
                       </Grid>
-                      <Divider variant='fullWidth'/>
-                      {aircraftList.map(aircraft => (
-                        <ActiveAircrafts
-                          aircraft={aircraft}
-                          aircraftModels={props.aircraftModels}
-                          handleEdit={handleEdit}
-                          key={aircraft.aircraft_uuid}
-                        />
-                      ))}
-
+                      <Divider variant='fullWidth' style={{ marginBottom: '5px' }}/>
+                      <Grid container item style={{ overflowY: 'auto', maxHeight: '600px' }}>
+                        {aircraftList.map(aircraft => (
+                          <ActiveAircrafts
+                            aircraft={aircraft}
+                            aircraftModels={props.aircraftModels}
+                            handleEdit={handleEdit}
+                            key={aircraft.aircraft_uuid}
+                          />
+                        ))}
+                      </Grid>
                       {/* New Aircraft button */}
                       <Grid container item>
                         <Paper className={classes.newAircraftBt}>
@@ -552,9 +577,8 @@ function Aircrafts(props) {
                   </>
                   :
                   <> {/* Aircraft Model List */}
-                    <Paper data-testid='aircrafts-models' className={classes.mainList}>
+                    <Paper data-testid='aircrafts-models' className={classes.modelList}>
                       <Grid container className={classes.cardList}>
-
                         {props.aircraftModels.map((model, index) => (
                           <Grid item md={6} key={index} style={{height: '185px'}}>
                             <AircraftModels
@@ -579,7 +603,6 @@ function Aircrafts(props) {
                             />
                           </Paper>
                         </Grid>
-
                       </Grid>
                     </Paper>
                   </>
@@ -607,7 +630,7 @@ function Aircrafts(props) {
                   </>  
                   :
                   <> {/* Aircraft Crew List */} 
-                    <Paper data-testid='aircrafts-crew' className={classes.mainList}>
+                    <Paper data-testid='aircrafts-crew' className={classes.crewList}>
                       <Grid container className={classes.cardList}>
                         {props.crewPositions.map((pos, index) => (
                           <Grid item md={6} key={index} style={{height: '185px'}}>

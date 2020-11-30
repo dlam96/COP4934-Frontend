@@ -80,18 +80,19 @@ const useStyles = makeStyles((theme) => ({
   },
   userList: {
     padding: theme.spacing(1),
-    height: "715px",
-    width: "800px",
-    maxHeight: "715px",
-    overflowY: "scroll",
+    height: '715px',
+    width: '800px',
+    maxHeight: '715px',
     backgroundColor: fade(grey[300], 0.25),
   },
   labelBar: {
     backgroundColor: theme.palette.primary.main,
-    marginBottom: "10px",
-    paddingLeft: "10px",
-    borderRadius: "5px",
-    color: "white",
+    padding: '1px',
+    marginBottom: '5px', 
+    borderRadius: '5px',
+    color: 'white',
+    justifyContent: 'space-around',
+    justifyContent: 'center',
   },
   newUserBt: {
     background: "#F1F1F1",
@@ -99,12 +100,6 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     opacity: "40%",
     marginTop: "10px",
-  },
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column",
   },
   fixedHeight: {
     height: 800,
@@ -158,9 +153,10 @@ function Users(props) {
   const [value, setValue] = useState(0);
   const [edit, setEdit] = useState(false);
   const [editUser, setEditUser] = useState(null);
-  // const [addNew, setAddNew] = useState(false);
   const [approveUserList, setApproveUserList] = useState([]);
+
   console.log("Props airmen", props.airmen);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -241,7 +237,6 @@ function Users(props) {
         <Grid item className={classes.title}>
           <Typography variant="h2">Users</Typography>
         </Grid>
-
         <Grid item style={{ height: "45px" }}>
           <AppBar position="static" className={classes.appBar}>
             {edit ? (
@@ -439,30 +434,33 @@ function Users(props) {
                     md={12}
                     className={classes.labelBar}
                   >
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                       <Typography variant="subtitle1">First Name</Typography>
                     </Grid>
                     <Grid item xs={3}>
                       <Typography variant="subtitle1">Last Name</Typography>
                     </Grid>
                     <Grid item xs={2}>
-                      <Typography variant="subtitle1">Rank</Typography>
+                    <Typography variant="subtitle1">Role</Typography>
                     </Grid>
-                    <Grid item xs={1}>
-                      <Typography variant="subtitle1">Role</Typography>
-                    </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={2}>
                       <Typography variant="subtitle1">Status</Typography>
                     </Grid>
                   </Grid>
-                  <Divider variant="fullWidth" />
-                  {props.airmen.map((user) => (
-                    <ActiveUsers
-                      user={user}
-                      handleEdit={handleEdit}
-                      key={user.account_uuid}
-                    />
-                  ))}
+                  <Divider variant='fullWidth' style={{ marginBottom: '5px' }} />
+                  <Grid 
+                    container 
+                    item
+                    style={{ display: 'flex', overflowY: 'auto', maxHeight: '650px' }}
+                  >
+                    {props.airmen.map((user) => (
+                      <ActiveUsers
+                        user={user}
+                        handleEdit={handleEdit}
+                        key={user.account_uuid}
+                      />
+                    ))}
+                  </Grid>
                 </Paper>
               </TabPanel>
             )}
@@ -484,9 +482,6 @@ function Users(props) {
                     <Typography variant="subtitle1">Last Name</Typography>
                   </Grid>
                   <Grid item xs={2}>
-                    <Typography variant="subtitle1">Rank</Typography>
-                  </Grid>
-                  <Grid item xs={1}>
                     <Typography variant="subtitle1">Role</Typography>
                   </Grid>
                   <Grid item xs={1}>
