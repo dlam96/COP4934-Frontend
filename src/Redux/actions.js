@@ -44,10 +44,6 @@ export const logout = () => ({
   type: LOGOUT,
 });
 
-export const gotEssentialPayload = () => ({
-  type: GOTINITIALESSENTIALREQUEST,
-});
-
 export const onDarkMode = () => ({
   type: ONDARKMODE,
 });

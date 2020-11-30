@@ -1,4 +1,5 @@
-import { LOGIN, LOGOUT, GOTINITIALESSENTIALREQUEST } from "../actionTypes.js";
+import { LOGIN, LOGOUT } from "../actionTypes.js";
+import { WebSocketFrame } from "../../Components/WebSocket/WebSocket.js";
 
 export default function loggedReducer(
   state = {
@@ -31,6 +32,7 @@ export default function loggedReducer(
     }
 
     case LOGOUT: {
+      WebSocketFrame.closeWebsocket();
       return {
         logged: false,
         accountUUID: null,
@@ -42,13 +44,6 @@ export default function loggedReducer(
         accessTokenCreated: null,
         accessTokenExpiresIn: null,
         gotEssentialRequest: false,
-      };
-    }
-
-    case GOTINITIALESSENTIALREQUEST: {
-      return {
-        ...state,
-        gotEssentialRequest: true,
       };
     }
 

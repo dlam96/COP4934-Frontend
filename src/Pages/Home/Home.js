@@ -66,8 +66,8 @@ function Home(props) {
 
 
   useEffect(() => {
-    let firstDay = moment().utc().startOf("month").format();
-    let lastDay = moment().utc().endOf("month").format();
+    let firstDay = moment().utc().subtract(1,'months').startOf("month").format();
+    let lastDay = moment().utc().add(1,'months').endOf("month").format();
 
     console.log("FirstDay", firstDay);
     console.log("LastDay", lastDay);
@@ -81,7 +81,7 @@ function Home(props) {
         aircraftModelAction(response.data.aircraft_models);
         crewPositionAction(response.data.crew_positions);
 
-        // Since backend gives us UTC, we can easily convert UCT to our browser time zone just by converting it to a Date Object
+        // Since backend gives us UTC, we can easily convert UTC to our browser time zone just by converting it to a Date Object
         response.data.flights.forEach((item) => {
           item.start = moment(item.start).toDate();
           item.end = moment(item.end).toDate();

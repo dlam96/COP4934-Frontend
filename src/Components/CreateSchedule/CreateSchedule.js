@@ -29,7 +29,7 @@ import MomentUtils from "@date-io/moment";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 
 import PreviewToolbar from "./PreviewToolbar.js";
-import { TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { TimePicker, DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 
 // Redux
 import { connect } from "react-redux";
@@ -181,28 +181,17 @@ function CreateSchedule(props) {
         if (!aircraftModels[model].blacklist)
           whitelist_models.push(aircraftModels[model].model_uuid);
       }
-
+      console.log("Sending Start", startDate);
+      console.log("Sending End:", endDate);
       WebSocketFrame.generationHandler("generate", {
-        start: startDate,
-        end: endDate,
+        start: startDate.toLocaleString(),
+        end: endDate.toLocaleString(),
         duration: flightDuration,
         whitelist_models: whitelist_models,
         blacklist_airmen: flightCrew,
       });
       setSuccess(true);
       setLoading(false);
-      // timer.current = window.setTimeout(() => {
-      //   setSuccess(true);
-      //   setLoading(false);
-      // }, 2500);
-    }
-    if (props.schedule) {
-      let generatedSchedule = [...props.schedule.flights];
-      generatedSchedule.forEach((item) => {
-        item.start = moment(item.start).toDate();
-        item.end = moment(item.end).toDate();
-      });
-      setGeneratedSchedule(generatedSchedule);
     }
   };
 
@@ -232,6 +221,18 @@ function CreateSchedule(props) {
   useEffect(() => {
     // console.log("Airmen", ...propsAirmen);
   }, [propsAirmen]);
+
+
+  useEffect(() => {
+    if (props.schedule) {
+      let generatedSchedule = [...props.schedule.flights];
+      generatedSchedule.forEach((item) => {
+        item.start = moment(item.start).toDate();
+        item.end = moment(item.end).toDate();
+      });
+      setGeneratedSchedule(generatedSchedule);
+    }
+  }, [props.schedule])
 
   const eventStyleGetter = (event) => {
     // console.log("prop e", event);
@@ -277,6 +278,15 @@ function CreateSchedule(props) {
               <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils}>
                 {/* Use Format for visual formatting */}
                 <Grid>
+                  <DatePicker
+                    autoOk
+                    disableToolbar
+                    label="Start Date"
+                    variant="inline"
+                    value={startDate}
+                    onChange={(date) => handleStartDateSelect(date)}
+                    className={classes.largeDateStyle}
+                  />
                   <TimePicker
                     autoOk
                     ampm={false}
@@ -285,6 +295,15 @@ function CreateSchedule(props) {
                     value={startDate}
                     onChange={(date) => handleStartDateSelect(date)}
                     className={classes.timeStyle}
+                  />
+                  <DatePicker
+                    autoOk
+                    disableToolbar
+                    label="End Date"
+                    variant="inline"
+                    value={endDate}
+                    onChange={(date) => handleEndDateSelect(date)}
+                    className={classes.largeDateStyle}
                   />
                   <TimePicker
                     autoOk
@@ -458,6 +477,7 @@ function CreateSchedule(props) {
               events={generatedSchedule}
               startAccessor="start"
               endAccessor="end"
+              date={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)}
               style={{ height: "82vh", width: "100%" }}
               defaultView="week"
               components={{ toolbar: PreviewToolbar }}
