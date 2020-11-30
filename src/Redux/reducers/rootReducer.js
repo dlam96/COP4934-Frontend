@@ -12,7 +12,7 @@ import rankReducer from "./rankReducer.js";
 import aircraftstatusReducer from "./aircraftstatusReducer.js";
 import userstatusReducer from "./userstatusReducer.js";
 import onlineReducer from "./onlineReducer";
-
+import generationReducer from "./generationReducer";
 
 export default combineReducers({
   darkModeReducer,
@@ -27,4 +27,5 @@ export default combineReducers({
   aircraftstatusReducer,
   userstatusReducer,
   onlineReducer,
+  generationReducer,
 });

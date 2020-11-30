@@ -23,6 +23,7 @@ import {
   DELETEFLIGHT,
   SETONLINE,
   SETPENDING,
+  SETSCHEDULE,
 } from "./actionTypes.js";
 
 export const login = (loginObject) => ({
@@ -66,9 +67,9 @@ export const setAirmen = (airmen) => ({
 export const setPending = (pending) => ({
   type: SETPENDING,
   payload: {
-    pending: pending
-  }
-})
+    pending: pending,
+  },
+});
 
 export const approveAirman = (airman) => ({
   type: APPROVEAIRMAN,
@@ -189,5 +190,13 @@ export const setOnline = (online) => ({
   type: SETONLINE,
   payload: {
     online: online,
+  },
+});
+
+// generation action
+export const setSchedule = (schedule) => ({
+  type: SETSCHEDULE,
+  payload: {
+    schedule: schedule,
   },
 });

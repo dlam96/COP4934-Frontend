@@ -24,8 +24,9 @@ import clsx from "clsx";
 // calendar imports
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
-import events from "./event.js";
+// import events from "./event.js";
 import MomentUtils from "@date-io/moment";
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 
 import PreviewToolbar from "./PreviewToolbar.js";
 import { TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -34,6 +35,8 @@ import { TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { connect } from "react-redux";
 
 import { WebSocketFrame } from "../WebSocket/WebSocket.js";
+
+const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -82,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
   },
   buttonWrapper: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
   },
 }));
 
@@ -91,7 +94,7 @@ function CreateSchedule(props) {
   // Loading variables
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
-  const timer = React.useRef();
+  // const timer = React.useRef();
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const localizer = momentLocalizer(moment);
@@ -104,8 +107,10 @@ function CreateSchedule(props) {
   let propsAircraftModels = props.aircraft_models;
   const [aircraftModels, setAircraftModels] = useState(propsAircraftModels);
   let propsAirmen = props.airmen;
-  const [flightCrew, setFlightCrew] = useState(propsAirmen);
+  const [flightCrew, setFlightCrew] = useState([]);
   const [checked, setChecked] = React.useState([1]);
+  const [generatedSchedule, setGeneratedSchedule] = useState([]);
+  // console.log("schedule", props.schedule);
 
   // Calender functions
   const handleStartDateSelect = (date) => {
@@ -131,10 +136,10 @@ function CreateSchedule(props) {
     console.log("aircraft delete", data);
     let newAirCraftModel = [...aircraftModels];
 
-    const index = aircraftModels.findIndex(
+    const index = newAirCraftModel.findIndex(
       (obj) => obj.model_name === data.model_name
     );
-    console.log("index", index);
+    // console.log("index", index);
     // // // does exit then remove from array
     if (!newAirCraftModel[index].blacklist) {
       console.log("adding aircraft to blacklist");
@@ -144,38 +149,74 @@ function CreateSchedule(props) {
       console.log("removing aircraft from blacklist");
       newAirCraftModel[index].blacklist = false;
     }
+    console.log("aircraft models", newAirCraftModel);
     setAircraftModels(newAirCraftModel);
   };
 
   const handleAirCrewToggle = (value) => () => {
+    let blacklist_airmen = [...flightCrew];
     const currentIndex = checked.indexOf(value);
+
     const newChecked = [...checked];
     if (currentIndex === -1) {
       newChecked.push(value);
+      blacklist_airmen.push(value.account_uuid);
     } else {
       newChecked.splice(currentIndex, 1);
+      blacklist_airmen.splice(currentIndex, 1);
     }
 
     setChecked(newChecked);
+    setFlightCrew(blacklist_airmen);
   };
 
   const handleGenerateSchedule = (event) => {
+    // console.log("generate event", event);
     if (!loading) {
       setSuccess(false);
       setLoading(true);
-      WebSocketFrame.generationHandler("generate", {});
-      timer.current = window.setTimeout(() => {
-        setSuccess(true);
-        setLoading(false);
-      }, 2500);
+
+      let whitelist_models = [];
+      for (let model in aircraftModels) {
+        if (!aircraftModels[model].blacklist)
+          whitelist_models.push(aircraftModels[model].model_uuid);
+      }
+
+      WebSocketFrame.generationHandler("generate", {
+        start: startDate,
+        end: endDate,
+        duration: flightDuration,
+        whitelist_models: whitelist_models,
+        blacklist_airmen: flightCrew,
+      });
+      setSuccess(true);
+      setLoading(false);
+      // timer.current = window.setTimeout(() => {
+      //   setSuccess(true);
+      //   setLoading(false);
+      // }, 2500);
+    }
+    if (props.schedule) {
+      let generatedSchedule = [...props.schedule.flights];
+      generatedSchedule.forEach((item) => {
+        item.start = moment(item.start).toDate();
+        item.end = moment(item.end).toDate();
+      });
+      setGeneratedSchedule(generatedSchedule);
     }
   };
 
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(timer.current);
-    };
-  }, []);
+  const moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
+    // console.log("Moving", event);
+    // removes event from current events
+    const updatedEvents = generatedSchedule.filter(
+      (item) => item.flight_uuid !== event.flight_uuid
+    );
+    // adds the new event w/ updated parameters
+    const updatedEvent = { ...event, start, end, allDay: droppedOnAllDaySlot };
+    updatedEvents.push(updatedEvent);
+    setGeneratedSchedule(updatedEvents);
+  };
 
   // add blacklist object to aircraftmodels array
   useEffect(() => {
@@ -192,17 +233,20 @@ function CreateSchedule(props) {
     // console.log("Airmen", ...propsAirmen);
   }, [propsAirmen]);
 
-  // useEffect(() => {
-  //   if (propsAircraftModels) {
-  //     let modelsObj = {};
-  //     for (const model of propsAircraftModels) {
-  //       modelsObj[model.model_uuid] = model;
-  //     }
-  //     // setAircraftModels(modelsObj);
-  //     setAircraftModels(propsAircraftModels);
-  //     // console.log("aircraft models", aircraftModels);
-  //   }
-  // }, [propsAircraftModels]);
+  const eventStyleGetter = (event) => {
+    // console.log("prop e", event);
+    var style = {
+      backgroundColor: event.color,
+      borderRadius: "7px",
+      opacity: 1,
+      // color: "white",
+      border: "0px",
+      display: "block",
+    };
+    return {
+      style: style,
+    };
+  };
 
   return (
     <Container
@@ -356,9 +400,11 @@ function CreateSchedule(props) {
             <Grid container>
               <Grid item xs={12}>
                 <List className={classes.listStyle} dense>
-                  {flightCrew.map((value, index) => {
+                  {propsAirmen.map((value, index) => {
                     return (
-                      <ListItem>
+                      <ListItem
+                        key={index + value.first_name + value.last_name}
+                      >
                         <ListItemText
                           id={index}
                           primary={`${value.first_name} ${value.last_name}`}
@@ -386,7 +432,7 @@ function CreateSchedule(props) {
             <Grid container direction="row" className={classes.buttonWrapper}>
               <Chip
                 label="Generate Schedule"
-                avatar={loading && <CircularProgress size={20} />}
+                avatar={loading ? <CircularProgress size={20} /> : null}
                 clickable
                 style={{ marginRight: 5 }}
                 onClick={handleGenerateSchedule}
@@ -406,15 +452,17 @@ function CreateSchedule(props) {
         {/* Preview window */}
         <Grid item xs={12} md={8} lg={8}>
           <Paper className={fixedHeightPaper}>
-            <Calendar
-              selectable
+            <DragAndDropCalendar
+              // selectable
               localizer={localizer}
-              events={events}
+              events={generatedSchedule}
               startAccessor="start"
               endAccessor="end"
               style={{ height: "82vh", width: "100%" }}
               defaultView="week"
               components={{ toolbar: PreviewToolbar }}
+              eventPropGetter={eventStyleGetter}
+              onEventDrop={moveEvent}
             />
           </Paper>
         </Grid>
@@ -427,6 +475,7 @@ const mapStateToProps = (state) => {
   return {
     aircraft_models: state.aircraftmodelReducer,
     airmen: state.airmenReducer.users,
+    schedule: state.generationReducer,
   };
 };
 

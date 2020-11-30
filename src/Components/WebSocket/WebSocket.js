@@ -10,6 +10,7 @@ import {
   setOnline,
   editAirman,
   approveAirman,
+  setSchedule,
 } from "../../Redux/actions.js";
 
 export class WebSocketFrame {
@@ -170,6 +171,7 @@ export class WebSocketFrame {
           switch (action) {
             case "generate":
               console.log("generating", message);
+              props.setScheduleAction(message);
               break;
             default:
               console.log("Websocket: generation action not supported", action);
@@ -225,6 +227,7 @@ const mapDispatchToProps = {
   editAirmanAction: editAirman,
   approveAirmanAction: approveAirman,
   setOnlineAction: setOnline,
+  setScheduleAction: setSchedule,
 };
 const mapStateToProps = (state) => {
   return {
