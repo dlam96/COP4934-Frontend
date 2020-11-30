@@ -1,18 +1,18 @@
-import { SETAIRMEN, EDITAIRMAN, APPROVEAIRMAN } from "../actionTypes.js";
+import { SETAIRMEN, EDITAIRMAN, APPROVEAIRMAN, SETPENDING } from "../actionTypes.js";
 
 export default function (state = null, action) {
   switch (action.type) {
     case SETAIRMEN: {
       return {
         users: [...action.payload.airmen],
-        pending: [...state.pending]
+        pending: state ? state.pending ? Array.from(state.pending) : [] : []
       }
     }
 
     case SETPENDING: {
       return {
         users: Array.from(state.users),
-        pending; [...action.payload.pending]
+        pending: [...action.payload.pending]
       }
     }
 
