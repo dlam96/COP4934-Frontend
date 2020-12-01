@@ -16,7 +16,7 @@ import {
   Message,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 
 const drawerWidth = 240;
@@ -44,6 +44,7 @@ function Sidebar(props) {
   const classes = useStyles();
   const history = useHistory();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [reloaded, setReloaded] = React.useState(false);
 
   const routes = [
     { routeName: "Schedule", path: "/Home/Schedule", icon: "CalendarToday" },
@@ -79,9 +80,26 @@ function Sidebar(props) {
   };
 
   const handleClick = (path, index) => {
+    console.log("click index", index);
     setSelectedIndex(index);
     history.push(path);
   };
+
+  const location = useLocation();
+  React.useEffect(() => {
+    if (reloaded) return;
+    console.log("current selectIndex", selectedIndex);
+    for (let index in routes) {
+      if (routes[index].path === location.pathname) {
+        console.log("currently in", location.pathname, "index", index);
+        setSelectedIndex(Number(index));
+      }
+    }
+  }, [selectedIndex, reloaded]);
+
+  React.useEffect(() => {
+    setReloaded(true);
+  }, []);
 
   return (
     <Drawer
