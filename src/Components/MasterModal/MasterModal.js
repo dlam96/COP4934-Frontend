@@ -245,6 +245,7 @@ function MasterModal(props) {
     }
   }, [props.selectedEvent, propsLocations, aircrafts]);
 
+  // Loads props location into our inner state locations
   useEffect(() => {
     if (propsLocations) {
       setLocations(
@@ -258,6 +259,7 @@ function MasterModal(props) {
     }
   }, [propsLocations]);
 
+  // Loads props Aircraft Models into our inner state Aircraft Models (Hash Table, key: model_uuid, value: model object)
   useEffect(() => {
     if (propsAircraftModels) {
       let modelsObj = {};
@@ -268,6 +270,7 @@ function MasterModal(props) {
     }
   }, [propsAircraftModels]);
 
+  // Loads props Crew Positions into our inner state Positions (Hash Table, key: crew_position_uuid, value: crew_position object)
   useEffect(() => {
     if (propsCrewPositions) {
       let positions = {};

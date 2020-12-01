@@ -18,6 +18,7 @@ import {
   SETFLIGHTS,
   SETCREWPOSITION,
   SETRANKS,
+  SETMETAPOSITIONS,
   SETAIRCRAFTSTATUS,
   SETUSERSTATUS,
   ADDLOCATION,
@@ -156,6 +157,13 @@ export const setRanks = (ranks) => ({
     rank: ranks,
   },
 });
+
+export const setMetaPositions = (metaPositions) => ({
+  type: SETMETAPOSITIONS,
+  payload: {
+    metaPositions: metaPositions
+  }
+})
 
 export const setAircraftStatus = (aircraftStatus) => ({
   type: SETAIRCRAFTSTATUS,

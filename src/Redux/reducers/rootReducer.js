@@ -14,6 +14,7 @@ import userstatusReducer from "./userstatusReducer.js";
 import onlineReducer from "./onlineReducer";
 import generationReducer from "./generationReducer";
 import commitScheduleReducer from "./commitScheduleReducer";
+import metaPositionReducer from "./metaPositionReducer";
 
 export default combineReducers({
   darkModeReducer,
@@ -30,4 +31,5 @@ export default combineReducers({
   onlineReducer,
   generationReducer,
   commitScheduleReducer,
+  metaPositionReducer,
 });

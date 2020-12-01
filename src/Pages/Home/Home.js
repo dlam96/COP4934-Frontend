@@ -16,6 +16,7 @@ import {
   setAirmen,
   setAircraftModels,
   setFlights,
+  setMetaPositions,
 } from "../../Redux/actions.js";
 import axios from "axios";
 import moment from "moment";
@@ -62,6 +63,7 @@ function Home(props) {
     airmenAction,
     aircraftModelAction,
     flightAction,
+    metaPositionAction
   } = props;
 
 
@@ -80,6 +82,7 @@ function Home(props) {
         airmenAction(response.data.airmen);
         aircraftModelAction(response.data.aircraft_models);
         crewPositionAction(response.data.crew_positions);
+        metaPositionAction(response.data.meta_positions);
 
         // Since backend gives us UTC, we can easily convert UTC to our browser time zone just by converting it to a Date Object
         response.data.flights.forEach((item) => {
@@ -159,6 +162,7 @@ const mapDispatchToProps = {
   airmenAction: setAirmen,
   aircraftModelAction: setAircraftModels,
   flightAction: setFlights,
+  metaPositionAction: setMetaPositions,
 };
 
 
