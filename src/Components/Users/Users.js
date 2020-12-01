@@ -438,16 +438,29 @@ function Users(props) {
                     className={classes.labelBar}
                   >
                     <Grid item xs={2}>
-                      <Typography variant="subtitle1">First Name</Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="subtitle1">Last Name</Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                    <Typography variant="subtitle1">Role</Typography>
+                      <Typography variant="subtitle1">
+                        First Name
+                      </Typography>
                     </Grid>
                     <Grid item xs={2}>
-                      <Typography variant="subtitle1">Status</Typography>
+                      <Typography variant="subtitle1">
+                        Last Name
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Typography variant="subtitle1">
+                        Role
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Typography variant="subtitle1">
+                        Status
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Typography variant="subtitle1">
+                        Position
+                      </Typography>
                     </Grid>
                   </Grid>
                   <Divider variant='fullWidth' style={{ marginBottom: '5px' }} />

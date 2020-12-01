@@ -5,6 +5,7 @@ import {
   Divider,
   IconButton,
   Typography,
+  Tooltip
 } from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
 import { blueGrey } from '@material-ui/core/colors';
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   divBar: {
     width: '5px',
     height: '100%',
-    marginRight: '90px',
+    marginRight: '55px',
     backgroundColor: 'white',
     borderRadius: '5px',
   },
@@ -40,11 +41,10 @@ export default function ActiveUsers(props) {
   const classes = useStyles();
   const { user } = props;
 
-  const rankIdSlice = (id = null) => {
-    let str = id;
-    let res = str.slice(0, 8);
-    return res;
-  };
+  const capitalizeMetaPos = (metaName = null) => {
+    let res = metaName.slice(5).replace(/_/g, ' ');
+    return res.charAt(0).toUpperCase() + res.slice(1)
+  }
 
   // const getRank = ( user = null ) => {
   //   let index = user.findIndex((element) => element.account_uuid === user.account_uuid)
@@ -60,7 +60,7 @@ export default function ActiveUsers(props) {
           {user.first_name}
         </Typography>
       </Grid>
-      <Grid item xs={3} style={{ marginLeft: '5px' }}>
+      <Grid item xs={2}>
         <Typography>
           {user.last_name}
         </Typography>
@@ -78,7 +78,12 @@ export default function ActiveUsers(props) {
           {user.user_status}
         </Typography>
       </Grid>
-      <Grid item xs={1} style={{ marginLeft: '20px' }}>
+      <Grid item xs={2}>
+        <Typography variant='body2'>
+          {capitalizeMetaPos(user.meta_position_status)}
+        </Typography>
+      </Grid>
+      <Grid item xs={1}>
         <IconButton
           className={classes.editButton}
           onClick={() => props.handleEdit(user)}

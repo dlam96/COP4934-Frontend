@@ -76,6 +76,11 @@ export default function EditUser(props) {
       return metaPositions.find(pos => pos.meta_name === meta_name)
     })
 
+  const capitalizeMetaPos = (metaName = null) => {
+    let res = metaName.slice(5).replace(/_/g, ' ');
+    return res.charAt(0).toUpperCase() + res.slice(1)
+  }  
+
   return (
     <Container maxWidth="lg" className={classes.container}>
       
@@ -239,7 +244,7 @@ export default function EditUser(props) {
             >
               <option value=''>Select</option>
               {removeDuplicates.map((pos, index) => (
-                <option value={pos.meta_name} key={index}>{pos.meta_name}</option>
+                <option value={pos.meta_name} key={index}>{capitalizeMetaPos(pos.meta_name)}</option>
               ))}
             </Select>
           </Grid>
