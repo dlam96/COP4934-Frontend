@@ -196,3 +196,11 @@ export const setSchedule = (schedule) => ({
     schedule: schedule,
   },
 });
+
+// commit schedule action
+export const commitSchedule = (schedule) => ({
+  type: COMMITSCHEDULE,
+  payload: {
+    schedule: schedule,
+  },
+});
