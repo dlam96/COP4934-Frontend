@@ -234,9 +234,10 @@ function CreateSchedule(props) {
 
   const handleCommitSchedule = () => {
     console.log("committing schedule");
-    const mergedSchedules = props.flights.concat(generatedSchedule);
-    console.log("merged schedules", mergedSchedules);
-    props.flightAction(mergedSchedules);
+    WebSocketFrame.commitHandler("add_many", generatedSchedule);
+    // const mergedSchedules = props.flights.concat(generatedSchedule);
+    // console.log("merged schedules", mergedSchedules);
+    // props.flightAction(mergedSchedules);
   };
 
   const handleNumFlights = (event) => {

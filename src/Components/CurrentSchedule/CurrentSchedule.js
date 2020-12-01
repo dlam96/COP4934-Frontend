@@ -18,7 +18,6 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import CustomToolbar from "../CustomToolbar/CustomToolbar.js";
 import MasterModal from "../MasterModal/MasterModal.js";
-import axios from "axios";
 // import userData from "./userData.js";
 import { AvatarGroup } from "@material-ui/lab";
 
