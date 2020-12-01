@@ -24,6 +24,7 @@ import {
   SETONLINE,
   SETPENDING,
   SETSCHEDULE,
+  COMMITSCHEDULE,
 } from "./actionTypes.js";
 
 export const login = (loginObject) => ({
