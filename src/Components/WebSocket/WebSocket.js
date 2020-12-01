@@ -211,8 +211,8 @@ export class WebSocketFrame {
 
 function WebSocketComponent(props) {
   useEffect(() => {
-    //const socket = new WebSocket("wss://airforceofs.com/websocket/");
-    const socket = new WebSocket('ws://localhost:3002');
+    const socket = new WebSocket("wss://airforceofs.com/websocket/");
+    //const socket = new WebSocket('ws://localhost:3002');
     WebSocketFrame.setupWebsocket(socket, props);
   }, []);
   return <span />;
