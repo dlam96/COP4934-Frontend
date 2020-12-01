@@ -214,7 +214,7 @@ function Aircrafts(props) {
       setEdit(false);
       if (!aircraft) return;
 
-      WebSocketFrame.aircraftHandler("edit", { aircraft_uuid: aircraft.aircraft_uuid, status: aircraft.status });
+      WebSocketFrame.aircraftHandler("edit", { aircraft_uuid: aircraft.aircraft_uuid, status: aircraft.status, tail_code: aircraft.tail_code });
     }
   }
 
@@ -455,6 +455,7 @@ function Aircrafts(props) {
                 <FilterAircraft 
                   applyFilter={applyFilter}
                   clearFilter={clearFilter}
+                  aircraftModels={props.aircraftModels}
                 />
               </Grid>
             </Paper>

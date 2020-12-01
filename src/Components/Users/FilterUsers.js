@@ -34,33 +34,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-export default function FilterAircraft(props) {
+export default function FilterUsers(props) {
   const classes = useStyles();
-  const { aircraftModels } = props;
-  const [searchFilterCraft, setSearchFilterCraft] = useState({ tail_code: null, model_uuid: null });
+  const { metaPositions } = props;
+  const [searchFilterUser, setSearchFilterUser] = useState({ last_name: null, meta_position_status: null });
   
+  const removeDuplicates = Array.from(new Set(metaPositions.map(pos => pos.meta_name)))
+  .map(meta_name => {
+    return metaPositions.find(pos => pos.meta_name === meta_name)
+  })
+
+  const capitalizeMetaPos = (metaName = null) => {
+    let res = metaName.slice(5).replace(/_/g, ' ');
+    return res.charAt(0).toUpperCase() + res.slice(1)
+  }  
+
   return (
     <Grid container item style={{ height: '290px', marginBottom: '5px', alignContent: 'center' }}>
       <Grid container item direction='column'>
         <Grid item>
           <Typography variant='subtitle1' className={classes.filterLabels}> 
-            Search by Tail Code
+            Search by Last Name
           </Typography>
           <TextField 
-            id='tail-code-search'
+            id='last-name-search'
             size='small'
             variant='outlined'
             style={{ padding: '10px' }}
-            value={ searchFilterCraft.tail_code === null ? '' : searchFilterCraft.tail_code }
-            InputProps={{
-              startAdornment: <InputAdornment position='start'>MY</InputAdornment>
-            }}
+            value={ searchFilterUser.last_name === null ? '' : searchFilterUser.last_name }
             onChange={(e) => 
               {
-                let newSearchFilter = {...searchFilterCraft};
-                newSearchFilter['tail_code'] = e.target.value;
-                setSearchFilterCraft(newSearchFilter);
+                let newSearchFilter = {...searchFilterUser};
+                newSearchFilter['last_name'] = e.target.value;
+                setSearchFilterUser(newSearchFilter);
               }
             }
           />
@@ -71,40 +77,22 @@ export default function FilterAircraft(props) {
           </Typography>
         </Grid>
         <Grid container item style={{ justifyContent: 'center' }}>
-          {/* <Select
-            id='filter-aircraft'
+          <Select
+            id="filter-users"
             native
             style={{ width: '175px' }}
-            value={ searchFilterCraft.model_uuid === null ? '' : searchFilterCraft.model_uuid }
-            onChange={(e) => 
-              { 
-                let newSearchFilter = {...searchFilterCraft};
-                newSearchFilter['model_uuid'] = e.target.value;
-                setSearchFilterCraft(newSearchFilter);
-              }
-            }
-          >
-            <option value="">Select</option>
-            <option value="2c04be67-fc24-4eba-b6ca-57c81daab9c4">HC-130J Combat King II</option>
-            <option value="db2863ea-369e-4262-ad17-bda986ae9632">HH-60 Pave Hawk</option>
-            <option value="b0f4cd21-9e4c-4b4d-b4ae-88668b492a7b">A-10C Thunderbolt II</option>
-          </Select> */}
-          <Select 
-            id='filter-aircraft'
-            native
-            style={{ width: '175px' }}
-            value={ searchFilterCraft.model_uuid === null ? '' : searchFilterCraft.model_uuid }
-            onChange={(e) => 
-              { 
-                let newSearchFilter = {...searchFilterCraft};
-                newSearchFilter['model_uuid'] = e.target.value;
-                setSearchFilterCraft(newSearchFilter);
+            value={ searchFilterUser.meta_position_status === null ? '' : searchFilterUser.meta_position_status }
+            onChange={(e) =>
+              {
+                let newUser = {...searchFilterUser}
+                newUser['meta_position_status'] = e.target.value
+                setSearchFilterUser(newUser);
               }
             }
           >
             <option value=''>Select</option>
-            {aircraftModels.map((model, index) => (
-              <option value={model.model_uuid} key={index}>{model.model_name}</option>
+            {removeDuplicates.map((pos, index) => (
+              <option value={pos.meta_name} key={index}>{capitalizeMetaPos(pos.meta_name)}</option>
             ))}
           </Select>
         </Grid>
@@ -113,7 +101,7 @@ export default function FilterAircraft(props) {
             <Button 
               className={classes.applyBtn}
               type='submit'  
-              onClick={() => props.applyFilter(searchFilterCraft)}
+              onClick={() => props.applyFilter(searchFilterUser)}
             >
               Apply
             </Button>
@@ -122,7 +110,7 @@ export default function FilterAircraft(props) {
               onClick={() => 
                 { 
                   props.clearFilter();
-                  setSearchFilterCraft({ tail_code: null, model_uuid: null });
+                  setSearchFilterUser({ last_name: null, meta_position_status: null });
                 }
               }
             >
