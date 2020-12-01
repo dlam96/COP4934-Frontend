@@ -18,7 +18,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import CustomToolbar from "../CustomToolbar/CustomToolbar.js";
 import MasterModal from "../MasterModal/MasterModal.js";
-
+import axios from "axios";
 // import userData from "./userData.js";
 import { AvatarGroup } from "@material-ui/lab";
 
@@ -110,6 +110,7 @@ function CurrentSchedule(props) {
   const [endDate, setEndDate] = useState(today);
   const [showDelete, setDelete] = useState(true);
   const [isFiltered, setFilterFlightBool] = useState(false);
+  const [exportCSV, setExportCSV] = useState(false);
   let eventList = props.events;
   const [filteredEvents, setFilteredEvents] = useState(null);
 
@@ -214,6 +215,14 @@ function CurrentSchedule(props) {
 
   const handleExportToCSV = () => {
     console.log("Exporting to CSV");
+    setExportCSV(true);
+    const newWindow = window.open(
+      "https://www.airforceofs.com/api/csv?start=2011-10-05T14:48:00.000Z&end=2020-12-25T14:48:00.000Z"
+      // "_blank",
+      // "noopener,noreferrer"
+    );
+    if (newWindow) newWindow.opener = null;
+    setExportCSV(false);
   };
   // Randomize color for avatar
   let colors = [
@@ -253,7 +262,7 @@ function CurrentSchedule(props) {
                 {/* Flight flight */}
                 <Grid item container xs={6}>
                   <Typography className={classes.filterStyle} variant="body2">
-                    QUICK FILTERS:
+                    QUICK ACTIONS:
                   </Typography>
                   <Button
                     className={classes.filterFlightBtn}
@@ -265,8 +274,8 @@ function CurrentSchedule(props) {
                   </Button>
                   <Button
                     className={classes.filterFlightBtn}
-                    color={isFiltered ? "primary" : "default"}
-                    variant={isFiltered ? "contained" : "text"}
+                    color={exportCSV ? "primary" : "default"}
+                    variant={exportCSV ? "contained" : "text"}
                     onClick={handleExportToCSV}
                   >
                     Export to CSV

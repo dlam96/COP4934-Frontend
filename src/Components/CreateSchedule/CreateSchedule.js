@@ -18,9 +18,12 @@ import {
   Checkbox,
   ListItemSecondaryAction,
   CircularProgress,
+  TextField,
 } from "@material-ui/core";
 import { Help } from "@material-ui/icons";
 import clsx from "clsx";
+
+import { setFlights } from "../../Redux/actions.js";
 // calendar imports
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -81,9 +84,13 @@ const useStyles = makeStyles((theme) => ({
   },
   durationStyle: {
     margin: theme.spacing(1, 0, 1, 1),
+    width: "30%",
   },
   durationLabel: {
     width: "30vw",
+  },
+  numberFlightsStyle: {
+    margin: theme.spacing(1, 0, 1, 1),
   },
   chip: {
     margin: theme.spacing(1),
@@ -106,12 +113,19 @@ function CreateSchedule(props) {
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const localizer = momentLocalizer(moment);
-
+  // dates
   let today = new Date();
   let nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  const [startDate, setStartDate] = useState(today);
-  const [endDate, setEndDate] = useState(today);
-  
+  // get first and last day of NEXT week
+  let first = nextWeek.getDate() - nextWeek.getDay(); // First day is the day of the month - the day of the week
+  let last = first + 6; // last day is the first day + 6
+  var firstday = new Date(nextWeek.setDate(first)).toUTCString();
+  var lastday = new Date(nextWeek.setDate(last)).toUTCString();
+  console.log("first", firstday, "last", lastday);
+
+  const [startDate, setStartDate] = useState(moment(firstday).toDate());
+  const [endDate, setEndDate] = useState(moment(lastday).toDate());
+
   const [flightDuration, setFlightDuration] = useState("4");
   const durationOptions = ["1", "2", "3", "4", "5", "6", "7", "8"];
 
@@ -121,6 +135,8 @@ function CreateSchedule(props) {
   const [flightCrew, setFlightCrew] = useState([]);
   const [checked, setChecked] = React.useState([1]);
   const [generatedSchedule, setGeneratedSchedule] = useState([]);
+  const [numFlights, setNumFlights] = useState(1);
+  const [numFlightsError, setNumFlightsError] = useState(false);
   // console.log("schedule", props.schedule);
 
   // Calender functions
@@ -200,9 +216,8 @@ function CreateSchedule(props) {
         duration: flightDuration,
         whitelist_models: whitelist_models,
         blacklist_airmen: flightCrew,
+        num_flights: numFlights,
       });
-      setSuccess(true);
-      setLoading(false);
     }
   };
 
@@ -218,6 +233,22 @@ function CreateSchedule(props) {
     setGeneratedSchedule(updatedEvents);
   };
 
+  const handleCommitSchedule = () => {
+    console.log("committing schedule");
+    const mergedSchedules = props.flights.concat(generatedSchedule);
+    console.log("merged schedules", mergedSchedules);
+    props.flightAction(mergedSchedules);
+  };
+
+  const handleNumFlights = (event) => {
+    console.log("number of flight", event.target.value);
+    setNumFlightsError(false);
+    if (event.target.value < 1 || event.target.value > 25) {
+      setNumFlightsError(true);
+      return;
+    }
+    setNumFlights(event.target.value);
+  };
   // add blacklist object to aircraftmodels array
   useEffect(() => {
     console.log("initializing blacklist");
@@ -236,7 +267,7 @@ function CreateSchedule(props) {
   useEffect(() => {
     if (props.schedule) {
       let generatedSchedule = [];
-      if(props.schedule.flights) {
+      if (props.schedule.flights) {
         generatedSchedule = [...props.schedule.flights];
         generatedSchedule.forEach((item) => {
           item.start = moment(item.start).toDate();
@@ -244,6 +275,8 @@ function CreateSchedule(props) {
         });
       }
       setGeneratedSchedule(generatedSchedule);
+      setSuccess(true);
+      setLoading(false);
     }
   }, [props.schedule]);
 
@@ -343,32 +376,45 @@ function CreateSchedule(props) {
                   placement="bottom-start"
                 >
                   <Typography variant="subtitle1" style={{ paddingTop: "5px" }}>
-                    Flight Duration
+                    Flight Constraint
                     <Help fontSize="small" style={{ paddingTop: "5px" }} />
                   </Typography>
                 </Tooltip>
                 <Divider />
-
-                <FormControl className={classes.durationStyle}>
-                  <InputLabel
-                    id="duration-select-label"
-                    className={classes.durationLabel}
-                  >
-                    Duration (Hours)
-                  </InputLabel>
-                  <Select
-                    labelId="flight-duration-select-label"
-                    id="flight-duration"
-                    value={flightDuration}
-                    onChange={handleFlightDurationSelect}
-                  >
-                    {durationOptions.map((item, index) => (
-                      <MenuItem key={index} value={item}>
-                        {item}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                <Grid container item direction="column">
+                  {/* duration */}
+                  <FormControl className={classes.durationStyle}>
+                    <InputLabel
+                      id="duration-select-label"
+                      className={classes.durationLabel}
+                    >
+                      Duration (Hours)
+                    </InputLabel>
+                    <Select
+                      labelId="flight-duration-select-label"
+                      id="flight-duration"
+                      value={flightDuration}
+                      onChange={handleFlightDurationSelect}
+                    >
+                      {durationOptions.map((item, index) => (
+                        <MenuItem key={index} value={item}>
+                          {item}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  {/* Numb of flights */}
+                  <FormControl className={classes.numberFlightsStyle}>
+                    <TextField
+                      error={numFlightsError}
+                      label="Number of Flights"
+                      InputLabelProps={{ shrink: true }}
+                      placeholder="1 - 25"
+                      onChange={handleNumFlights}
+                      helperText={numFlightsError ? "Invalid range." : null}
+                    />
+                  </FormControl>
+                </Grid>
               </Grid>
               {/* =========================================
             End of Flight Duration Window 
@@ -464,7 +510,14 @@ function CreateSchedule(props) {
             <Grid container direction="row" className={classes.buttonWrapper}>
               <Chip
                 label="Generate Schedule"
-                avatar={loading ? <CircularProgress size={20} /> : null}
+                avatar={
+                  loading ? (
+                    <CircularProgress
+                      size={20}
+                      style={{ backgroundColor: "transparent" }}
+                    />
+                  ) : null
+                }
                 clickable
                 style={{ marginRight: 5 }}
                 onClick={handleGenerateSchedule}
@@ -473,6 +526,7 @@ function CreateSchedule(props) {
               <Chip
                 label="Commit Schedule"
                 clickable
+                onClick={handleCommitSchedule}
                 color={success ? "secondary" : "default"}
               />
             </Grid>
@@ -506,12 +560,17 @@ function CreateSchedule(props) {
   );
 }
 
+const mapDispatchToProps = {
+  flightAction: setFlights,
+};
+
 const mapStateToProps = (state) => {
   return {
     aircraft_models: state.aircraftmodelReducer,
     airmen: state.airmenReducer.users,
     schedule: state.generationReducer,
+    flights: state.flightReducer,
   };
 };
 
-export default connect(mapStateToProps, null)(CreateSchedule);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateSchedule);
