@@ -20,8 +20,6 @@ export default function (state = null, action) {
       let newState = [...state];
       for (let i = 0; i < newState.length; i++) {
         if (newState[i].flight_uuid === action.payload.flight.flight_uuid) {
-          //console.log("Founds it");
-          //console.log("Old one", newState[i]);
           newState[i] = {...newState[i], ...action.payload.flight,
             start: action.payload.flight.start ? moment(action.payload.flight.start).toDate() : newState[i].start,
             end: action.payload.flight.end ? moment(action.payload.flight.end).toDate(): newState[i].end};

@@ -11,6 +11,12 @@ import {
   editAirman,
   approveAirman,
   setSchedule,
+  editAircraft,
+  addAircraft,
+  deleteAircraft,
+  addAircraftModel,
+  editAircraftModel,
+  deleteAircraftModel,
 } from "../../Redux/actions.js";
 
 export class WebSocketFrame {
@@ -74,6 +80,37 @@ export class WebSocketFrame {
     }
   }
 
+
+  static aircraftHandler(action, message) {
+    console.log("Websocket: Aircraft Send:", action);
+    try {
+      let wsMessage = JSON.stringify({
+        topic: "aircraft",
+        action: action,
+        message: message,
+      });
+      console.log("Websocket Aircraft: About to send the message");
+      this.ws.send(wsMessage);
+    } catch (error) {
+      console.log("Websocket Aircraft: Handler Error:", error);
+    }
+  }
+
+  static aircraftModelHandler(action, message) {
+    console.log("Websocket: Aircraft Model Send:", action);
+    try {
+      let wsMessage = JSON.stringify({
+        topic: "aircraft_model",
+        action: action,
+        message: message,
+      });
+      console.log("Websocket Aircraft Model: About to send the message");
+      this.ws.send(wsMessage);
+    } catch (error) {
+      console.log("Websocket Aircraft Model: Handler Error:", error);
+    }
+  }
+
   static closeWebsocket() {
     console.log("Closing websocket");
     if (this.ws.readyState <= 1) {
@@ -118,15 +155,15 @@ export class WebSocketFrame {
         case "location":
           switch (action) {
             case "add":
-              console.log("location Add:", message);
+              console.log("Websocket: location Add:", message);
               props.addLocationAction(message);
               break;
             case "edit":
-              console.log("location Edit:", message);
+              console.log("Websocket: location Edit:", message);
               props.editLocationAction(message);
               break;
             case "delete":
-              console.log("location Delete:", message);
+              console.log("Websocket: location Delete:", message);
               props.deleteLocationAction(message);
               break;
             default:
@@ -138,15 +175,15 @@ export class WebSocketFrame {
         case "flight":
           switch (action) {
             case "add":
-              console.log("flight Add:", message);
+              console.log("Websocket: flight Add:", message);
               props.addFlightAction(message);
               break;
             case "edit":
-              console.log("flight Edit:", message);
+              console.log("Websocket: flight Edit:", message);
               props.editFlightAction(message);
               break;
             case "delete":
-              console.log("flight Delete:", message);
+              console.log("Websocket: flight Delete:", message);
               props.deleteFlightAction(message);
               break;
             default:
@@ -170,7 +207,7 @@ export class WebSocketFrame {
         case "generation":
           switch (action) {
             case "generate":
-              console.log("generating", message);
+              console.log("Websocket: generating", message);
               props.setScheduleAction(message);
               break;
             default:
@@ -182,11 +219,11 @@ export class WebSocketFrame {
         case "airman":
           switch (action) {
             case "approve":
-              console.log("approving airman", message);
+              console.log("Websocket: approving airman", message);
               props.approveAirmanAction(message);
               break;
             case "edit":
-              console.log("editing airman", message);
+              console.log("Websocket: editing airman", message);
               props.editAirmanAction(message);
               break;
             default:
@@ -194,6 +231,48 @@ export class WebSocketFrame {
               break;
           }
           break;
+
+        case "aircraft":
+          switch (action) {
+            case "add":
+              console.log("Websocket: adding Aircraft");
+              props.addAircraftAction(message);
+              break;
+            case "edit":
+              console.log("Websocket: editting Aircraft");
+              props.editAircraftAction(message);
+              break;
+            case "delete":
+              console.log("Websocket: deleting Aircraft");
+              props.deleteAircraftAction(message);
+              break;
+            default:
+              console.log("Websocket: aircraft action not supported", action);
+              break;
+          }
+          break;
+
+        case "aircraft_model":
+          switch (action) {
+            case "add":
+              console.log("Websocket: adding Aircraft_model");
+              props.addAicraftModelAction(message);
+              break;
+            case "edit":
+              console.log("Websocket: editting Aircraft_model");
+              props.editAircraftModelAction(message);
+              break;
+            case "delete":
+              console.log("Websocket: deleting Aircraft_model");
+              props.deleteAircraftModelAction(message);
+              break;
+            default:
+              console.log("Websocket: aircraft_model action not supported", action);
+              break;
+          }
+          break;
+
+
         default:
           console.log("Websocket: General topic not supported:", topic);
           break;
@@ -229,6 +308,12 @@ const mapDispatchToProps = {
   approveAirmanAction: approveAirman,
   setOnlineAction: setOnline,
   setScheduleAction: setSchedule,
+  addAircraftAction: addAircraft,
+  editAircraftAction: editAircraft,
+  deleteAircraftAction: deleteAircraft,
+  addAicraftModelAction: addAircraftModel,
+  editAircraftModelAction: editAircraftModel,
+  deleteAircraftModelAction: deleteAircraftModel,
 };
 const mapStateToProps = (state) => {
   return {

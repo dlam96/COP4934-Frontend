@@ -7,14 +7,19 @@ import {
   APPROVEAIRMAN,
   EDITAIRMAN,
   SETAIRCRAFTMODELS,
+  ADDAIRCRAFTMODEL,
+  EDITAIRCRAFTMODEL,
+  DELETEAIRCRAFTMODEL,
   SETLOCATIONS,
   SETAIRCRAFTS,
+  ADDAIRCRAFT,
+  EDITAIRCRAFT,
+  DELETEAIRCRAFT,
   SETFLIGHTS,
   SETCREWPOSITION,
   SETRANKS,
   SETAIRCRAFTSTATUS,
   SETUSERSTATUS,
-  GOTINITIALESSENTIALREQUEST,
   ADDLOCATION,
   EDITLOCATION,
   DELETELOCATION,
@@ -88,11 +93,53 @@ export const setAircraftModels = (aircraftModels) => ({
   },
 });
 
+export const addAircraftModel = (aircraftModel) => ({
+  type: ADDAIRCRAFTMODEL,
+  payload: {
+    aircraftModel: aircraftModel
+  }
+});
+
+export const editAircraftModel = (aircraftModel) => ({
+  type: EDITAIRCRAFTMODEL,
+  payload: {
+    aircraftModel: aircraftModel
+  }
+});
+
+export const deleteAircraftModel = (aircraftModel) => ({
+  type: DELETEAIRCRAFTMODEL,
+  payload: {
+    aircraftModel: aircraftModel
+  }
+})
+
 export const setAircrafts = (aircrafts) => ({
   type: SETAIRCRAFTS,
   payload: {
     aircraft: aircrafts,
   },
+});
+
+export const addAircraft = (aircraft) => ({
+  type: ADDAIRCRAFT,
+  payload: {
+    aircraft: aircraft
+  }
+});
+
+export const editAircraft = (aircraft) => ({
+  type: EDITAIRCRAFT,
+  payload: {
+    aircraft: aircraft
+  }
+});
+
+export const deleteAircraft = (aircraft) => ({
+  type: DELETEAIRCRAFT,
+  payload: {
+    aircraft: aircraft
+  }
 });
 
 export const setCrewPostions = (crewPositions) => ({
