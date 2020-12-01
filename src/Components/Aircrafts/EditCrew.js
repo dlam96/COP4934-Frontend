@@ -7,25 +7,47 @@ import {
   FormControl,
   Select,
   IconButton,
+  Typography,
 } from "@material-ui/core";
 import {
   Save,
   Delete,
 } from "@material-ui/icons";
 import ConfirmDeleteCrew from './ConfirmDeleteCrew';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const useStyles = makeStyles((theme) => ({
-  fixedInfo: {
-    height: '100%',
-    width: '100%',
-    paddingTop: "50px",
-    padding: theme.spacing(2),
+  enterInfo: {
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+    padding: '15px',
+    width: '700px',
+    height: '250px',
+    marginTop: '50px',
+  },
+  fields: {
+    margin: '5px',
   },
   buttons: {
-    paddingTop: theme.spacing(4),
+    paddingTop: '10px',
   },
   saveBt: {
     marginRight: "10px",
+  },
+  inputRow: {
+    alignItems: 'center',
+    marginTop: '15px',
+  },
+  labelBar: {
+    backgroundColor: fade(theme.palette.primary.main, 0.75),
+    height: '50px',
+    padding: '1px',
+    marginBottom: '15px', 
+    borderRadius: '5px',
+    color: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }));
 
@@ -35,24 +57,31 @@ export default function EditCrew(props) {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   return (
-    <Paper className={classes.fixedInfo} variant="outlined">
-      <Grid container item direct='column' spacing={2}>
-        <Grid container item direction='row'>
-          <Grid item xs={4} align='right'>Position</Grid>
-          <Grid item xs={1} />
-          <Grid item xs={4} align='start'>{ position.position }</Grid>
+    <Paper className={classes.enterInfo} variant='outlined'>
+      <Grid container item direction='column' style={{ justifyContent: 'center' }}>
+        <Grid container item className={classes.labelBar}>
+          <Typography variant='h5'>
+            Crew Position Detail
+          </Typography>
         </Grid>
-        <Grid container item direction='row'>
-          <Grid item xs={4} align='right'>Position id</Grid>
-          <Grid item xs={1} />
-          <Grid item xs={4} align='start'>{ position.crew_position_uuid }</Grid>
+        <Grid container item direction='row' className={classes.inputRow}>
+          <Grid item xs={5} align='end' style={{ marginRight: '50px' }} >
+            <Typography>
+              Position
+            </Typography>
+          </Grid>
+          <Grid item xs={5}>
+            { position.position }
+          </Grid>
         </Grid>
-        <Grid container item direction='row'>
-          <Grid item xs={4} align='right'>Required</Grid>
-          <Grid item xs={1} />
-          <Grid item xs={4} alight='start'>
-            <FormControl size='small'>
-              <Select
+        <Grid container item direction='row' className={classes.inputRow}>
+          <Grid item xs={5} align='end' style={{ marginRight: '50px' }}>
+            <Typography>
+              Required
+            </Typography>
+          </Grid>
+          <Grid item xs={4}>
+            <Select
                 native
                 value={position.required}
                 onChange={(e) =>
@@ -66,49 +95,48 @@ export default function EditCrew(props) {
                 <option value={true}>Yes</option>
                 <option value={false}>No</option>
               </Select>
-            </FormControl>
           </Grid>
         </Grid>
-        <Grid container item>
-          <Grid item xs={4} align="center">
-            <IconButton
-              color='secondary'
-              onClick={()=>setConfirmDelete(true)}
-            >
-              <Delete />
-            </IconButton>
-            <ConfirmDeleteCrew
+      </Grid>
+
+      {/* Save and Cancel buttons */}
+      <Grid container item style={{ marginTop: '10px' }}>
+        <Grid item xs={2} align='start'>
+          <IconButton
+            color='secondary'
+            onClick={()=> setConfirmDelete(true)}
+          >
+            <Delete />
+          </IconButton>
+          <ConfirmDeleteCrew
               title='Delete Crew?'
               open={confirmDelete}
               setOpen={setConfirmDelete}
               position={position}
               handleDeleteCrew={props.handleDeleteCrew}
               handleCrewEdit={props.handleCrewEdit}
-            >
-              Are you sure you want to delete this crew?
-            </ConfirmDeleteCrew>
-          </Grid>
-          <Grid item xs={8} align="center" className={classes.buttons}>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<Save />}
-              className={classes.saveBt}
-              onClick={()=>{
-                console.log(position)
-                props.handleCrewEdit(position)}}
-            >
-              Save
-            </Button>
-            <Button
-              variant="contained"
-              onClick={()=>props.handleCrewEdit()}
-            >
-              Cancel
-            </Button>
-          </Grid>
+          >
+            Are you sure you want to delete this crew?
+          </ConfirmDeleteCrew>
         </Grid>
-
+        <Grid item xs={2} />
+        <Grid item xs={4} className={classes.buttons}>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<Save />}
+            className={classes.saveBt}
+            onClick={()=>{ props.handleCrewEdit(position) }}
+          >
+            Save
+          </Button>
+          <Button
+            variant="contained"
+            onClick={()=>props.handleCrewEdit()}
+          >
+            Cancel
+          </Button>
+        </Grid>
       </Grid>
     </Paper>
   )

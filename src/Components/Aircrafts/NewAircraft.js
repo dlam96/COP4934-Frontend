@@ -11,15 +11,16 @@ import {
 import {
   Save,
 } from "@material-ui/icons";
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const useStyles = makeStyles((theme) => ({
   enterInfo: {
     display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',
-    padding: '5%',
+    padding: '15px',
     width: '700px',
-    height: '300px',
+    height: '350px',
     marginTop: '50px',
   },
   fields: {
@@ -33,6 +34,17 @@ const useStyles = makeStyles((theme) => ({
   },
   inputRow: {
     alignItems: 'center',
+    marginTop: '15px',
+  },
+  labelBar: {
+    backgroundColor: fade(theme.palette.primary.main, 0.75),
+    height: '50px',
+    padding: '1px',
+    marginBottom: '15px', 
+    borderRadius: '5px',
+    color: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }));
 
@@ -43,9 +55,14 @@ export default function NewAircraft(props) {
 
   return (
     <Paper className={classes.enterInfo} variant='outlined'>
-      <Grid container item direction='column'>
+      <Grid container item direction='column' style={{ justifyContent: 'center' }}>
+        <Grid container item className={classes.labelBar}>
+          <Typography variant='h5'>
+            Add New Aircraft
+          </Typography>
+        </Grid>
         <Grid container item direction='row' className={classes.inputRow}>
-          <Grid item xs={4} align='end' style={{ marginRight: '100px' }} >
+          <Grid item xs={5} align='end' style={{ marginRight: '50px' }} >
             <Typography>
               Tail Code
             </Typography>
@@ -63,7 +80,7 @@ export default function NewAircraft(props) {
           </Grid>
         </Grid>
         <Grid container item direction='row' className={classes.inputRow}>
-          <Grid item xs={4} align='end' style={{ marginRight: '100px' }}>
+          <Grid item xs={5} align='end' style={{ marginRight: '50px' }}>
             <Typography>
               Aircraft Model
             </Typography>
@@ -88,19 +105,7 @@ export default function NewAircraft(props) {
           </Grid>
         </Grid>
         <Grid container item direction='row' className={classes.inputRow}>
-          <Grid item xs={4} align='end' style={{ marginRight: '100px' }}>
-            <Typography>
-              Model ID
-            </Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <Typography>
-              { aircraft.model_uuid }
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid container item direction='row' className={classes.inputRow}>
-          <Grid item xs={4} align='end' style={{ marginRight: '100px' }}>
+          <Grid item xs={5} align='end' style={{ marginRight: '50px' }}>
             <Typography>
               Current Status
             </Typography>

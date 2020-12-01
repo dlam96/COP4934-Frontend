@@ -521,12 +521,16 @@ function Aircrafts(props) {
             ---------------------- */}
             {edit ? 
               <TabPanel value={value} index={0}>
-                <EditAircraft
-                  aircraft={editAircraft}
-                  aircraftModels={props.aircraftModels}
-                  handleDeleteAircraft={handleDeleteAircraft}
-                  handleEdit={handleEdit}
-                />
+                <Paper className={classes.crewList}>
+                  <Grid container style={{ justifyContent: 'center' }}>
+                    <EditAircraft
+                      aircraft={editAircraft}
+                      aircraftModels={props.aircraftModels}
+                      handleDeleteAircraft={handleDeleteAircraft}
+                      handleEdit={handleEdit}
+                    />
+                  </Grid>
+                </Paper>
               </TabPanel>
               :
               <TabPanel value={value} index={0}>
@@ -590,55 +594,61 @@ function Aircrafts(props) {
             --------------------- */}
             {edit ?
               <TabPanel value={value} index={1}>
-                <EditAircraftModel
-                  model={editAircraftModel}
-                  crewPositions={props.crewPositions}
-                  handleDeleteModel={handleDeleteModel}
-                  handleModelEdit={handleModelEdit}
-                />
+                <Paper className={classes.crewList}>
+                  <Grid container style={{ justifyContent: 'center' }}>
+                    <EditAircraftModel
+                      model={editAircraftModel}
+                      crewPositions={props.crewPositions}
+                      handleDeleteModel={handleDeleteModel}
+                      handleModelEdit={handleModelEdit}
+                    />
+                  </Grid>
+                </Paper>
               </TabPanel>
               :
               <TabPanel value={value} index={1}>
-                {addNew ?
-                  <> {/* Add New Model to database */}
-                    <NewModel 
-                      aircraftModels={props.aircraftModels}
-                      crewPositions={props.crewPositions}
-                      handleNewModel={handleNewModel}
-                    />
-                  </>
-                  :
-                  <> {/* Aircraft Model List */}
-                    <Paper className={classes.modelList}>
-                      <Grid container className={classes.cardList}>
-                        {props.aircraftModels.map((model, index) => (
-                          <Grid item md={6} key={index} style={{height: '185px'}}>
-                            <AircraftModels
-                              model={model}
-                              handleModelEdit={handleModelEdit}
-                              key={model.model_uuid}
-                            />
-                          </Grid>
-                        ))}  
-                        {/* New Model button */}
-                        <Grid item md={6} style={{height: '185px'}}>
-                          <Paper className={classes.newButtonPaper}>
-                            <Button 
-                                startIcon={<Add />}
-                                fullWidth={true}
-                                size="large"
-                                onClick={()=>handleNewModel()}
-                                style={{
-                                  color: green[500],
-                                  minHeight: '100%',
-                                }}
-                            />
-                          </Paper>
-                        </Grid>
+                <Paper className={classes.modelList}>
+                  {addNew ?
+                    <> {/* Add New Model to database */}
+                      <Grid container style={{ justifyContent: 'center' }}>
+                        <NewModel 
+                          aircraftModels={props.aircraftModels}
+                          crewPositions={props.crewPositions}
+                          handleNewModel={handleNewModel}
+                        />
                       </Grid>
-                    </Paper>
-                  </>
-                }
+                    </>
+                    :
+                    <> {/* Aircraft Model List */}
+                        <Grid container className={classes.cardList}>
+                          {props.aircraftModels.map((model, index) => (
+                            <Grid item md={6} key={index} style={{height: '185px'}}>
+                              <AircraftModels
+                                model={model}
+                                handleModelEdit={handleModelEdit}
+                                key={model.model_uuid}
+                              />
+                            </Grid>
+                          ))}  
+                          {/* New Model button */}
+                          <Grid item md={6} style={{height: '185px'}}>
+                            <Paper className={classes.newButtonPaper}>
+                              <Button 
+                                  startIcon={<Add />}
+                                  fullWidth={true}
+                                  size="large"
+                                  onClick={()=>handleNewModel()}
+                                  style={{
+                                    color: green[500],
+                                    minHeight: '100%',
+                                  }}
+                              />
+                            </Paper>
+                          </Grid>
+                        </Grid>
+                    </>
+                  }
+                </Paper>
               </TabPanel>  
             } 
             {/* -------------------
@@ -646,23 +656,29 @@ function Aircrafts(props) {
             ------------------- */}
             {edit ?
               <TabPanel value={value} index={2}>
-                <EditCrew
-                  position={editCrew}
-                  handleDeleteCrew={handleDeleteCrew}
-                  handleCrewEdit={handleCrewEdit}
-                />
+                <Paper className={classes.crewList}>
+                  <Grid container style={{ justifyContent: 'center' }}>
+                    <EditCrew
+                      position={editCrew}
+                      handleDeleteCrew={handleDeleteCrew}
+                      handleCrewEdit={handleCrewEdit}
+                    />
+                  </Grid>
+                </Paper>
               </TabPanel>
               :
               <TabPanel value={value} index={2}>
-                {addNew ?
-                  <> {/* Add New Crew Position to database */}
-                    <NewCrew
-                      handleNewCrew={handleNewCrew}
-                    />
-                  </>  
-                  :
-                  <> {/* Aircraft Crew List */} 
-                    <Paper className={classes.crewList}>
+                <Paper className={classes.crewList}>
+                  {addNew ?
+                    <> {/* Add New Crew Position to database */}
+                      <Grid container style={{ justifyContent: 'center' }}>
+                        <NewCrew
+                          handleNewCrew={handleNewCrew}
+                        />
+                      </Grid>
+                    </>  
+                    :
+                    <> {/* Aircraft Crew List */} 
                       <Grid container className={classes.cardList}>
                         {props.crewPositions.map((pos, index) => (
                           <Grid item md={6} key={index} style={{height: '185px'}}>
@@ -689,9 +705,9 @@ function Aircrafts(props) {
                           </Paper>
                         </Grid>
                       </Grid>
-                    </Paper>
-                  </>
-                }
+                    </>
+                  }
+                </Paper>
               </TabPanel>  
             }
           </Grid>
