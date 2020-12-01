@@ -24,6 +24,7 @@ import {
   ADDLOCATION,
   EDITLOCATION,
   DELETELOCATION,
+  MANYFLIGHTS,
   ADDFLIGHT,
   EDITFLIGHT,
   DELETEFLIGHT,
@@ -222,6 +223,13 @@ export const addFlight = (flight) => ({
     flight: flight,
   },
 });
+
+export const addManyFlights = (flights) => ({
+  type: MANYFLIGHTS,
+  payload: {
+    flights: flights
+  }
+})
 
 export const editFlight = (flight) => ({
   type: EDITFLIGHT,

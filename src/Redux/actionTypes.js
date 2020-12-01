@@ -10,6 +10,7 @@ export const DELETELOCATION = "DELETELOCATION";
 
 export const SETFLIGHTS = "SETFLIGHTS";
 export const ADDFLIGHT = "ADDFLIGHTS";
+export const MANYFLIGHTS = "MANYFLIGHTS";
 export const EDITFLIGHT = "EDITFLIGHTS";
 export const DELETEFLIGHT = "DELETEFLIGHTS";
 
