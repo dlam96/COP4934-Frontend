@@ -111,8 +111,10 @@ function CreateSchedule(props) {
   let nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
+  
   const [flightDuration, setFlightDuration] = useState("4");
   const durationOptions = ["1", "2", "3", "4", "5", "6", "7", "8"];
+
   let propsAircraftModels = props.aircraft_models;
   const [aircraftModels, setAircraftModels] = useState(propsAircraftModels);
   let propsAirmen = props.airmen;
@@ -233,11 +235,14 @@ function CreateSchedule(props) {
 
   useEffect(() => {
     if (props.schedule) {
-      let generatedSchedule = [...props.schedule.flights];
-      generatedSchedule.forEach((item) => {
-        item.start = moment(item.start).toDate();
-        item.end = moment(item.end).toDate();
-      });
+      let generatedSchedule = [];
+      if(props.schedule.flights) {
+        generatedSchedule = [...props.schedule.flights];
+        generatedSchedule.forEach((item) => {
+          item.start = moment(item.start).toDate();
+          item.end = moment(item.end).toDate();
+        });
+      }
       setGeneratedSchedule(generatedSchedule);
     }
   }, [props.schedule]);
@@ -357,9 +362,9 @@ function CreateSchedule(props) {
                     value={flightDuration}
                     onChange={handleFlightDurationSelect}
                   >
-                    {durationOptions.map((value, index) => (
-                      <MenuItem key={index} value={value}>
-                        {value}
+                    {durationOptions.map((item, index) => (
+                      <MenuItem key={index} value={item}>
+                        {item}
                       </MenuItem>
                     ))}
                   </Select>
