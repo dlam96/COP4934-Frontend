@@ -419,7 +419,11 @@ function Users(props) {
             {edit ? (
               <TabPanel value={value} index={0}>
                 <Paper className={classes.userList}>
-                  <EditUser user={editUser} handleEdit={handleEdit} />
+                  <EditUser 
+                    user={editUser} 
+                    handleEdit={handleEdit} 
+                    metaPositions={props.metaPositions}
+                  />
                 </Paper>
               </TabPanel>
             ) : (
@@ -526,6 +530,7 @@ function Users(props) {
 const mapStateToProps = (state) => {
   return {
     airmen: state.airmenReducer.users,
+    metaPositions: state.metaPositionReducer,
     pendingUsers: state.airmenReducer.pending,
     unapprovedUsers: state.unapprovedUsersReducer,
   };
