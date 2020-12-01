@@ -67,7 +67,6 @@ export default function EditUser(props) {
       {/* User Info */}
       <Paper className={classes.fixedInfo} variant="outlined">
         <Grid container item direction='column' spacing={2}>
-
           <Grid container item direction='row' style={{height: '50px'}}>
             <Grid item md={5} align='right'>
               <h3>First Name</h3>
@@ -89,7 +88,6 @@ export default function EditUser(props) {
               />
             </Grid>
           </Grid>
-
           <Grid container item direction='row' style={{height: '50px'}}>
             <Grid item md={5} align='right'>
               <h3>Last Name</h3>
@@ -111,7 +109,6 @@ export default function EditUser(props) {
               />
             </Grid>
           </Grid>
-
           <Grid container item direction='row' style={{height: '50px'}}>
             <Grid item md={5} align='right'>
               <h3>Pilot Status</h3>
@@ -139,7 +136,6 @@ export default function EditUser(props) {
               </Select>
             </Grid>
           </Grid>
-
           <Grid container item direction='row' style={{height: '50px'}}>
             <Grid item md={5} align='right'>
               <h3>Rank</h3>
@@ -149,7 +145,6 @@ export default function EditUser(props) {
               <h3>{ rankIdSlice(user.rank_uuid) }</h3>
             </Grid>
           </Grid>
-
           <Grid container item direction='row' style={{height: '50px'}}>
             <Grid item md={5} align='right'>
               <h3>Role</h3>
@@ -171,7 +166,6 @@ export default function EditUser(props) {
               />
             </Grid>
           </Grid>
-
           <Grid container item direction='row' style={{height: '50px'}}>
             <Grid item md={5} align='right'>
               <h3>User Status</h3>

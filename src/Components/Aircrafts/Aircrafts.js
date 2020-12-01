@@ -30,6 +30,7 @@ import EditCrew from './EditCrew.js';
 import NewModel from './NewModel.js';
 import NewCrew from './NewCrew.js';
 import TabControlAircraft from './TabControlAircraft.js';
+import FilterAircraft from './FilterAircraft.js';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -383,16 +384,38 @@ function Aircrafts(props) {
     return searchList.filter((item) => item.status === craft.status).length
   }
 
+  const applyFilter = ( craft = null ) => {
+    if (craft.model_uuid && craft.tail_code) {
+      let newAircraftList = [...aircraftList];
+      setAircraftList(
+        newAircraftList.filter((item) => (item.model_uuid === craft.model_uuid && item.tail_code === ('MY' + craft.tail_code )))
+      );
+    } else if (craft.model_uuid) {
+      let newAircraftList = [...aircraftList];
+      setAircraftList(
+        newAircraftList.filter((item) => item.model_uuid === craft.model_uuid)
+      );
+    } else if (craft.tail_code) {
+      let newAircraftList = [...aircraftList];
+      setAircraftList(
+        newAircraftList.filter((item) => item.tail_code === ('MY' + craft.tail_code ))
+      );
+    }
+  }
+
+  const clearFilter = () => {
+    console.log('Filter cleared', aircraftList);
+    setAircraftList(props.aircrafts)
+  }
+
   return (
     <Container maxWidth='lg' style={{ paddingLeft: '50px' }}>
-      <Paper container className={classes.container} direction='column'>
-
+      <Paper className={classes.container} direction='column'>
         <Grid item className={classes.title}>
           <Typography variant='h2'>
             Aircrafts
           </Typography>
         </Grid>
-
         <Grid item style={{height: '45px'}}>
           <AppBar position="static" className={classes.appBar}>
             {(edit || addNew) ? 
@@ -414,7 +437,7 @@ function Aircrafts(props) {
           {/* Quick info and Search boxes */}
           <Grid container item md={3} direction='column' className={classes.infoBoxes}>
             {/* Database info */}
-            <Paper container item className={classes.quickInfo}>
+            <Paper className={classes.quickInfo}>
               <div className={classes.infoLabels}>
                 <Typography variant='subtitle2'>Summary</Typography>
               </div>
@@ -477,11 +500,17 @@ function Aircrafts(props) {
                 </Grid>
               </Grid>
             </Paper>
-            {/* Search system */}
-            <Paper container item className={classes.search}>
+            {/* Filter system */}
+            <Paper className={classes.search}>
               <div className={classes.infoLabels}>
-                <Typography variant='subtitle2'>Search</Typography>
+                <Typography variant='subtitle2'>Filter</Typography>
               </div>
+              <Grid container direction='column'>
+                <FilterAircraft 
+                  applyFilter={applyFilter}
+                  clearFilter={clearFilter}
+                />
+              </Grid>
             </Paper>
           </Grid>
 
@@ -509,7 +538,7 @@ function Aircrafts(props) {
                   </>
                   :     
                   <> {/* Active Aircraft List*/}
-                    <Paper container direction='column' className={classes.mainList}>
+                    <Paper className={classes.mainList}>
                       <Grid container item className={classes.labelBar}>
                         <Grid item xs={1} />
                         <Grid item xs={4}>
@@ -577,7 +606,7 @@ function Aircrafts(props) {
                   </>
                   :
                   <> {/* Aircraft Model List */}
-                    <Paper data-testid='aircrafts-models' className={classes.modelList}>
+                    <Paper className={classes.modelList}>
                       <Grid container className={classes.cardList}>
                         {props.aircraftModels.map((model, index) => (
                           <Grid item md={6} key={index} style={{height: '185px'}}>
@@ -630,7 +659,7 @@ function Aircrafts(props) {
                   </>  
                   :
                   <> {/* Aircraft Crew List */} 
-                    <Paper data-testid='aircrafts-crew' className={classes.crewList}>
+                    <Paper className={classes.crewList}>
                       <Grid container className={classes.cardList}>
                         {props.crewPositions.map((pos, index) => (
                           <Grid item md={6} key={index} style={{height: '185px'}}>

@@ -233,7 +233,7 @@ function Users(props) {
 
   return (
     <Container maxWidth="lg" style={{ paddingLeft: "50px" }}>
-      <Paper container className={classes.container} direction="column">
+      <Paper className={classes.container} direction="column">
         <Grid item className={classes.title}>
           <Typography variant="h2">Users</Typography>
         </Grid>
@@ -253,7 +253,6 @@ function Users(props) {
             )}
           </AppBar>
         </Grid>
-
         <Grid container item direction="row" style={{ marginTop: "30px" }}>
           {/* Quick info and Search boxes */}
           <Grid
@@ -264,7 +263,7 @@ function Users(props) {
             className={classes.infoBoxes}
           >
             {/* Database info */}
-            <Paper container item className={classes.quickInfo}>
+            <Paper className={classes.quickInfo}>
               <div className={classes.infoLabels}>
                 <Typography variant="subtitle2">Summary</Typography>
               </div>
@@ -366,12 +365,12 @@ function Users(props) {
                   >
                     Unavailable
                   </Typography>
-                  <Typography
+                  {/* <Typography
                     variant="caption"
                     style={{ paddingLeft: "15px", fontStyle: "italic" }}
                   >
-                    Maintenance
-                  </Typography>
+                    Vacation
+                  </Typography> */}
                 </Grid>
                 <Grid
                   container
@@ -392,17 +391,17 @@ function Users(props) {
                   >
                     {statusInventory({ user_status: "Unavailable" })}
                   </Typography>
-                  <Typography
+                  {/* <Typography
                     variant="caption"
                     className={classes.countBackground}
                   >
                     {statusInventory({ user_status: "Vacation" })}
-                  </Typography>
+                  </Typography> */}
                 </Grid>
               </Grid>
             </Paper>
             {/* Search system */}
-            <Paper container item className={classes.search}>
+            <Paper className={classes.search}>
               <div className={classes.infoLabels}>
                 <Typography variant="subtitle2">Search</Typography>
               </div>

@@ -71,9 +71,7 @@ export default function NewModel(props) {
 
   return (
     <Paper className={classes.enterInfo} variant='outlined'>
-      
       <Grid container item>
-
         <Grid container item md={6} direction='column' spacing={2} style={{paddingLeft: '100px'}}>
           {aircraftInfo.map(label => (
             <Grid item key={label}>
@@ -81,7 +79,6 @@ export default function NewModel(props) {
             </Grid>
           ))}
         </Grid>
-
         <Grid container item md={6} direction='column' spacing={2}>
           <Grid item>
             <TextField 
@@ -96,7 +93,6 @@ export default function NewModel(props) {
               }
             />
           </Grid>
-
           { inputSelects.map((inputSelect, index) => (
             <Grid container key={index} className={classes.crewSelect}>
               <Grid item md={8}>
@@ -128,10 +124,8 @@ export default function NewModel(props) {
                 </IconButton>
               </Grid>
             </Grid>
-          ))}
-          
+          ))}  
         </Grid>
-
       </Grid>
 
       {/* Save and Cancel buttons */}

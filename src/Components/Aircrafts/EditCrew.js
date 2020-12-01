@@ -37,7 +37,6 @@ export default function EditCrew(props) {
   return (
     <Paper className={classes.fixedInfo} variant="outlined">
       <Grid container item direct='column' spacing={2}>
-        
         <Grid container item direction='row'>
           <Grid item xs={4} align='right'>Position</Grid>
           <Grid item xs={1} />
@@ -70,7 +69,6 @@ export default function EditCrew(props) {
             </FormControl>
           </Grid>
         </Grid>
-
         <Grid container item>
           <Grid item xs={4} align="center">
             <IconButton
