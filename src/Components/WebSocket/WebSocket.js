@@ -5,6 +5,7 @@ import {
   editLocation,
   deleteLocation,
   addFlight,
+  addManyFlights,
   editFlight,
   deleteFlight,
   setOnline,
@@ -114,7 +115,7 @@ export class WebSocketFrame {
     console.log("Websocket: commit schedule Send:", action);
     try {
       let wsMessage = JSON.stringify({
-        topic: "add_many",
+        topic: "schedule",
         action: action,
         message: message,
       });
@@ -290,11 +291,13 @@ export class WebSocketFrame {
           switch (action) {
             case "add_many":
               console.log("adding flights", message);
+              props.addManyFlightsAction(message);
               break;
             default:
               console.log("Websocket: schedule action not supported", action);
               break;
           }
+          break;
 
         default:
           console.log("Websocket: General topic not supported:", topic);
@@ -325,6 +328,7 @@ const mapDispatchToProps = {
   editLocationAction: editLocation,
   deleteLocationAction: deleteLocation,
   addFlightAction: addFlight,
+  addManyFlightsAction: addManyFlights,
   editFlightAction: editFlight,
   deleteFlightAction: deleteFlight,
   editAirmanAction: editAirman,
