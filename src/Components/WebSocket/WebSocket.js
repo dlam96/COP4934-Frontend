@@ -80,7 +80,6 @@ export class WebSocketFrame {
     }
   }
 
-
   static aircraftHandler(action, message) {
     console.log("Websocket: Aircraft Send:", action);
     try {
@@ -108,6 +107,21 @@ export class WebSocketFrame {
       this.ws.send(wsMessage);
     } catch (error) {
       console.log("Websocket Aircraft Model: Handler Error:", error);
+    }
+  }
+
+  static commitHandler(action, message) {
+    console.log("Websocket: commit schedule Send:", action);
+    try {
+      let wsMessage = JSON.stringify({
+        topic: "add_many",
+        action: action,
+        message: message,
+      });
+      console.log("Websocket commit schedule: About to send the message");
+      this.ws.send(wsMessage);
+    } catch (error) {
+      console.log("Websocket commit schedule Handler Error:", error);
     }
   }
 
@@ -272,6 +286,15 @@ export class WebSocketFrame {
           }
           break;
 
+        case "schedule":
+          switch (action) {
+            case "add_many":
+              console.log("adding flights", message);
+              break;
+            default:
+              console.log("Websocket: schedule action not supported", action);
+              break;
+          }
 
         default:
           console.log("Websocket: General topic not supported:", topic);

@@ -29,6 +29,7 @@ import {
   SETONLINE,
   SETPENDING,
   SETSCHEDULE,
+  COMMITSCHEDULE,
 } from "./actionTypes.js";
 
 export const login = (loginObject) => ({
@@ -239,6 +240,14 @@ export const setOnline = (online) => ({
 // generation action
 export const setSchedule = (schedule) => ({
   type: SETSCHEDULE,
+  payload: {
+    schedule: schedule,
+  },
+});
+
+// commit schedule action
+export const commitSchedule = (schedule) => ({
+  type: COMMITSCHEDULE,
   payload: {
     schedule: schedule,
   },

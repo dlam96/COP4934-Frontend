@@ -6,22 +6,22 @@ import {
   Select,
   Button, 
   TextField,
+  Typography,
 } from "@material-ui/core";
 import {
   Save,
 } from "@material-ui/icons";
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    paddingTop: theme.spacing(2),
-  },
   enterInfo: {
     display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',
-    padding: '5%',
-    width: '100%',
-    height: '100%',
+    padding: '15px',
+    width: '700px',
+    height: '350px',
+    marginTop: '50px',
   },
   fields: {
     margin: '5px',
@@ -32,26 +32,42 @@ const useStyles = makeStyles((theme) => ({
   saveBt: {
     marginRight: "10px",
   },
+  inputRow: {
+    alignItems: 'center',
+    marginTop: '15px',
+  },
+  labelBar: {
+    backgroundColor: fade(theme.palette.primary.main, 0.75),
+    height: '50px',
+    padding: '1px',
+    marginBottom: '15px', 
+    borderRadius: '5px',
+    color: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 }));
 
 export default function NewAircraft(props) {
   const classes = useStyles();
   const { aircraftModels } = props;
   const [aircraft, setAircraft] = useState({model_uuid: '', tail_code: ''});
-  const aircraftInfo = ['Tail Code', 'Aicraft Type', 'Model id', 'Current Status'];
 
   return (
     <Paper className={classes.enterInfo} variant='outlined'>
-      <Grid container item>
-        <Grid container item md={6} direction='column' spacing={2} style={{paddingLeft: '50px'}}>
-          {aircraftInfo.map(label => (
-            <Grid item key={label}>
-              {label}
-            </Grid>
-          ))}
+      <Grid container item direction='column' style={{ justifyContent: 'center' }}>
+        <Grid container item className={classes.labelBar}>
+          <Typography variant='h5'>
+            Add New Aircraft
+          </Typography>
         </Grid>
-        <Grid container item md={6} direction='column' spacing={2}>
-          <Grid item>
+        <Grid container item direction='row' className={classes.inputRow}>
+          <Grid item xs={5} align='end' style={{ marginRight: '50px' }} >
+            <Typography>
+              Tail Code
+            </Typography>
+          </Grid>
+          <Grid item xs={4}>
             <TextField 
               onChange={(e) => 
                 {
@@ -62,7 +78,14 @@ export default function NewAircraft(props) {
               }
             />
           </Grid>
-          <Grid item>
+        </Grid>
+        <Grid container item direction='row' className={classes.inputRow}>
+          <Grid item xs={5} align='end' style={{ marginRight: '50px' }}>
+            <Typography>
+              Aircraft Model
+            </Typography>
+          </Grid>
+          <Grid item xs={4}>
             <Select 
               native
               value={aircraft.model_uuid}
@@ -75,26 +98,30 @@ export default function NewAircraft(props) {
               }
             >
               <option value=''>Select</option>
-            {aircraftModels.map((model, index) => (
-              <option value={model.model_uuid} key={index}>{model.model_name}</option>
-            ))}
+              {aircraftModels.map((model, index) => (
+                <option value={model.model_uuid} key={index}>{model.model_name}</option>
+              ))}
             </Select>
           </Grid>
-          <Grid item>
-            {aircraft.model_uuid}
+        </Grid>
+        <Grid container item direction='row' className={classes.inputRow}>
+          <Grid item xs={5} align='end' style={{ marginRight: '50px' }}>
+            <Typography>
+              Current Status
+            </Typography>
           </Grid>
-          <Grid item>
+          <Grid item xs={4}>
             <Select
-              native
-              value={aircraft.status}
-              onChange={(e) =>
-                {
-                  let newAircraft = {...aircraft};
-                  newAircraft['status'] = e.target.value;
-                  setAircraft(newAircraft)
+                native
+                value={aircraft.status}
+                onChange={(e) =>
+                  {
+                    let newAircraft = {...aircraft};
+                    newAircraft['status'] = e.target.value;
+                    setAircraft(newAircraft)
+                  }
                 }
-              }
-            >
+              >
               <option value="">Select</option>
               <option value="Unavailable">Unavailable</option>
               <option value="Available">Available</option>
@@ -105,7 +132,7 @@ export default function NewAircraft(props) {
       </Grid>
       
       {/* Save and Cancel buttons */}
-      <Grid container item>
+      <Grid item>
         <Grid item xs={12} align="center" className={classes.buttons}>
           <Button
             variant="contained"

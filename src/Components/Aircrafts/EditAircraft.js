@@ -7,33 +7,48 @@ import {
   IconButton,
   Select,
   FormControl,
+  TextField,
+  Typography,
 } from "@material-ui/core";
 import {
   Save,
   Delete,
 } from "@material-ui/icons";
 import ConfirmDelete from './ConfirmDelete.js';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const useStyles = makeStyles((theme) => ({
-  fixedInfo: {
-    height: '300px',
-    width: '500px',
-    paddingTop: "50px",
-    padding: theme.spacing(2),
-    marginLeft: '100px',
+  enterInfo: {
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+    padding: '15px',
+    width: '700px',
+    height: '350px',
+    marginTop: '50px',
   },
-  crewPos: {
-    width: '100%',
+  fields: {
+    margin: '5px',
   },
   buttons: {
-    paddingLeft: '20%',
+    paddingTop: '10px',
   },
   saveBt: {
     marginRight: "10px",
   },
-  posInfo: {
-    margin: theme.spacing(1),
-    paddingLeft: '50%',
+  inputRow: {
+    alignItems: 'center',
+    marginTop: '15px',
+  },
+  labelBar: {
+    backgroundColor: fade(theme.palette.primary.main, 0.75),
+    height: '50px',
+    padding: '1px',
+    marginBottom: '15px', 
+    borderRadius: '5px',
+    color: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }));
 
@@ -50,86 +65,121 @@ export default function EditAircraft(props) {
   }
 
   return (
-    <Paper className={classes.fixedInfo} variant="outlined">
-      <Grid container item direction='column' spacing={2}>
-
-        {/* Aircraft Info */}
-        <Grid container item direction='row'>
-          <Grid item xs={4} align='right'>Aircraft ID</Grid>
-          <Grid item xs={1} />
-          <Grid item xs={4} align='start'>{ aircraft.aircraft_uuid }</Grid>
+    <Paper className={classes.enterInfo} variant='outlined'>
+      <Grid container item direction='column' style={{ justifyContent: 'center' }}>
+        <Grid container item className={classes.labelBar}>
+          <Typography variant='h5'>
+            Edit Aircraft
+          </Typography>
         </Grid>
-        <Grid container item direction='row'>
-          <Grid item xs={4} align='right'>Aircraft Model</Grid>
-          <Grid item xs={1} />
-          <Grid item xs={4} align='start'>{ getModelName(aircraft) }</Grid>
+        <Grid container item direction='row' className={classes.inputRow}>
+          <Grid item xs={5} align='end' style={{ marginRight: '50px' }} >
+            <Typography>
+              Aircraft ID
+            </Typography>
+          </Grid>
+          <Grid item xs={5}>
+            { aircraft.aircraft_uuid }
+          </Grid>
         </Grid>
-        <Grid container item direction='row'>
-          <Grid item xs={4} align='right'>Status</Grid>
-          <Grid item xs={1} />
-          <Grid item xs={4} alight='start'>
-            <FormControl size='small'>
-              <Select
-                native
-                value={aircraft.status}
-                onChange={(e) =>
-                  {
-                    let newAircraft = {...aircraft};
-                    newAircraft['status'] = e.target.value;
-                    setAircraft(newAircraft)
-                  }
+        <Grid container item direction='row' className={classes.inputRow}>
+          <Grid item xs={5} align='end' style={{ marginRight: '50px' }}>
+            <Typography>
+              Tail Code
+            </Typography>
+          </Grid>
+          <Grid item xs={4}>
+            <TextField
+              id='tail-code-edit'
+              size='small'
+              variant='outlined'
+              value={aircraft.tail_code}
+              onChange={(e) => 
+                {
+                  let newAircraft = {...aircraft};
+                  newAircraft['tail_code'] = e.target.value;
+                  setAircraft(newAircraft)
                 }
-              >
-                <option value="Unavailable">Unavailable</option>
-                <option value="Available">Available</option>
-                <option value="Maitenance">Maitenance</option>
-              </Select>
-            </FormControl>
+              }
+            />
           </Grid>
         </Grid>
-
-        {/* Save and Cancel buttons */}
-        <Grid container item>
-          <Grid item xs={2} align='start'>
-            <IconButton
-              color='secondary'
-              // onClick={()=>props.handleDeleteAircraft(aircraft)}
-              onClick={()=> setConfirmDelete(true)}
-            >
-              <Delete />
-            </IconButton>
-            <ConfirmDelete
-              title='Delete Aircraft?'
-              open={confirmDelete}
-              setOpen={setConfirmDelete}
-              aircraft={aircraft}
-              handleDeleteAircraft={props.handleDeleteAircraft}
-              handleEdit={props.handleEdit}
-            >
-              Are you sure you want to delete this aircraft?
-            </ConfirmDelete>
+        <Grid container item direction='row' className={classes.inputRow}>
+          <Grid item xs={5} align='end' style={{ marginRight: '50px' }}>
+            <Typography>
+              Aircraft Model
+            </Typography>
           </Grid>
-          <Grid item xs={10} className={classes.buttons}>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<Save />}
-              className={classes.saveBt}
-              onClick={()=>props.handleEdit(aircraft)}
-            >
-              Save
-            </Button>
-            <Button
-              variant="contained"
-              onClick={()=>props.handleEdit()}
-            >
-              Cancel
-            </Button>
+          <Grid item xs={4}>
+            { getModelName(aircraft) }
           </Grid>
         </Grid>
-
+        <Grid container item direction='row' className={classes.inputRow}>
+          <Grid item xs={5} align='end' style={{ marginRight: '50px' }}>
+            <Typography>
+              Status
+            </Typography>
+          </Grid>
+          <Grid item xs={4}>
+            <Select
+              native
+              value={aircraft.status}
+              onChange={(e) =>
+                {
+                  let newAircraft = {...aircraft};
+                  newAircraft['status'] = e.target.value;
+                  setAircraft(newAircraft)
+                }
+              }
+            >
+              <option value="Unavailable">Unavailable</option>
+              <option value="Available">Available</option>
+              <option value="Maitenance">Maitenance</option>
+            </Select>
+          </Grid>
+        </Grid>
+      </Grid>
+      
+      {/* Save and Cancel buttons */}
+      <Grid container item style={{ marginTop: '10px' }}>
+        <Grid item xs={2} align='start'>
+          <IconButton
+            color='secondary'
+            // onClick={()=>props.handleDeleteAircraft(aircraft)}
+            onClick={()=> setConfirmDelete(true)}
+          >
+            <Delete />
+          </IconButton>
+          <ConfirmDelete
+            title='Delete Aircraft?'
+            open={confirmDelete}
+            setOpen={setConfirmDelete}
+            aircraft={aircraft}
+            handleDeleteAircraft={props.handleDeleteAircraft}
+            handleEdit={props.handleEdit}
+          >
+            Are you sure you want to delete this aircraft?
+          </ConfirmDelete>
+        </Grid>
+        <Grid item xs={2} />
+        <Grid item xs={4} className={classes.buttons}>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<Save />}
+            className={classes.saveBt}
+            onClick={()=>props.handleEdit(aircraft)}
+          >
+            Save
+          </Button>
+          <Button
+            variant="contained"
+            onClick={()=>props.handleEdit()}
+          >
+            Cancel
+          </Button>
+        </Grid>
       </Grid>
     </Paper>
   )
-
 }
