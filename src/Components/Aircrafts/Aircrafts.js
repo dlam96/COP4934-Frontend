@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { 
@@ -19,7 +19,7 @@ import { green, grey, blueGrey } from '@material-ui/core/colors';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import { setAircraftModels, setAircrafts, setCrewPostions } from '../../Redux/actions.js';
-
+import { WebSocketFrame } from "../WebSocket/WebSocket.js";
 import EditAircraftModel from './EditAircraftModel.js';
 import ActiveAircrafts from './ActiveAircrafts.js';
 import AircraftModels from './AircraftModels.js';
@@ -196,6 +196,12 @@ function Aircrafts(props) {
   const [editAircraftModel, setEditAircraftModel] = useState(null);
   const [editCrew, setEditCrew] = useState(null);
 
+  useEffect(() => {
+    console.log("new State Props Aircrafts:", props.aircrafts)
+    setAircraftList(props.aircrafts);
+  }, [props.aircrafts]);
+
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -207,27 +213,8 @@ function Aircrafts(props) {
     } else {
       setEdit(false);
       if (!aircraft) return;
-      
-      const updatedAircrafts = aircraftList.filter(
-        (item) => item.aircraft_uuid !== aircraft.aircraft_uuid
-      );
 
-      const updatedAircraft = {...aircraft};
-      updatedAircrafts.push(updatedAircraft)
-
-      axios
-        .patch("/aircraft/" + aircraft.aircraft_uuid,
-        {
-          status: aircraft.status,
-          tail_code: aircraft.tail_code,
-        })
-        .then((response) => {
-          console.log("Response from Post:", response);
-          setAircraftList(updatedAircrafts);
-        })
-        .catch((error) => {
-          console.log("Error:", error);
-        })
+      WebSocketFrame.aircraftHandler("edit", { aircraft_uuid: aircraft.aircraft_uuid, status: aircraft.status });
     }
   }
 
@@ -268,22 +255,7 @@ function Aircrafts(props) {
     } else {
       setAddNew(false);
       if (!aircraft) return;
-      axios
-        .post(
-          "/aircraft",
-          {
-            model_uuid: aircraft.model_uuid,
-            status: aircraft.status,
-            tail_code: aircraft.tail_code,
-          },
-          { headers: { "Content-Type": "application/json" } }
-        )
-        .then((response) => {
-          console.log("Response from Post:", response);
-        })
-        .catch((error) => {
-          console.log("Error:", error);
-        })
+      WebSocketFrame.aircraftHandler("add", { model_uuid: aircraft.model_uuid, status: aircraft.status, tail_code: aircraft.tail_code, });
     }
   }
 
@@ -294,21 +266,9 @@ function Aircrafts(props) {
       setAddNew(false);
       if (!model) return;
       // console.log('Testing model', model.model_name, model.positions)
-      axios
-        .post(
-          "aircraft_model",
-          {
-            model_name: model.model_name,
-            positions: model.positions,
-          },
-          { headers: { "Content-Type": "application/json" }}
-        )
-        .then((response) => {
-          console.log("Response from Post Model:", response.data);
-        })
-        .catch((error) => {
-          console.log("Error:", error)
-        })
+      console.log("Positions:", model.positions);
+      model.positions = model.positions.filter((position) => position.crew_position_uuid !== '');
+      WebSocketFrame.aircraftModelHandler("add", { model_name: model.model_name, positions: model.positions})
     } 
   }
 
@@ -338,27 +298,12 @@ function Aircrafts(props) {
   
   const handleDeleteAircraft = (aircraft = null) => {
     if (!aircraft) return;
-    axios
-      .delete("/aircraft/" + aircraft.aircraft_uuid)
-      .then((response) => {
-        console.log("Response from delete Aircraft:", response);
-        console.log("Delete Model:", aircraft)
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-      })
+    WebSocketFrame.aircraftHandler("delete", { aircraft_uuid: aircraft.aircraft_uuid });
   }
 
   const handleDeleteModel = (model = null) => {
     if (!model) return;
-    axios
-      .delete("/aircraft_model/" + model.model_uuid)
-      .then((response) => {
-        console.log("Response from delete Model:", response);
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-      })
+    WebSocketFrame.aircraftModelHandler("delete", { model_uuid: model.model_uuid });
   }
 
   const handleDeleteCrew = (crew = null) => {

@@ -11,7 +11,6 @@ export default function (state = null, action) {
     }
 
     case EDITLOCATION: {
-      console.log("editting got obj:", action.payload);
       let newState = [...state];
       for (let i = 0; i < newState.length; i++) {
         if (newState[i].location_uuid === action.payload.location.location_uuid) {
@@ -22,9 +21,7 @@ export default function (state = null, action) {
     }
 
     case DELETELOCATION: {
-      console.log("Deleting Reducer");
       let newState = state.filter(element => element.location_uuid !== action.payload.location.location_uuid);
-      console.log("NewState:", newState);
       return newState;
     }
 
