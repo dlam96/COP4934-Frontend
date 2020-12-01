@@ -119,9 +119,8 @@ function CreateSchedule(props) {
   // get first and last day of NEXT week
   let first = nextWeek.getDate() - nextWeek.getDay(); // First day is the day of the month - the day of the week
   let last = first + 6; // last day is the first day + 6
-  var firstday = new Date(nextWeek.setDate(first)).toUTCString();
-  var lastday = new Date(nextWeek.setDate(last)).toUTCString();
-  console.log("first", firstday, "last", lastday);
+  let firstday = new Date(nextWeek.setDate(first)).setHours(0, 0, 0, 0);
+  let lastday = new Date(nextWeek.setDate(last)).setHours(23, 59, 59, 59);
 
   const [startDate, setStartDate] = useState(moment(firstday).toDate());
   const [endDate, setEndDate] = useState(moment(lastday).toDate());
