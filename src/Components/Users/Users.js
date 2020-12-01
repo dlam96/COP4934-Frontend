@@ -22,6 +22,7 @@ import TabControlUser from "./TabControlUser.js";
 import { setPending } from "../../Redux/actions";
 import { connect } from "react-redux";
 import { WebSocketFrame } from "../WebSocket/WebSocket.js";
+import FilterUsers from "./FilterUsers.js";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -155,6 +156,13 @@ function Users(props) {
   const [editUser, setEditUser] = useState(null);
   const [approveUserList, setApproveUserList] = useState([]);
 
+  const [userList, setUserList] = useState(props.airmen)
+
+  useEffect(() => {
+    console.log("new State Props Users:", props.airmen)
+    setUserList(props.airmen)
+  }, [props.airmen])
+
   console.log("Props airmen", props.airmen);
 
   const handleChange = (event, newValue) => {
@@ -220,16 +228,38 @@ function Users(props) {
 
   const userInventory = (user = null) => {
     if (!user) return;
-    let searchList = [...props.airmen];
+    let searchList = [...approveUserList];
     return searchList.filter((item) => item.role === user.role).length;
   };
 
   const statusInventory = (user = null) => {
     if (!user) return;
-    let searchList = [...props.airmen];
+    let searchList = [...userList];
     return searchList.filter((item) => item.user_status === user.user_status)
       .length;
   };
+
+  const applyFilter = ( user = null ) => {
+    let newUserList = [...userList];
+    if (user.last_name && user.meta_position_status) {
+      setUserList(
+        newUserList.filter((item) => (item.last_name === user.last_name && item.meta_position_status === user.meta_position_status ))
+      );
+    } else if (user.last_name) {
+      setUserList(
+        newUserList.filter((item) => item.last_name === user.last_name)
+      );
+    } else if (user.meta_position_status) {
+      setUserList(
+        newUserList.filter((item) => item.meta_position_status === user.meta_position_status )
+      );
+    }
+  }
+
+  const clearFilter = () => {
+    console.log('Filter cleared', userList);
+    setUserList(props.airmen)
+  }
 
   return (
     <Container maxWidth="lg" style={{ paddingLeft: "50px" }}>
@@ -314,7 +344,7 @@ function Users(props) {
                     variant="caption"
                     className={classes.countBackground}
                   >
-                    {props.airmen.length}
+                    {userList.length}
                   </Typography>
                   <Typography
                     variant="caption"
@@ -403,8 +433,15 @@ function Users(props) {
             {/* Search system */}
             <Paper className={classes.search}>
               <div className={classes.infoLabels}>
-                <Typography variant="subtitle2">Search</Typography>
+                <Typography variant="subtitle2">Filter</Typography>
               </div>
+              <Grid container direction="column">
+                <FilterUsers
+                  metaPositions={props.metaPositions}
+                  applyFilter={applyFilter}
+                  clearFilter={clearFilter}
+                />
+              </Grid>
             </Paper>
           </Grid>
 
@@ -469,7 +506,7 @@ function Users(props) {
                     item
                     style={{ display: 'flex', overflowY: 'auto', maxHeight: '650px' }}
                   >
-                    {props.airmen.map((user) => (
+                    {userList.map((user) => (
                       <ActiveUsers
                         user={user}
                         handleEdit={handleEdit}
@@ -503,6 +540,7 @@ function Users(props) {
                   <Grid item xs={1}>
                     <Typography variant="subtitle1">Status</Typography>
                   </Grid>
+                  <Grid item xs={1} />
                 </Grid>
                 <Divider variant="fullWidth" />
                 {props.pendingUsers && props.pendingUsers.map((user) => (

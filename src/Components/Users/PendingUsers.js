@@ -4,15 +4,35 @@ import {
   Grid,
   Divider,
   Checkbox,
+  Typography,
 } from "@material-ui/core";
+import { blueGrey } from '@material-ui/core/colors';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const useStyles = makeStyles((theme) => ({
   details: {
-    paddingLeft: '10px',
-    marginBottom: '5px',
+    height: '40px',
+    margin: '10px',
     alignItems: 'center',
-    margin: '5px',
-  }
+    alignContent: 'center',
+    borderRadius: '5px',
+    '&:hover': {
+      backgroundColor: fade(blueGrey[700], 0.25),
+      '& $divBar': {
+        backgroundColor: theme.palette.secondary.main,
+      }
+    }
+  },
+  divBar: {
+    width: '5px',
+    height: '100%',
+    marginRight: '55px',
+    backgroundColor: 'white',
+    borderRadius: '5px',
+  },
+  editButton: {
+    color: theme.palette.secondary.main,
+  },
 }));
 
 export default function PendingUsers(props) {
@@ -32,14 +52,33 @@ export default function PendingUsers(props) {
     props.setApproveUserList([...props.approveUserList, e.target.value]);
   }
 
-  return( 
+  return (
     <Grid container item xs={12} md={12} className={classes.details}>
-      <Grid item xs={3} align="start">{ user.first_name }</Grid>
-      <Grid item xs={3} align="start">{ user.last_name }</Grid>
-      <Grid item xs={2} align="start">{ rankIdSlice(user.rank_uuid) }</Grid>
-      <Grid item xs={1} align="start">{ user.role }</Grid>
-      <Grid item xs={1} align="start">{ user.user_status }</Grid>
-      <Grid item xs={2} align="right" style={{paddingRight: '15px'}}>
+      <Grid item className={classes.divBar} />
+      <Grid item xs={3}>
+        <Typography>
+          {user.first_name}
+        </Typography>
+      </Grid>
+      <Grid item xs={3}>
+        <Typography>
+          {user.last_name}
+        </Typography>
+      </Grid>
+      {/* <Grid item xs={2} style={{ marginLeft: '5px' }}>
+        {rankIdSlice(user.rank_uuid)}
+      </Grid> */}
+      <Grid item xs={2}>
+        <Typography variant='body2'>
+          {user.role}
+        </Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography variant='body2'>
+          {user.user_status}
+        </Typography>
+      </Grid>
+      <Grid item xs={1} align="right">
         <Checkbox 
           checked={approveCheck}
           value={user.account_uuid}
@@ -51,9 +90,7 @@ export default function PendingUsers(props) {
           }
         />
       </Grid>
-      <Grid item xs={12} md={12}><Divider variant='middle' /></Grid>
     </Grid>
-  )
-
+  );
 }
 
