@@ -39,7 +39,6 @@ export default function EditAircraftModel(props) {
   return (
     <Paper className={classes.fixedInfo} variant="outlined">
       <Grid container item direct='column' spacing={2}>
-
        <Grid container item direction='row'>
           <Grid item xs={4} align='right'>Model id</Grid>
           <Grid item xs={1} />

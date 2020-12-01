@@ -43,7 +43,6 @@ export default function NewAircraft(props) {
   return (
     <Paper className={classes.enterInfo} variant='outlined'>
       <Grid container item>
-
         <Grid container item md={6} direction='column' spacing={2} style={{paddingLeft: '50px'}}>
           {aircraftInfo.map(label => (
             <Grid item key={label}>
@@ -51,7 +50,6 @@ export default function NewAircraft(props) {
             </Grid>
           ))}
         </Grid>
-
         <Grid container item md={6} direction='column' spacing={2}>
           <Grid item>
             <TextField 
@@ -104,8 +102,8 @@ export default function NewAircraft(props) {
             </Select>
           </Grid>
         </Grid>
-
       </Grid>
+      
       {/* Save and Cancel buttons */}
       <Grid container item>
         <Grid item xs={12} align="center" className={classes.buttons}>
