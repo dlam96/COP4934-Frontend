@@ -216,11 +216,18 @@ function MasterModal(props) {
   // Current crew members of this selected aircraft
   const [flightCrew, setFlightCrew] = useState(null);
 
+  // crew_position_uuid to meta_name
+  const [crewToMeta, setCrewToMeta] = useState(null);
+
+  // meta_name to airmen
+  const [metaToAirmen, setMetaToAirmen] = useState(null);
+
   let propsLocations = props.locations;
   let propsAircrafts = props.aircrafts;
   let propsAircraftModels = props.airacraft_models;
   let propsCrewPositions = props.crew_positions;
   let propsAirmen = props.airmen;
+  let propsMetaPosition = props.meta_positions;
 
   // Main use Effect which updates the selected flight a user opens
   useEffect(() => {
@@ -281,6 +288,7 @@ function MasterModal(props) {
     }
   }, [propsCrewPositions]);
 
+  // Loads props Aircrafts into our inner state Aircrafts (Array of Aircrafts, we use array index to reference aircraft)
   useEffect(() => {
     if (propsAircrafts && aircraftModels) {
       setAircrafts(
@@ -295,6 +303,7 @@ function MasterModal(props) {
     }
   }, [propsAircrafts, aircraftModels]);
 
+  // Loads based on the selected Aircraft what our Flight Positions are. 
   useEffect(() => {
     if (positions && aircraftModels && aircrafts) {
       let modelUUID = aircrafts[selectedAircraftIndex].model_uuid;
@@ -309,6 +318,7 @@ function MasterModal(props) {
     }
   }, [positions, aircraftModels, selectedAircraftIndex, aircrafts]);
 
+  // Loads in already selected airmen for a given flight returns Hash Table, Key: crew_position_uuid, Value: airman object
   useEffect(() => {
     if (selectedPilots) {
       let flightCrewObj = {};
@@ -324,6 +334,73 @@ function MasterModal(props) {
       console.log("Flight Positions:", flightPositions);
     }
   }, [flightPositions]);
+
+  useEffect(() => {
+    if (propsMetaPosition) {
+      let crew_to_meta_obj = {};
+      propsMetaPosition.forEach((item) => {
+        crew_to_meta_obj[item.crew_position_uuid] = item.meta_name;
+      });
+      setCrewToMeta(crew_to_meta_obj);
+      console.log("Set Crew TO Meta!!!", crew_to_meta_obj);
+    }
+  }, [propsMetaPosition]);
+
+  useEffect(() => {
+    if (propsAirmen) {
+      let meta_to_airmen_obj = {};
+      propsAirmen.forEach((item) => {
+        console.log("Creating meta: Item", item.meta_position_status);
+        if (meta_to_airmen_obj[item.meta_position_status]) {
+          meta_to_airmen_obj[item.meta_position_status].push(item);
+        } else {
+          let new_array = [item];
+          meta_to_airmen_obj[item.meta_position_status] = new_array;
+        }
+      });
+      setMetaToAirmen(meta_to_airmen_obj);
+      console.log("Set Meta to Airmen!!!", meta_to_airmen_obj);
+    }
+  }, [propsAirmen]);
+   
+  const handleAirmenPick = (crew_position_uuid) => {
+    if (crewToMeta && metaToAirmen && flightCrew) {
+      //console.log("Meta Picking Crew_Position_UUID", crew_position_uuid);
+      //console.log("flight Crew:", flightCrew);
+      let metaPosition = crewToMeta[crew_position_uuid];
+      //console.log("Meta Picking Meta Postion", metaPosition);
+      //console.log("Meta to Airmen", metaToAirmen);
+      let metaToCertainAimen = metaToAirmen[metaPosition];
+      console.log("Meta Picking from:", metaToCertainAimen);
+      if (metaToCertainAimen) {
+        //console.log("Flight Crew:",Object.values(flightCrew));
+        //console.log("Filter From", metaToCertainAimen);
+        let filterCrew = Object.values(flightCrew).filter((item) => item.crew_position_uuid !== crew_position_uuid);
+        let blockDup = Object.values(filterCrew).map((item) => item.airman_uuid);
+        //console.log("Our crew uuid", crew_position_uuid);
+        //console.log("Filtering out:", blockDup);
+        metaToCertainAimen = metaToCertainAimen.filter((item) => !blockDup.includes(item.account_uuid));
+        return metaToCertainAimen.map((airman) => (
+          <MenuItem
+            key={airman.account_uuid}
+            value={airman.account_uuid}
+          >
+            {airman.first_name +
+              " " +
+              airman.last_name}
+          </MenuItem>
+        ))
+      } else {
+        return (
+          <MenuItem
+            key={""}
+            value={""}
+           >
+          </MenuItem>
+          );
+      }
+    }
+  }
 
   // Modal functions
 
@@ -368,14 +445,6 @@ function MasterModal(props) {
     console.log("New Pilot Selected:");
     console.log("Selected Value:", event.target.value);
     console.log("Position_uuid:", position_uuid);
-    // check if pilot already selected
-    // let isSelected = selectedPilots.findIndex(
-    //   (member) => member.airman_uuid === event.target.value
-    // );
-    // if (isSelected !== -1) {
-    //   console.log("member is not unique");
-    //   return;
-    // }
     let newSelectedPilots = [];
     if (selectedPilots) {
       newSelectedPilots = [...selectedPilots];
@@ -396,19 +465,6 @@ function MasterModal(props) {
   };
 
   const handleDelete = () => {
-    // axios
-    //   .delete("/flight/" + props.selectedEvent.flight_uuid)
-    //   .then((response) => {
-    //     console.log("Response from Delete:", response);
-    //   })
-    //   .catch((error) => {
-    //     console.log("Error:", error);
-    //   });
-    // props.setEvents(
-    //   props.events.filter(
-    //     (obj) => obj.flight_uuid !== props.selectedEvent.flight_uuid
-    //   )
-    // );
     WebSocketFrame.flightHandler("delete", {
       flight_uuid: props.selectedEvent.flight_uuid,
     });
@@ -471,95 +527,8 @@ function MasterModal(props) {
     console.log("Websocket: Finished Flight Object:", flightObj);
     // Updating existing Event
     if (objIndex >= 0) {
-      // const newEvents = [...props.events];
-      // newEvents[objIndex] = {
-      //   flight_uuid: props.selectedEvent.flight_uuid,
-      //   color: selectedColor,
-      //   title: title,
-      //   start: props.startDate,
-      //   end: props.endDate,
-      //   allDay: allDay ? allDay : false,
-      //   aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
-      //   location_uuid: locations[selectedLocationIndex].location_uuid,
-      //   crew_members: selectedPilots,
-      //   description: props.selectedEvent.description,
-      // };
-      // props.setEvents(newEvents);
       WebSocketFrame.flightHandler("edit", flightObj);
-      // // Send A Put Request
-      // axios
-      //   .put(
-      //     "/flight/" + props.selectedEvent.flight_uuid,
-      //     {
-      //       flight_uuid: props.selectedEvent.flight_uuid,
-      //       color: selectedColor,
-      //       title: title,
-      //       start_time: props.startDate,
-      //       end_time: props.endDate,
-      //       all_day: allDay ? allDay : false,
-      //       aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
-      //       location_uuid: locations[selectedLocationIndex].location_uuid,
-      //       crew_members: selectedPilots,
-      //       description: props.selectedEvent.description,
-      //     },
-      //     { headers: { "Content-Type": "application/json" } }
-      //   )
-      //   .then((response) => {
-      //     console.log("Response from Put:", response);
-      //   })
-      //   .catch((error) => {
-      //     console.log("Error:", error);
-      //   });
-
-      // Creating a new event
-      // TODO:
-      // Need to fix description (add state and place to update description)
-      // Need to fix crew_members
     } else {
-      // Call A Post Request
-      // TODO:
-      // Need to fix description (add state and place to update description)
-      // Need to fix crew_members
-
-      // axios
-      //   .post(
-      //     "/flight",
-      //     {
-      //       color: selectedColor !== "" ? selectedColor : "#3174ad",
-      //       title: title ? title : "",
-      //       start_time: props.startDate,
-      //       end_time: props.endDate,
-      //       allDay: allDay ? allDay : false,
-      //       aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
-      //       location_uuid: locations[selectedLocationIndex].location_uuid,
-      //       crew_members: [],
-      //       description: "",
-      //     },
-      //     { headers: { "Content-Type": "application/json" } }
-      //   )
-      //   .then((response) => {
-      //     console.log("Response from Post:", response);
-
-      //     const newEvents = [
-      //       ...props.events,
-      //       {
-      //         flight_uuid: response.data.flight_uuid,
-      //         color: selectedColor !== "" ? selectedColor : "#3174ad",
-      //         title: title,
-      //         start: props.startDate,
-      //         end: props.endDate,
-      //         allDay: allDay ? allDay : false,
-      //         aircraft_uuid: aircrafts[selectedAircraftIndex].aircraft_uuid,
-      //         location_uuid: locations[selectedLocationIndex].location_uuid,
-      //         crew_members: [],
-      //         description: "",
-      //       },
-      //     ];
-      //     props.setEvents(newEvents);
-      //   })
-      //   .catch((error) => {
-      //     console.log("Error:", error);
-      //   });
       WebSocketFrame.flightHandler("add", flightObj);
       // Need to update id we get back
     }
@@ -933,16 +902,8 @@ function MasterModal(props) {
                                       props.role === "User" ? true : false,
                                   }}
                                 >
-                                  {propsAirmen.map((airman) => (
-                                    <MenuItem
-                                      key={airman.account_uuid}
-                                      value={airman.account_uuid}
-                                    >
-                                      {airman.first_name +
-                                        " " +
-                                        airman.last_name}
-                                    </MenuItem>
-                                  ))}
+                                  {/* Working ON */}
+                                  {handleAirmenPick(item.crew_position_uuid)}
                                 </TextField>
                               </Grid>
                             ))}
@@ -1406,14 +1367,8 @@ function MasterModal(props) {
                                     props.role === "User" ? true : false,
                                 }}
                               >
-                                {propsAirmen.map((airman) => (
-                                  <MenuItem
-                                    key={airman.account_uuid}
-                                    value={airman.account_uuid}
-                                  >
-                                    {airman.first_name + " " + airman.last_name}
-                                  </MenuItem>
-                                ))}
+                                {/* Working ON */}
+                                {handleAirmenPick(item.crew_position_uuid)}
                               </TextField>
                             </Grid>
                           ))}
@@ -1459,6 +1414,7 @@ const mapStateToProps = (state) => {
     airacraft_models: state.aircraftmodelReducer,
     crew_positions: state.crewpositionReducer,
     airmen: state.airmenReducer.users,
+    meta_positions: state.metaPositionReducer,
   };
 };
 const mapDispatchToProps = (state) => {
