@@ -5,24 +5,46 @@ import {
   makeStyles,
   Button,
   IconButton,
+  Typography,
 } from "@material-ui/core";
 import {
   Delete,
 } from "@material-ui/icons";
 import ConfirmDeleteModel from './ConfirmDeleteModel';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const useStyles = makeStyles((theme) => ({
-  fixedInfo: {
-    height: '100%',
-    width: '100%',
-    paddingTop: "50px",
-    padding: theme.spacing(2),
+  enterInfo: {
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+    padding: '15px',
+    width: '700px',
+    height: '350px',
+    marginTop: '50px',
+  },
+  fields: {
+    margin: '5px',
   },
   buttons: {
-    paddingTop: theme.spacing(2),
+    paddingTop: '40px',
   },
   saveBt: {
     marginRight: "10px",
+  },
+  inputRow: {
+    alignItems: 'center',
+    marginTop: '15px',
+  },
+  labelBar: {
+    backgroundColor: fade(theme.palette.primary.main, 0.75),
+    height: '50px',
+    padding: '1px',
+    marginBottom: '15px', 
+    borderRadius: '5px',
+    color: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }));
 
@@ -37,58 +59,70 @@ export default function EditAircraftModel(props) {
   }
 
   return (
-    <Paper className={classes.fixedInfo} variant="outlined">
-      <Grid container item direct='column' spacing={2}>
-       <Grid container item direction='row'>
-          <Grid item xs={4} align='right'>Model id</Grid>
-          <Grid item xs={1} />
-          <Grid item xs={4} align='start'>{ model.model_uuid }</Grid>
+    <Paper className={classes.enterInfo} variant='outlined'>
+    <Grid container item direction='column' style={{ justifyContent: 'center' }}>
+      <Grid container item className={classes.labelBar}>
+        <Typography variant='h5'>
+          Model Details
+        </Typography>
+      </Grid>
+      <Grid container item direction='row' className={classes.inputRow}>
+        <Grid item xs={5} align='end' style={{ marginRight: '50px' }} >
+          <Typography>
+            Model Name
+          </Typography>
         </Grid>
-        <Grid container item direction='row'>
-          <Grid item xs={4} align='right'>Model Name</Grid>
-          <Grid item xs={1} />
-          <Grid item xs={4} align='start'>{ model.model_name }</Grid>
+        <Grid item xs={5}>
+          { model.model_name }
         </Grid>
-        <Grid container item direction='row'>
-          <Grid item xs={4} align='right'>Positions:</Grid>
+      </Grid>
+      <Grid container item direction='row' className={classes.inputRow}>
+        <Grid item xs={5} align='end' style={{ marginRight: '50px' }}>
+          <Typography>
+            Positions
+          </Typography>
+        </Grid>
+        <Grid item xs={4}>
           {model.positions.map(pos => (
-            <Grid item xs={12} align='center' key={pos.crew_position_uuid}>
+            <Grid item xs={12} align='start' key={pos.crew_position_uuid}>
               {getPositionName(pos)}
             </Grid>
           ))}
         </Grid>
-
-        {/* Save and Cancel buttons */}
-        <Grid container item className={classes.buttons}>
-          <Grid item xs={4} align="center">
-            <IconButton
-              color='secondary'
-              onClick={()=>setConfirmDelete(true)}
-            >
-              <Delete />
-            </IconButton>
-            <ConfirmDeleteModel
-              title='Delete Model?'
-              open={confirmDelete}
-              setOpen={setConfirmDelete}
-              model={model}
-              handleDeleteModel={props.handleDeleteModel}
-              handleModelEdit={props.handleModelEdit}
-            >
-              Are you sure you want to delete this model?
-            </ConfirmDeleteModel>
-          </Grid>
-          <Grid item md={8} align="center">
-            <Button
-              variant="contained"
-              onClick={()=>props.handleModelEdit()}
-            >
-              Back
-            </Button>
-          </Grid>
-        </Grid>
-
       </Grid>
-    </Paper>
+    </Grid>
+    
+
+      {/* Save and Cancel buttons */}
+      <Grid container item className={classes.buttons}>
+        <Grid item xs={4} align="center">
+          <IconButton
+            color='secondary'
+            onClick={()=>setConfirmDelete(true)}
+          >
+            <Delete />
+          </IconButton>
+          <ConfirmDeleteModel
+            title='Delete Model?'
+            open={confirmDelete}
+            setOpen={setConfirmDelete}
+            model={model}
+            handleDeleteModel={props.handleDeleteModel}
+            handleModelEdit={props.handleModelEdit}
+          >
+            Are you sure you want to delete this model?
+          </ConfirmDeleteModel>
+        </Grid>
+        <Grid item md={4} align="center">
+          <Button
+            variant="contained"
+            onClick={()=>props.handleModelEdit()}
+          >
+            Back
+          </Button>
+        </Grid>
+      </Grid>
+      
+  </Paper>
   )
 }
