@@ -29,7 +29,11 @@ import MomentUtils from "@date-io/moment";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 
 import PreviewToolbar from "./PreviewToolbar.js";
-import { TimePicker, DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import {
+  TimePicker,
+  DatePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
 
 // Redux
 import { connect } from "react-redux";
@@ -45,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
     // overflow: "auto",/
   },
   container: {
+    width: "100%",
     // paddingTop: theme.spacing(4),
     // paddingBottom: theme.spacing(4),
   },
@@ -67,6 +72,9 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     backgroundColor: theme.palette.primary.main,
     textAlign: "center",
+  },
+  largeDateStyle: {
+    margin: theme.spacing(1, 0, 1, 1),
   },
   timeStyle: {
     margin: theme.spacing(1, 0, 1, 1),
@@ -100,10 +108,13 @@ function CreateSchedule(props) {
   const localizer = momentLocalizer(moment);
 
   let today = new Date();
+  let nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
-  const [flightDuration, setFlightDuration] = useState('4');
-  const durationOptions = ['1', '2', '3', '4', '5', '6', '7', '8'];
+  
+  const [flightDuration, setFlightDuration] = useState("4");
+  const durationOptions = ["1", "2", "3", "4", "5", "6", "7", "8"];
+
   let propsAircraftModels = props.aircraft_models;
   const [aircraftModels, setAircraftModels] = useState(propsAircraftModels);
   let propsAirmen = props.airmen;
@@ -222,7 +233,6 @@ function CreateSchedule(props) {
     // console.log("Airmen", ...propsAirmen);
   }, [propsAirmen]);
 
-
   useEffect(() => {
     if (props.schedule) {
       let generatedSchedule = [];
@@ -235,7 +245,7 @@ function CreateSchedule(props) {
       }
       setGeneratedSchedule(generatedSchedule);
     }
-  }, [props.schedule])
+  }, [props.schedule]);
 
   const eventStyleGetter = (event) => {
     // console.log("prop e", event);
@@ -480,10 +490,12 @@ function CreateSchedule(props) {
               events={generatedSchedule}
               startAccessor="start"
               endAccessor="end"
-              date={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)}
+              defaultDate={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)}
               style={{ height: "82vh", width: "100%" }}
               defaultView="week"
-              components={{ toolbar: PreviewToolbar }}
+              components={{
+                toolbar: PreviewToolbar,
+              }}
               eventPropGetter={eventStyleGetter}
               onEventDrop={moveEvent}
             />

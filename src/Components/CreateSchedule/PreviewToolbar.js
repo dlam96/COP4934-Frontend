@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 export default function PreviewToolbar(props) {
   // console.log(props);
   const classes = useStyles();
-
+  // console.log("props", props);
   return (
     <Toolbar className={classes.toolbar}>
       <Grid container direction="row">
