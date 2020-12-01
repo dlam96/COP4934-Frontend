@@ -281,32 +281,36 @@ function CurrentSchedule(props) {
                   </Button>
                 </Grid>
                 {/* Avatar User Count */}
-                <Grid
-                  item
-                  container
-                  xs={6}
-                  justify="flex-end"
-                  alignItems="baseline"
-                >
-                  <AvatarGroup max={5}>
-                    {props.online_users &&
-                      props.online_users.map((item, index) => {
-                        return (
-                          <Tooltip
-                            title={`${item.first_name} ${item.last_name}`}
-                            key={index}
-                          >
-                            <Avatar style={{ backgroundColor: colors[index] }}>
-                              {`${item.first_name.substr(
-                                0,
-                                1
-                              )}${item.last_name.substr(0, 1)}`}
-                            </Avatar>
-                          </Tooltip>
-                        );
-                      })}
-                  </AvatarGroup>
-                </Grid>
+                {props.role !== "user" ? (
+                  <Grid
+                    item
+                    container
+                    xs={6}
+                    justify="flex-end"
+                    alignItems="baseline"
+                  >
+                    <AvatarGroup max={5}>
+                      {props.online_users &&
+                        props.online_users.map((item, index) => {
+                          return (
+                            <Tooltip
+                              title={`${item.first_name} ${item.last_name}`}
+                              key={index}
+                            >
+                              <Avatar
+                                style={{ backgroundColor: colors[index] }}
+                              >
+                                {`${item.first_name.substr(
+                                  0,
+                                  1
+                                )}${item.last_name.substr(0, 1)}`}
+                              </Avatar>
+                            </Tooltip>
+                          );
+                        })}
+                    </AvatarGroup>
+                  </Grid>
+                ) : null}
               </Grid>
               {/* Calendar App */}
               <Paper>
@@ -337,6 +341,7 @@ const mapStateToProps = (state) => {
   return {
     online_users: state.onlineReducer,
     accountUUID: state.loggedReducer.accountUUID,
+    role: state.loggedReducer.role,
   };
 };
 export default connect(mapStateToProps, null)(CurrentSchedule);
