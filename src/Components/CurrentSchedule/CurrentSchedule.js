@@ -212,6 +212,9 @@ function CurrentSchedule(props) {
     }
   };
 
+  const handleExportToCSV = () => {
+    console.log("Exporting to CSV");
+  };
   // Randomize color for avatar
   let colors = [
     "#D50000",
@@ -259,6 +262,14 @@ function CurrentSchedule(props) {
                     onClick={handleFilterFlightSelect}
                   >
                     Only My Flights
+                  </Button>
+                  <Button
+                    className={classes.filterFlightBtn}
+                    color={isFiltered ? "primary" : "default"}
+                    variant={isFiltered ? "contained" : "text"}
+                    onClick={handleExportToCSV}
+                  >
+                    Export to CSV
                   </Button>
                 </Grid>
                 {/* Avatar User Count */}
