@@ -219,6 +219,7 @@ function Aircrafts(props) {
         .patch("/aircraft/" + aircraft.aircraft_uuid,
         {
           status: aircraft.status,
+          tail_code: aircraft.tail_code,
         })
         .then((response) => {
           console.log("Response from Post:", response);
@@ -529,16 +530,18 @@ function Aircrafts(props) {
               </TabPanel>
               :
               <TabPanel value={value} index={0}>
-                {addNew ?
-                  <> {/* Add New Aircraft to database */}
-                    <NewAircraft 
-                      aircraftModels={props.aircraftModels}
-                      handleNewCraft={handleNewCraft}
-                    />
-                  </>
-                  :     
-                  <> {/* Active Aircraft List*/}
-                    <Paper className={classes.mainList}>
+                <Paper className={classes.mainList}>
+                  {addNew ?
+                    <> {/* Add New Aircraft to database */}
+                      <Grid container style={{ justifyContent: 'center' }}>
+                        <NewAircraft 
+                          aircraftModels={props.aircraftModels}
+                          handleNewCraft={handleNewCraft}
+                        />
+                      </Grid>
+                    </>
+                    :     
+                    <> {/* Active Aircraft List*/}
                       <Grid container item className={classes.labelBar}>
                         <Grid item xs={1} />
                         <Grid item xs={4}>
@@ -577,9 +580,9 @@ function Aircrafts(props) {
                           />
                         </Paper>
                       </Grid>
-                    </Paper>
-                  </>
-                }
+                    </>
+                  }
+                </Paper>
               </TabPanel>  
             }
             {/* ---------------------

@@ -7,6 +7,7 @@ import {
   IconButton,
   Select,
   FormControl,
+  TextField,
 } from "@material-ui/core";
 import {
   Save,
@@ -58,6 +59,25 @@ export default function EditAircraft(props) {
           <Grid item xs={4} align='right'>Aircraft ID</Grid>
           <Grid item xs={1} />
           <Grid item xs={4} align='start'>{ aircraft.aircraft_uuid }</Grid>
+        </Grid>
+        <Grid container item direction='row'>
+          <Grid item xs={4} align='right'>Tail Code</Grid>
+          <Grid item xs={1} />
+          <Grid item xs={4} align='start'>
+            <TextField
+              id='tail-code-edit'
+              size='small'
+              variant='outlined'
+              value={aircraft.tail_code}
+              onChange={(e) => 
+                {
+                  let newAircraft = {...aircraft};
+                  newAircraft['tail_code'] = e.target.value;
+                  setAircraft(newAircraft)
+                }
+              }
+            />
+          </Grid>
         </Grid>
         <Grid container item direction='row'>
           <Grid item xs={4} align='right'>Aircraft Model</Grid>
