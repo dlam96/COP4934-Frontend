@@ -49,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
     // overflow: "auto",/
   },
   container: {
+    width: "100%",
     // paddingTop: theme.spacing(4),
     // paddingBottom: theme.spacing(4),
   },
@@ -71,6 +72,9 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     backgroundColor: theme.palette.primary.main,
     textAlign: "center",
+  },
+  largeDateStyle: {
+    margin: theme.spacing(1, 0, 1, 1),
   },
   timeStyle: {
     margin: theme.spacing(1, 0, 1, 1),
@@ -107,8 +111,8 @@ function CreateSchedule(props) {
   let nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
-  const [flightDuration, setFlightDuration] = useState(4);
-  const durationOptions = [1, 2, 3, 4, 5, 6, 7, 8];
+  const [flightDuration, setFlightDuration] = useState("4");
+  const durationOptions = ["1", "2", "3", "4", "5", "6", "7", "8"];
   let propsAircraftModels = props.aircraft_models;
   const [aircraftModels, setAircraftModels] = useState(propsAircraftModels);
   let propsAirmen = props.airmen;
@@ -133,7 +137,7 @@ function CreateSchedule(props) {
   };
 
   const handleFlightDurationSelect = (event) => {
-    setFlightDuration(event);
+    setFlightDuration(event.target.value);
   };
 
   const handleAircraftChange = (data) => {
