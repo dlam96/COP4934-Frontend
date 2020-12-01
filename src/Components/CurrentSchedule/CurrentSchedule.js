@@ -237,7 +237,7 @@ function CurrentSchedule(props) {
   return (
     <>
       {props.events && props.events.length > 0 ? (
-        <Container maxWidth="lg" className={classes.container}>
+        <Container maxWidth={false} className={classes.container}>
           <CssBaseline />
           <MasterModal
             handleClose={handleClose}

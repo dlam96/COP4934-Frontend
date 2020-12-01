@@ -23,7 +23,7 @@ import {
 import { Help } from "@material-ui/icons";
 import clsx from "clsx";
 
-import { setFlights } from "../../Redux/actions.js";
+import { setFlights, setSchedule } from "../../Redux/actions.js";
 // calendar imports
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -207,8 +207,8 @@ function CreateSchedule(props) {
         if (!aircraftModels[model].blacklist)
           whitelist_models.push(aircraftModels[model].model_uuid);
       }
-      console.log("Sending Start", startDate);
-      console.log("Sending End:", endDate);
+      // console.log("Sending Start", startDate);
+      // console.log("Sending End:", endDate);
       WebSocketFrame.generationHandler("generate", {
         start: startDate.toLocaleString(),
         end: endDate.toLocaleString(),
@@ -223,14 +223,22 @@ function CreateSchedule(props) {
   const moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
     // console.log("Moving", event);
     // removes event from current events
-    const updatedEvents = generatedSchedule.filter(
+    const newUpdatedEvent = [...generatedSchedule];
+    const updatedEvents = newUpdatedEvent.filter(
       (item) => item.flight_uuid !== event.flight_uuid
     );
     // adds the new event w/ updated parameters
     const updatedEvent = { ...event, start, end, allDay: droppedOnAllDaySlot };
     updatedEvents.push(updatedEvent);
     setGeneratedSchedule(updatedEvents);
+    props.setScheduleAction(updatedEvents);
   };
+  // useEffect(() => {
+  //   if (generatedSchedule) {
+  //     console.log("setting schedule action");
+  //     props.setScheduleAction(generatedSchedule);
+  //   }
+  // }, generatedSchedule);
 
   const handleCommitSchedule = () => {
     console.log("committing schedule");
@@ -251,7 +259,7 @@ function CreateSchedule(props) {
   };
   // add blacklist object to aircraftmodels array
   useEffect(() => {
-    console.log("initializing blacklist");
+    // console.log("initializing blacklist");
     for (const aircraft in aircraftModels) {
       aircraftModels[aircraft].blacklist = false;
     }
@@ -273,7 +281,14 @@ function CreateSchedule(props) {
           item.start = moment(item.start).toDate();
           item.end = moment(item.end).toDate();
         });
+      } else if (props.schedule) {
+        generatedSchedule = [...props.schedule];
+        generatedSchedule.forEach((item) => {
+          item.start = moment(item.start).toDate();
+          item.end = moment(item.end).toDate();
+        });
       }
+
       setGeneratedSchedule(generatedSchedule);
       setSuccess(true);
       setLoading(false);
@@ -297,7 +312,7 @@ function CreateSchedule(props) {
 
   return (
     <Container
-      maxWidth="lg"
+      maxWidth={false}
       className={classes.container}
       disableGutters={true}
     >
@@ -465,7 +480,7 @@ function CreateSchedule(props) {
             {/* =========================================
             Blacklist AirCrew Window 
             =========================================*/}
-            <Tooltip
+            {/* <Tooltip
               title="Aircrew members to blacklist"
               placement="bottom-start"
             >
@@ -499,7 +514,7 @@ function CreateSchedule(props) {
                   })}
                 </List>
               </Grid>
-            </Grid>
+            </Grid> */}
             {/* =========================================
             End of Blacklist AirCrew Window 
             =========================================*/}
@@ -562,6 +577,7 @@ function CreateSchedule(props) {
 
 const mapDispatchToProps = {
   flightAction: setFlights,
+  setScheduleAction: setSchedule,
 };
 
 const mapStateToProps = (state) => {
