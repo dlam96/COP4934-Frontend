@@ -22,7 +22,7 @@
     A Calendar Scheduler Web Application Built for United State Air Force Flight Scheduling
     <br />
     <br />
-    <a href="https://airforceofs.com/">View Demo</a>
+    <a target="_blank" href="https://airforceofs.com/">View Demo</a>
     ·
     <a href="https://github.com/dlam96/cop4934-frontend/issues">Report Bug</a>
     ·
